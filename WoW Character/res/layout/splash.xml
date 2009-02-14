@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/splash" 
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content">
+	<ImageView android:id="@+id/splash_image"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/wow_logo_wrath"
+		android:layout_centerInParent="true" />
+	<TextView android:id="@+id/splash_label01" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/app_name"
+		android:layout_centerHorizontal="true"
+		android:layout_below="@+id/splash_image" />
+	<TextView android:id="@+id/splash_label02" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_below="@+id/splash_label01" />	
+</RelativeLayout>
