@@ -10,5 +10,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="Splash"> 
+ 			 <intent-filter> 
+   				<action android:name="android.intent.action.VIEW" /> 
+   				<category android:name="android.intent.category.DEFAULT" /> 
+ 			 </intent-filter> 
+ 		</activity> 
+        <activity android:name="Search"
+        	android:screenOrientation="sensor">
+ 			 <intent-filter> 
+   				<action android:name="android.intent.action.VIEW" /> 
+   				<category android:name="android.intent.category.DEFAULT" /> 
+ 			 </intent-filter> 
+ 		</activity> 
     </application>
 </manifest> 

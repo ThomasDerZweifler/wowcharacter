@@ -1,9 +1,12 @@
 package de.stm.android.wow.character;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
@@ -31,7 +34,22 @@ public class Splash extends Activity implements OnClickListener, Constants {
         super.onCreate(savedInstanceState);
         init();
     }
-	
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent ev) {
+
+		Log.i("id", "onKeyDown");
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+	        setResult(RESULT_CANCELED);
+	        finish();
+			break;
+		default:
+			return false;
+		}
+		return true;
+	}
+    
     public void onClick(View v) {
         setResult(RESULT_OK);
         finish();
