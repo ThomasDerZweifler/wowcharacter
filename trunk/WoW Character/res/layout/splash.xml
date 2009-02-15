@@ -7,17 +7,16 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:src="@drawable/wow_logo_wrath"
-		android:clickable="false"
 		android:layout_centerInParent="true" />
-	<TextView android:id="@+id/splash_label01" 
+	<TextView android:id="@+id/splash_label_app" 
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/app_name"
 		android:layout_centerHorizontal="true"
 		android:layout_below="@+id/splash_image" />
-	<TextView android:id="@+id/splash_label02" 
+	<TextView android:id="@+id/splash_label_ver" 
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
-		android:layout_below="@+id/splash_label01" />	
+		android:layout_below="@+id/splash_label_app" />	
 </RelativeLayout>
