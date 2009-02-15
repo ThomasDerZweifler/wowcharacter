@@ -6,22 +6,27 @@ import android.os.Bundle;
 
 public class Wowcharacter extends Activity implements Constants {
 
-    protected void onActivityResult(int requestCode, int resultCode,
-            Intent data) {
-    	
-    	if (requestCode == SPLASH_CLICKED) {
-            if (resultCode == RESULT_OK) {
-	    		setContentView(R.layout.search);
-            }
-        }
-    }
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (requestCode == SPLASH_CLICKED) {
+			if (resultCode == RESULT_OK) {
+				Intent intent = new Intent(this,
+						de.stm.android.wow.character.Search.class);
+				startActivity(intent);
+			} else if (resultCode == RESULT_CANCELED) {
+				int pid = android.os.Process.myPid();
+				android.os.Process.killProcess(pid);
+			}
+		}
+	}
 
 	/** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Intent intent = new Intent(this, de.stm.android.wow.character.Splash.class);
-        startActivityForResult(intent, SPLASH_CLICKED);
-    }
-    
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Intent intent = new Intent(this,
+				de.stm.android.wow.character.Splash.class);
+		startActivityForResult(intent, SPLASH_CLICKED);
+	}
+
 }
