@@ -1,23 +1,22 @@
 package de.stm.android.wow.character;
 
-
-import java.util.EventListener;
-
 import android.app.Activity;
 import android.os.Bundle;
 
-public class Wowcharacter extends Activity {
-	public Wowcharacter() {
-		init();
-	}
+public class Wowcharacter extends Activity implements Constants {
 
-	private void init() {
-		// TODO Auto-generated method stub
-		initListener();
-	}
+	// Listen for results.
+	protected void request(int requestCode, int resultCode, Bundle data){
+	    // See which child activity is calling us back.
+	    switch (requestCode) {
+	        case SPLASH_CLICKED:
+	        	System.out.println("splash clicked.");
+	        	data.getString("param1");
+	    		setContentView(R.layout.search);
 
-	private void initListener() {
-		// TODO Auto-generated method stub
+	        default:
+	            break;
+	    }
 	}
 
 	/** Called when the activity is first created. */
@@ -27,8 +26,4 @@ public class Wowcharacter extends Activity {
         new Splash(this);
     }
     
-	public EventListener getListener() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

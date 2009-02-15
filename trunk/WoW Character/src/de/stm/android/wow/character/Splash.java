@@ -1,15 +1,14 @@
 package de.stm.android.wow.character;
 
-import java.util.EventListener;
-
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class Splash {
+public class Splash implements Constants {
 	private Wowcharacter parent;
 	
 	public Splash (Wowcharacter parent) {
@@ -33,7 +32,9 @@ public class Splash {
 	
     OnClickListener mSplashClickListener = new OnClickListener() {
         public void onClick(View v) {
-        	EventListener l = parent.getListener();
+            Bundle stats = new Bundle();
+            stats.putString("param1","0"); 
+            parent.request(SPLASH_CLICKED, 0, stats);       	
         }
     };
 }
