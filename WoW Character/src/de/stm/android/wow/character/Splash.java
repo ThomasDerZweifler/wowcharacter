@@ -1,5 +1,8 @@
 package de.stm.android.wow.character;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -17,8 +20,17 @@ import android.widget.TextView;
  *
  */
 public class Splash extends Activity implements OnClickListener {
+	private Timer timer;
 	
 	private void init() {
+		timer = new Timer("WOW-Timer");
+		TimerTask timerTask = new TimerTask() {
+			public void run() {
+				goToSearchDialog();
+			}
+		};
+		timer.schedule(timerTask, 5000);
+		
 		setContentView(R.layout.splash);				
         ((RelativeLayout) findViewById(R.id.splash)).setOnClickListener(this);
         
@@ -54,15 +66,20 @@ public class Splash extends Activity implements OnClickListener {
 //		return true;
 //	}
     
+    private void goToSearchDialog() {
+    	timer.cancel();
+		//zum Suchdialog uebergehen
+		Intent intent = new Intent(this,
+				de.stm.android.wow.character.Search.class);
+		startActivity(intent);    	
+		//diese Aktivitaet vom "History-Stack" nehmen
+    	finish();
+    }
+    
     /**
      * 
      */
     public void onClick(View v) {
-		//zum Suchdialog uebergehen
-		Intent intent = new Intent(this,
-				de.stm.android.wow.character.Search.class);
-		startActivity(intent);
-		//diese Aktivitaet vom "History-Stack" nehmen
-    	finish();
+    	goToSearchDialog();
     }
 }
