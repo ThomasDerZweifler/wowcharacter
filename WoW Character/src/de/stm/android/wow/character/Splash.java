@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class Splash extends Activity implements OnClickListener, Constants {
+/**
+ * Splash
+ * 
+ * @author tfunke
+ *
+ */
+public class Splash extends Activity implements OnClickListener {
 	
 	private void init() {
 		setContentView(R.layout.splash);				
@@ -35,23 +39,30 @@ public class Splash extends Activity implements OnClickListener, Constants {
         init();
     }
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent ev) {
-
-		Log.i("id", "onKeyDown");
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-	        setResult(RESULT_CANCELED);
-	        finish();
-			break;
-		default:
-			return false;
-		}
-		return true;
-	}
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent ev) {
+//
+//		Log.i("id", "onKeyDown");
+//		switch (keyCode) {
+//		case KeyEvent.KEYCODE_BACK:
+//	        setResult(RESULT_CANCELED);
+//	        finish();
+//			break;
+//		default:
+//			return false;
+//		}
+//		return true;
+//	}
     
+    /**
+     * 
+     */
     public void onClick(View v) {
-        setResult(RESULT_OK);
-        finish();
+		//zum Suchdialog uebergehen
+		Intent intent = new Intent(this,
+				de.stm.android.wow.character.Search.class);
+		startActivity(intent);
+		//diese Aktivitaet vom "History-Stack" nehmen
+    	finish();
     }
 }
