@@ -3,7 +3,13 @@ package de.stm.android.wow.character;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class Search extends Activity implements Constants {
+/**
+ * Suchdialog
+ * 
+ * @author tfunke
+ *
+ */
+public class Search extends Activity {
 	private void init() {
 		setContentView(R.layout.search);				
 	}
@@ -14,5 +20,4 @@ public class Search extends Activity implements Constants {
         super.onCreate(savedInstanceState);
         init();
     }
-
 }

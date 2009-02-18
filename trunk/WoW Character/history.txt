@@ -1,0 +1,16 @@
+  Wowcharacter Release History:
+  -----------------------------
+  
+  
+  
+(2009-02-18)
+	+ Fixed:	Forwarding
+
+(2009-02-01)
+  Start der History
+  
+  template:
+  	+ Fixed: 
+	+ Changed:
+	+ New:
+  
