@@ -1,7 +1,8 @@
   Wowcharacter Release History:
   -----------------------------
   
-  
+(2009-02-19)
+  	+ New:		Laden einer Webseite
   
 (2009-02-18)
 	+ Change:	Programmicon
