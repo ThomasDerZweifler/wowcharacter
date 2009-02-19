@@ -89,11 +89,14 @@ public class Search extends Activity {
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
 
+			StringBuilder sb = new StringBuilder();
+			
 			while (br.ready()) {
 				String line = br.readLine();
-				tv.append(line);
+				sb.append(line);
 			}
 
+			tv.setText(sb);
 			sv.scrollTo(0, 0);
 			
 			// doc = db.parse(is);
