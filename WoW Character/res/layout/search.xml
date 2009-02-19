@@ -3,19 +3,67 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:orientation="vertical">
+<RelativeLayout
+android:id="@+id/rl"
+android:layout_width="250px"
+android:layout_height="80px"
+android:layout_x="17px"
+android:layout_y="9px"
+>
 <EditText
-	android:layout_width="wrap_content"
+	android:id="@+id/editText"
+	android:layout_width="250px"
 	android:layout_height="wrap_content"
 	android:padding="10px"
-	android:text="EditText"
-	android:textSize="18sp" />
-<Spinner
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:padding="10px" />
+	android:layout_alignParentTop="true"
+	android:layout_alignParentLeft="true"
+	android:text="type in URL (http://...)"
+	android:textSize="16sp" />
 <Button
+	android:id="@+id/button"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:padding="10px"
-	android:text="Button" />
+	android:layout_alignBaseline="@+id/editText"
+	android:layout_alignParentRight="true"
+	android:text="Search"
+	android:textSize="16sp" />
+/>
+</RelativeLayout>
+<ScrollView
+		android:id="@+id/scrollView"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		>
+
+		<LinearLayout
+		android:id="@+id/ll"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		>
+		    <!--  your widgets go here -->
+			<TextView
+			android:id="@+id/textView"
+			android:textColor="#999900"
+            android:background="#444444"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text=""
+			>
+			</TextView>
+
+		</LinearLayout>
+
+</ScrollView>
+
+<!--<TextView
+	android:id="@+id/textView"
+	android:padding="10px"
+	android:layout_width="wrap_content"
+	android:layout_height="270px"
+	android:maxWidth="800sp" 
+	android:textSize="10sp" />
+	android:text="webpage" /> -->
+
 </TableLayout>
