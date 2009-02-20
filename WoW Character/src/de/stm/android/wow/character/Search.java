@@ -54,7 +54,7 @@ public class Search extends Activity {
 				tv.setText( "loading webpage..." );
 				sv.scrollTo( 0, 0 );
 				sURL = et.getText().toString();
-				sbXMLPage = getXML( sURL, false );
+				sbXMLPage = getXML( sURL, true );
 			}
 		} );
 		bt.performClick();
@@ -118,15 +118,16 @@ public class Search extends Activity {
 			// Wichtig, Zugriff erlauben durch: <uses-permission
 			// android:name="android.permission.INTERNET" /> (in manifest)
 			urlConn = url.openConnection();
-			urlConn
-					.addRequestProperty(
-							"User-Agent",
-							"Mozilla/5.0 (Windows; U; Windows NT 6.0; rv:1.9.1b3pre) Gecko/20090218 Firefox/3.0 SeaMonkey/2.0a3pre" );
-			urlConn.addRequestProperty( "Accept",
-					"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" );
-			urlConn.addRequestProperty( "Accept", "de-de,de;q=0.8,en-us;q=0.5,en;q=0.3" );
+			urlConn.addRequestProperty( "User-Agent", "Firefox/3.0" );
+//			urlConn
+//					.addRequestProperty(
+//							"User-Agent",
+//							"Mozilla/5.0 (Windows; U; Windows NT 6.0; rv:1.9.1b3pre) Gecko/20090218 Firefox/3.0 SeaMonkey/2.0a3pre" );
+//			urlConn.addRequestProperty( "Accept",
+//					"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" );
+//			urlConn.addRequestProperty( "Accept", "de-de,de;q=0.8,en-us;q=0.5,en;q=0.3" );
 			urlConn.addRequestProperty( "Accept-Encoding", packed ? "gzip,deflate" : "identity" );
-			urlConn.addRequestProperty( "Accept-Charset", "ISO-8859-15,utf-8;q=0.7,*;q=0.7" );
+//			urlConn.addRequestProperty( "Accept-Charset", "ISO-8859-15,utf-8;q=0.7,*;q=0.7" );
 		} catch (IOException ioe) {
 			Log.e( "Search", "Could not connect to server!" );
 			tv.setText( "check url!" );

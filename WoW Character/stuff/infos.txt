@@ -3,15 +3,24 @@
 damit ergeben sich folgende Parameter fuer die Abfrage, um XML Code zu bekommen:
 
 User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.0; rv:1.9.1b3pre) Gecko/20090218 Firefox/3.0 SeaMonkey/2.0a3pre
+
+{----------------optional------------------------------------------------
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3
 Accept-Charset: ISO-8859-15,utf-8;q=0.7,*;q=0.7
 
-Accept-Encoding: gzip,deflate			(gepackte Daten)
+Accept-Encoding: gzip,deflate		(gepackte Daten)
 oder
 Accept-Encoding: identity			(ungepackte Daten)
+------------------------------------------------------------------------}
 
--------------------------
+			URLConnection urlConn = url.openConnection();
+			urlConn.addRequestProperty( "User-Agent", "Firefox/3.0" );
+
+			//optional
+			urlConn.addRequestProperty( "Accept-Encoding", packed ? "gzip,deflate" : "identity" );
+
+			...
 
 			//-----------funktioniert nicht!?-----------
 			// String line = null;
@@ -20,8 +29,12 @@ Accept-Encoding: identity			(ungepackte Daten)
 			// }
 			//-------------------------------------
 
-statt dessen: 		char chars[] = new char[1024];
+statt dessen: 		
+
+			char chars[] = new char[1024];
 			int len = 0;
 			while ((len = br.read( chars, 0, chars.length )) >= 0) {
 				sb.append( chars, 0, len );
 			}
+------------------------------
+
