@@ -1,132 +1,177 @@
 package de.stm.android.wow.character;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.zip.GZIPInputStream;
+
+import javax.xml.parsers.*;
+
+import org.w3c.dom.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.*;
 
 /**
  * Suchdialog
  * 
  * @author tfunke
- * 
  */
 public class Search extends Activity {
+	/** URL */
 	private URL url;
-	private URLConnection urlConn = null;
-	private ScrollView sv;
-	private TextView tv;
-	private EditText et;
-	private Button bt;
+	/** URL */
 	private String sURL = "http://eu.wowarmory.com/character-sheet.xml?r=Lothar&n=Etienne";
+	/** ScrollView */
+	private ScrollView sv;
+	/** TextView */
+	private TextView tv;
+	/** EditText (URL Eingabefeld) */
+	private EditText et;
+	/** geladene XML Seite */
+	private StringBuilder sbXMLPage;
 
+	/**
+	 * Initialisierungen
+	 */
 	private void init() {
-		setContentView(R.layout.search);
+		setContentView( R.layout.search );
 		// displayXML("http://web.de");
-
-		sv = (ScrollView) findViewById(R.id.scrollView);
-		
-		tv = (TextView) findViewById(R.id.textView);
+		sv = (ScrollView)findViewById( R.id.scrollView );
+		tv = (TextView)findViewById( R.id.textView );
 		// tv.setMovementMethod(ArrowKeyMovementMethod.getInstance());
 		// tv.setFocusable(true);
-
-		et = (EditText) findViewById(R.id.editText);
-
-		et.setText(sURL);
-
-		bt = (Button) findViewById(R.id.button);
-		bt.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				tv.setText("loading webpage...");
-				sv.scrollTo(0, 0);
-				String text = et.getText().toString();
-				displayXML(text);
+		et = (EditText)findViewById( R.id.editText );
+		et.setText( sURL );
+		Button bt = (Button)findViewById( R.id.buttonSearch );
+		bt.setOnClickListener( new Button.OnClickListener() {
+			public void onClick( View v ) {
+				tv.setText( "loading webpage..." );
+				sv.scrollTo( 0, 0 );
+				sURL = et.getText().toString();
+				sbXMLPage = getXML( sURL, false );
 			}
-		});
-		
+		} );
 		bt.performClick();
+		bt = (Button)findViewById( R.id.buttonXML );
+		bt.setOnClickListener( new Button.OnClickListener() {
+			public void onClick( View v ) {
+				interpretXML( sbXMLPage.toString() );
+			}
+		} );
 	}
 
 	/**
-	 * Parse XML file and display
+	 * XML auswerten
+	 * 
+	 * @param xmlString
 	 */
-	public void displayXML(String strURL) {
-
-		if( !strURL.startsWith("http://") ) {
-			strURL = "http://"+strURL;
-			et.setText( strURL );
-		}
-		
+	public void interpretXML( String xmlString ) {
+		StringReader inStream = new StringReader( xmlString );
+		InputSource inSource = new InputSource( inStream );
+		Document doc = null;
 		try {
-			url = new URL(strURL);
-			
-			//Wichtig, Zugriff erlauben durch: <uses-permission android:name="android.permission.INTERNET" /> (in manifest)
-			urlConn = url.openConnection();
-		} catch (IOException ioe) {
-			Log.e("Search", "Could not connect to server!");
-			tv.setText("check url!");
-			return;
-		}
-
-		// Document doc = null;
-		try {
-			// DocumentBuilderFactory dbf =
-			// DocumentBuilderFactory.newInstance();
-			// DocumentBuilder db = dbf.newDocumentBuilder();
-			InputStream is = urlConn.getInputStream();
-
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-
-			StringBuilder sb = new StringBuilder();
-			
-			while (br.ready()) {
-				String line = br.readLine();
-				sb.append(line);
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			// dbf.setValidating( false );
+			// dbf.setNamespaceAware( false );
+			doc = db.parse( inSource );
+			// Demo TODO Auswerten (DTD evtl. nutzen), Bilder laden etc.
+			NodeList nodeList = doc.getElementsByTagName( "character" );
+			Node node = nodeList.item( 0 );
+			NamedNodeMap nodesMap = node.getAttributes();
+			tv.setText( node.getLocalName() );
+			for (int i = 0; i < nodesMap.getLength(); i++) {
+				Node n = nodesMap.item( i );
+				tv.append( n.getNodeName() + ": " + n.getNodeValue() + "; " );
 			}
-
-			tv.setText(sb);
-			sv.scrollTo(0, 0);
-			
-			// doc = db.parse(is);
-		} catch (IOException ioe) {
-//			Log.e("Search", "Invalid XML format!!");
-			tv.setText("check page!");
-
+		} catch (SAXException e) {
+			Log.e( "Search", "SAX" + e.getMessage() );
+		} catch (IOException e) {
+			Log.e( "Search", "URI" + e.getMessage() );
+		} catch (ParserConfigurationException e) {
+			Log.e( "Search", "Parser Implementation" + e.getMessage() );
 		}
-		// catch (ParserConfigurationException pce) {
-		// Log.e("Search", "Could not parse XML!");
-		// }
-		// catch (SAXException se) {
-		// Log.e("Search", "Could not parse XML!");
-		// }
-
-		// String s = doc.toString();
-		//		
-		// Log.i("Search",s);
-		//		
-		// int size = doc.getElementsByTagName("tagName").getLength();
-		//
-		// for (int i = 0; i < size; i++) {
-		// Element e = (Element) doc.getElementsByTagName("tagName").item(i);
-		// }
 	}
 
-	/** Called when the activity is first created. */
+	/**
+	 * XML von URL lesen
+	 * 
+	 * @param strURL
+	 * @param packed
+	 * @return
+	 */
+	public StringBuilder getXML( String strURL, boolean packed ) {
+		StringBuilder sb = null;
+		if (!strURL.startsWith( "http://" )) {
+			strURL = "http://" + strURL;
+			et.setText( strURL );
+		}
+		URLConnection urlConn = null;
+		try {
+			url = new URL( strURL );
+			// Wichtig, Zugriff erlauben durch: <uses-permission
+			// android:name="android.permission.INTERNET" /> (in manifest)
+			urlConn = url.openConnection();
+			urlConn
+					.addRequestProperty(
+							"User-Agent",
+							"Mozilla/5.0 (Windows; U; Windows NT 6.0; rv:1.9.1b3pre) Gecko/20090218 Firefox/3.0 SeaMonkey/2.0a3pre" );
+			urlConn.addRequestProperty( "Accept",
+					"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" );
+			urlConn.addRequestProperty( "Accept", "de-de,de;q=0.8,en-us;q=0.5,en;q=0.3" );
+			urlConn.addRequestProperty( "Accept-Encoding", packed ? "gzip,deflate" : "identity" );
+			urlConn.addRequestProperty( "Accept-Charset", "ISO-8859-15,utf-8;q=0.7,*;q=0.7" );
+		} catch (IOException ioe) {
+			Log.e( "Search", "Could not connect to server!" );
+			tv.setText( "check url!" );
+			return null;
+		}
+		InputStream is = null;
+		BufferedReader br = null;
+		try {
+			is = urlConn.getInputStream();
+			if (packed) {
+				is = new GZIPInputStream( is );
+			}
+			InputStreamReader isr = new InputStreamReader( is );
+			br = new BufferedReader( isr );
+			sb = new StringBuilder();
+			char chars[] = new char[1024];
+			int len = 0;
+			while ((len = br.read( chars, 0, chars.length )) >= 0) {
+				sb.append( chars, 0, len );
+			}
+			// -----------funktioniert nicht!?-----------
+			// String line = null;
+			// while ((line = br.readLine()) != null) {
+			// sb.append( line );
+			// }
+			// ------------------------------------------
+			tv.setText( sb );
+			sv.scrollTo( 0, 0 );
+		} catch (IOException ioe) {
+			Log.e( "Search", "Invalid format!!" );
+			tv.setText( "check page!" );
+		} finally {
+			try {
+				is.close();
+				br.close();
+			} catch (IOException ioExc) {
+				Log.e( "Search", "Exception Occured in finally block" + ioExc.getMessage() );
+			}
+		}
+		return sb;
+	}
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate( Bundle savedInstanceState ) {
+		super.onCreate( savedInstanceState );
 		init();
 	}
 }
