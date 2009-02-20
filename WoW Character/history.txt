@@ -1,6 +1,10 @@
   Wowcharacter Release History:
   -----------------------------
   
+(2009-02-20)
+  	+ New:		Laden der XML Repaesentation einer Webseite (wenn vorhanden)
+  	+ New:		Aufbereitung der XML Daten zu einem Document
+  
 (2009-02-19)
   	+ New:		Laden einer Webseite
   

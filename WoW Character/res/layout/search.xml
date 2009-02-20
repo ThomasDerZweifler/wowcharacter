@@ -20,16 +20,24 @@ android:layout_y="9px"
 	android:text="type in URL (http://...)"
 	android:textSize="16sp" />
 <Button
-	android:id="@+id/button"
+	android:id="@+id/buttonSearch"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:padding="10px"
 	android:layout_alignBaseline="@+id/editText"
 	android:layout_alignParentRight="true"
-	android:text="Search"
+	android:text="Laden"
 	android:textSize="16sp" />
 />
 </RelativeLayout>
+<Button
+	android:id="@+id/buttonXML"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:padding="10px"
+	android:text="XML interpretieren (Demo)"
+	android:textSize="16sp" />
+/>
 <ScrollView
 		android:id="@+id/scrollView"
 		android:layout_width="fill_parent"
@@ -45,7 +53,7 @@ android:layout_y="9px"
 		    <!--  your widgets go here -->
 			<TextView
 			android:id="@+id/textView"
-			android:textColor="#999900"
+			android:textColor="#bbbb00"
             android:background="#444444"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
