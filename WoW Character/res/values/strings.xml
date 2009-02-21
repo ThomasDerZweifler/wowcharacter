@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <string name="app_name">WoW Character</string>
+<string name="app_name">WoW Character</string>
+<string name="search_button">search</string>
+<string name="search_name">name:</string>
+
 
 </resources>
