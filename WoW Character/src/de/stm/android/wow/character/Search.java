@@ -15,6 +15,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import android.app.Activity;
+import android.graphics.Region;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,13 +24,14 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import de.stm.android.wow.character.util.Armory;
+import de.stm.android.wow.character.util.Const;
 
 /**
  * Suchdialog
  * 
  * @author tfunke
  */
-public class Search extends Activity {
+public class Search extends Activity implements Const {
 	/** URL */
 	private String ssearch;
 	/** ScrollView */
@@ -61,8 +63,8 @@ public class Search extends Activity {
 				tv.setText( "loading webpage..." );
 				sv.scrollTo( 0, 0 );
 				ssearch = et.getText().toString();
-				sbXMLPage = armory.search(ssearch, "EU");
-				if( sbXMLPage.length() > 0 ) {
+				sbXMLPage = armory.search(ssearch, Region.EU.ordinal());
+				if( sbXMLPage != null && sbXMLPage.length() > 0 ) {
 					tv.setText( sbXMLPage );				
 					sv.scrollTo( 0, 0 );
 				}

@@ -10,6 +10,7 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import android.util.Log;
+import android.widget.Toast;
 
 public class Armory implements Const {
 	/**
@@ -44,7 +45,7 @@ public class Armory implements Const {
 
 			urlConn.addRequestProperty( "Accept-Encoding", packed ? "gzip,deflate" : "identity" );
 		} catch (IOException ioe) {
-			Log.e( "Search", "Could not connect to server!" );
+			Log.e( "Armory", "Could not connect to server!" );
 			return null;
 		}
 		InputStream is = null;
@@ -67,20 +68,30 @@ public class Armory implements Const {
 			while ((len = isr.read( chars, 0, chars.length )) >= 0) {
 				sb.append( chars, 0, len );
 			}
-		} catch (IOException ioe) {
-			Log.e( "Search", "Invalid format!!" );
-		} finally {
-			try {
-				isr.close();
-			} catch (Exception e) {
-				Log.e( "Search", "finally" + e.getMessage() );
-			}
+			is.close();
+		}
+		catch( Exception e ) {
+			/** */
+		}
+		catch (Throwable t) {
+			Log.e( "Armory", "Exception: "+ t.toString() );
 		}
 		return sb;
 	}
 
-	public StringBuilder search(String character, String region) {
-		String url = URL_EU + SEARCHPAGE + character + SEARCHTYPE_ALL;
+	/**
+	 * 
+	 * @param character
+	 * @param region
+	 * @return
+	 */
+	public StringBuilder search(String character, int region) {
+		String r = URL_EU;
+		if( region == Region.US.ordinal() ) {
+			r = URL_US;
+		}
+		
+		String url = r + SEARCHPAGE + character + SEARCHTYPE_ALL;
 		return getXML(url, true);
 	}
 
