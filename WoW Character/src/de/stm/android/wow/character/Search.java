@@ -15,7 +15,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import android.app.Activity;
-import android.graphics.Region;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;

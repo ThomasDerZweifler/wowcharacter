@@ -10,7 +10,6 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import android.util.Log;
-import android.widget.Toast;
 
 public class Armory implements Const {
 	/**
