@@ -16,6 +16,8 @@ import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,39 +45,60 @@ public class Search extends Activity implements Const {
 	private StringBuilder sbXMLPage;
 	/** Armory */
 	private Armory armory = new Armory();
+	Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (sbXMLPage != null && sbXMLPage.length() > 0) {
+				tv.setText(sbXMLPage);
+				sv.scrollTo(0, 0);
+			}
+		}
+	};
 
 	/**
 	 * Initialisierungen
 	 */
 	private void init() {
-		setContentView( R.layout.search );
+		setContentView(R.layout.search);
 		// displayXML("http://web.de");
-		sv = (ScrollView)findViewById( R.id.scrollView );
-		tv = (TextView)findViewById( R.id.textView );
+		sv = (ScrollView) findViewById(R.id.scrollView);
+		tv = (TextView) findViewById(R.id.textView);
 		// tv.setMovementMethod(ArrowKeyMovementMethod.getInstance());
 		// tv.setFocusable(true);
-		et = (EditText)findViewById( R.id.editText );
-		//et.setText( sURL );
-		Button bt = (Button)findViewById( R.id.buttonSearch );
-		bt.setOnClickListener( new Button.OnClickListener() {
-			public void onClick( View v ) {
-				tv.setText( "loading webpage..." );
-				sv.scrollTo( 0, 0 );
+		et = (EditText) findViewById(R.id.editText);
+		// et.setText( sURL );
+		Button bt = (Button) findViewById(R.id.buttonSearch);
+		bt.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				tv.setText("loading webpage...");
+				sv.scrollTo(0, 0);
 				ssearch = et.getText().toString();
-				sbXMLPage = armory.search(ssearch, Region.EU.ordinal());
-				if( sbXMLPage != null && sbXMLPage.length() > 0 ) {
-					tv.setText( sbXMLPage );				
-					sv.scrollTo( 0, 0 );
-				}
+
+				Thread background = new Thread(new Runnable() {
+					public void run() {
+						try {
+
+							sbXMLPage = armory.search(ssearch, Region.EU
+									.ordinal());
+
+							handler.sendMessage(handler.obtainMessage());
+						} catch (Throwable t) {
+							// just end the background thread
+						}
+					}
+				});
+
+				background.start();
+
 			}
-		} );
-		//bt.performClick();
-		bt = (Button)findViewById( R.id.buttonXML );
-		bt.setOnClickListener( new Button.OnClickListener() {
-			public void onClick( View v ) {
-				interpretXML( sbXMLPage.toString() );
+		});
+		// bt.performClick();
+		bt = (Button) findViewById(R.id.buttonXML);
+		bt.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				interpretXML(sbXMLPage.toString());
 			}
-		} );
+		});
 	}
 
 	/**
@@ -83,37 +106,37 @@ public class Search extends Activity implements Const {
 	 * 
 	 * @param xmlString
 	 */
-	public void interpretXML( String xmlString ) {
-		StringReader inStream = new StringReader( xmlString );
-		InputSource inSource = new InputSource( inStream );
+	public void interpretXML(String xmlString) {
+		StringReader inStream = new StringReader(xmlString);
+		InputSource inSource = new InputSource(inStream);
 		Document doc = null;
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			// dbf.setValidating( false );
 			// dbf.setNamespaceAware( false );
-			doc = db.parse( inSource );
+			doc = db.parse(inSource);
 			// Demo TODO Auswerten (DTD evtl. nutzen), Bilder laden etc.
-			NodeList nodeList = doc.getElementsByTagName( "character" );
-			Node node = nodeList.item( 0 );
+			NodeList nodeList = doc.getElementsByTagName("character");
+			Node node = nodeList.item(0);
 			NamedNodeMap nodesMap = node.getAttributes();
-			tv.setText( node.getLocalName() );
+			tv.setText(node.getLocalName());
 			for (int i = 0; i < nodesMap.getLength(); i++) {
-				Node n = nodesMap.item( i );
-				tv.append( n.getNodeName() + ": " + n.getNodeValue() + "; " );
+				Node n = nodesMap.item(i);
+				tv.append(n.getNodeName() + ": " + n.getNodeValue() + "; ");
 			}
 		} catch (SAXException e) {
-			Log.e( "Search", "SAX" + e.getMessage() );
+			Log.e("Search", "SAX" + e.getMessage());
 		} catch (IOException e) {
-			Log.e( "Search", "URI" + e.getMessage() );
+			Log.e("Search", "URI" + e.getMessage());
 		} catch (ParserConfigurationException e) {
-			Log.e( "Search", "Parser Implementation" + e.getMessage() );
+			Log.e("Search", "Parser Implementation" + e.getMessage());
 		}
 	}
 
 	@Override
-	public void onCreate( Bundle savedInstanceState ) {
-		super.onCreate( savedInstanceState );
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		init();
 	}
 }
