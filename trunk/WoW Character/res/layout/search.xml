@@ -1,77 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:orientation="vertical">
-<RelativeLayout
-android:id="@+id/rl"
-android:layout_width="250px"
-android:layout_height="80px"
-android:layout_x="17px"
-android:layout_y="9px"
->
-<EditText
-	android:id="@+id/editText"
-	android:layout_width="250px"
-	android:layout_height="wrap_content"
-	android:padding="10px"
-	android:layout_alignParentTop="true"
-	android:layout_alignParentLeft="true"
-	android:text="type in URL (http://...)"
-	android:textSize="16sp" />
-<Button
-	android:id="@+id/buttonSearch"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:padding="10px"
-	android:layout_alignBaseline="@+id/editText"
-	android:layout_alignParentRight="true"
-	android:text="Laden"
-	android:textSize="16sp" />
-/>
-</RelativeLayout>
-<Button
-	android:id="@+id/buttonXML"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:padding="10px"
-	android:text="XML interpretieren (Demo)"
-	android:textSize="16sp" />
-/>
-<ScrollView
-		android:id="@+id/scrollView"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="1"
-		>
-
-		<LinearLayout
-		android:id="@+id/ll"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		>
-		    <!--  your widgets go here -->
-			<TextView
-			android:id="@+id/textView"
-			android:textColor="#bbbb00"
-            android:background="#444444"
+	android:layout_height="fill_parent" >
+	<TableRow>
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Name" />
+		<EditText android:id="@+id/editText"
+			android:layout_height="wrap_content"
+			android:layout_width="220px"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true" />
+		<Button android:id="@+id/buttonSearch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text=""
-			>
+			android:layout_alignBaseline="@+id/editText"
+			android:layout_alignParentRight="true"
+			android:text="Laden" />
+	</TableRow>
+	<TableRow>
+		<Button android:id="@+id/buttonXML"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="XML interpretieren"
+			android:layout_span="3" />
+	</TableRow>
+	<ScrollView android:id="@+id/scrollView"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1" >
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" >
+			<TextView
+				android:id="@+id/textView"
+				android:textColor="#bbbb00"
+            	android:background="#444444"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="" >
 			</TextView>
-
 		</LinearLayout>
-
-</ScrollView>
-
-<!--<TextView
-	android:id="@+id/textView"
-	android:padding="10px"
-	android:layout_width="wrap_content"
-	android:layout_height="270px"
-	android:maxWidth="800sp" 
-	android:textSize="10sp" />
-	android:text="webpage" /> -->
-
+	</ScrollView>
 </TableLayout>
