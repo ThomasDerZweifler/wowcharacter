@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent" >
+	android:layout_height="fill_parent"
+	android:stretchColumns="1" >
 	<TableRow>
 		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="Name" />
+			android:layout_height="wrap_content" android:text="@string/search_name"/>
 		<EditText android:id="@+id/editText"
 			android:layout_height="wrap_content"
-			android:layout_width="220px"
+			android:layout_width="fill_parent"
 			android:layout_alignParentTop="true"
 			android:layout_alignParentLeft="true" />
 		<Button android:id="@+id/buttonSearch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignBaseline="@+id/editText"
-			android:layout_alignParentRight="true"
-			android:text="Laden" />
+			android:layout_alignParentRight="true" android:text="@string/search_button"/>
+	</TableRow>
+	<TableRow>
+		<Spinner android:id="@+id/spinner"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:drawSelectorOnTop="true"
+			android:layout_span="3" />
 	</TableRow>
 	<TableRow>
 		<Button android:id="@+id/buttonXML"
