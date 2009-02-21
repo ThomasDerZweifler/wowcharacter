@@ -23,6 +23,7 @@ public class Armory implements Const {
 		if (!strURL.startsWith("http://")) {
 			strURL = "http://" + strURL;
 		}
+
 		URLConnection urlConn = null;
 		try {
 			URL url = new URL(strURL);
@@ -83,6 +84,7 @@ public class Armory implements Const {
 		} catch (Throwable t) {
 			Log.e("Armory", "Exception: " + t.toString());
 		}
+		
 		return sb;
 	}
 
@@ -99,7 +101,10 @@ public class Armory implements Const {
 		}
 
 		String url = r + SEARCHPAGE + character + SEARCHTYPE_ALL;
-		return getXML(url, true);
+		
+		StringBuilder sb = getXML(url, true);
+		
+		return sb;
 	}
 
 }
