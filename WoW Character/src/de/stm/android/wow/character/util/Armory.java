@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Locale;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -47,7 +48,8 @@ public class Armory implements Const {
 			// urlConn.addRequestProperty( "Accept-Charset",
 			// "ISO-8859-1,ISO-8859-2" );
 
-			urlConn.addRequestProperty("Accept-Language", "de-de,de;q=0.8");
+			Locale l = Locale.getDefault();
+			urlConn.addRequestProperty("Accept-Language", l.toString().replace("_", "-"));
 			// urlConn.addRequestProperty( "Accept-Language",
 			// "en-us;q=0.5,en;q=0.3" );
 

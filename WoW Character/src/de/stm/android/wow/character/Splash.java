@@ -22,11 +22,18 @@ import android.widget.TextView;
 public class Splash extends Activity implements OnClickListener {
 	private Timer timer;
 	
+	/** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        init();
+    }
+
 	private void init() {
 		timer = new Timer("WOW-Timer");
 		TimerTask timerTask = new TimerTask() {
 			public void run() {
-				goToSearchDialog();
+				goToCharacterList();
 			}
 		};
 		timer.schedule(timerTask, 5000);
@@ -43,43 +50,24 @@ public class Splash extends Activity implements OnClickListener {
             // should never happen 
         }; 
 	}
-	
-	/** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        init();
-    }
-
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent ev) {
-//
-//		Log.i("id", "onKeyDown");
-//		switch (keyCode) {
-//		case KeyEvent.KEYCODE_BACK:
-//	        setResult(RESULT_CANCELED);
-//	        finish();
-//			break;
-//		default:
-//			return false;
-//		}
-//		return true;
-//	}
-    
-    private void goToSearchDialog() {
-    	timer.cancel();
-		//zum Suchdialog uebergehen
-		Intent intent = new Intent(this,
-				de.stm.android.wow.character.Search.class);
-		startActivity(intent);    	
-		//diese Aktivitaet vom "History-Stack" nehmen
-    	finish();
-    }
-    
+	  
     /**
      * 
      */
     public void onClick(View v) {
-    	goToSearchDialog();
+    	goToCharacterList();
+    }
+
+    /**
+     *
+     */
+	private void goToCharacterList() {
+    	timer.cancel();
+		//zum Suchdialog uebergehen
+		Intent intent = new Intent(this,
+				de.stm.android.wow.character.Characterlist.class);
+		startActivity(intent);    	
+		//diese Aktivitaet vom "History-Stack" nehmen
+    	finish();
     }
 }

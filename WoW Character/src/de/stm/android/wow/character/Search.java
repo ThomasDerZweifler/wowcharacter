@@ -55,18 +55,18 @@ public class Search extends Activity implements Const {
 		}
 	};
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		init();
+	}
+
 	/**
 	 * Initialisierungen
 	 */
 	private void init() {
 		setContentView(R.layout.search);
-		// displayXML("http://web.de");
-		sv = (ScrollView) findViewById(R.id.scrollView);
-		tv = (TextView) findViewById(R.id.textView);
-		// tv.setMovementMethod(ArrowKeyMovementMethod.getInstance());
-		// tv.setFocusable(true);
 		et = (EditText) findViewById(R.id.editText);
-		// et.setText( sURL );
 		Button bt = (Button) findViewById(R.id.buttonSearch);
 		bt.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
@@ -86,17 +86,10 @@ public class Search extends Activity implements Const {
 							// just end the background thread
 						}
 					}
-				});
+				}, "WOW-Search");
 
 				background.start();
 
-			}
-		});
-		// bt.performClick();
-		bt = (Button) findViewById(R.id.buttonXML);
-		bt.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				interpretXML(sbXMLPage.toString());
 			}
 		});
 	}
@@ -134,9 +127,17 @@ public class Search extends Activity implements Const {
 		}
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		init();
-	}
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent ev) {
+//
+//		switch (keyCode) {
+//		case KeyEvent.KEYCODE_BACK:
+//	        setResult(RESULT_CANCELED);
+//	        finish();
+//			break;
+//		default:
+//			return false;
+//		}
+//		return true;
+//	}
 }

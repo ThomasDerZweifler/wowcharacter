@@ -5,16 +5,16 @@
       android:versionName="1.0.0">
     <uses-permission android:name="android.permission.INTERNET" /> 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:label="@string/app_name" android:icon="@drawable/icon" android:name="Wowcharacter">
+<!--    <activity android:label="@string/app_name" android:icon="@drawable/icon" android:name="Wowcharacter">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name="Splash"> 
+        </activity> -->
+        <activity android:name="Splash" android:label="@string/app_name" android:icon="@drawable/icon"> 
  			 <intent-filter> 
-   				<action android:name="android.intent.action.VIEW" /> 
-   				<category android:name="android.intent.category.DEFAULT" /> 
+   				<action android:name="android.intent.action.MAIN"/> 
+   				<category android:name="android.intent.category.LAUNCHER"/> 
  			 </intent-filter> 
  		</activity> 
         <activity android:name="Search"
@@ -24,5 +24,11 @@
    				<category android:name="android.intent.category.DEFAULT" /> 
  			 </intent-filter> 
  		</activity>
-    </application>
+    	<activity android:name="Characterlist">
+    		<intent-filter>
+    			<action android:name="android.intent.action.VIEW" />
+    			<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+	</application>
 </manifest> 
