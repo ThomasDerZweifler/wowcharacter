@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">WoW Character</string><string name="search_button">suchen</string>
+    <string name="search_button">suchen</string><string name="search_name">Name:</string><string name="search_region">Region:</string>
 
-<string name="search_name">Name:</string>
+
+<string name="charlist_menu_search">Suche</string>
+<string name="charlist_menu_clear">Liste löschen</string>
+
 </resources>
