@@ -2,29 +2,35 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:stretchColumns="1">
+	android:stretchColumns="1" android:baselineAligned="true">
 	<TableRow>
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/search_name"/>
-		<EditText android:id="@+id/editText"
-			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			 />
+			android:text="@string/search_name" />
+		<EditText android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:id="@+id/editTextName"/>
 		<Button android:id="@+id/buttonSearch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/search_button"/>
+			android:text="@string/search_button" android:enabled="false"/>
 	</TableRow>
 	<TableRow>
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/search_region"/>
-		<Spinner android:layout_width="fill_parent"
+		<RadioGroup android:layout_span="2"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:drawSelectorOnTop="false"
-			android:layout_span="2"
-			android:id="@+id/region"/>
+			android:orientation="horizontal" android:id="@+id/radio_region">
+			<RadioButton android:id="@+id/radio_US"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/region_radio_US" />
+			<RadioButton android:id="@+id/radio_EU"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/region_radio_EU" />
+		</RadioGroup>
 	</TableRow>
 <!--<TableRow>
 		<Button android:id="@+id/buttonXML"
