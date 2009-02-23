@@ -28,6 +28,9 @@ public class Characterlist extends ListActivity {
 	private void init() {
 		setContentView(R.layout.characterlist);
 		// TODO wenn Characterliste leer, dann gleich zur Suche springen
+		if (true) {
+			goToSearch();
+		}
 	}
 
 	private void populateMenu(Menu menu) {

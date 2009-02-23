@@ -22,8 +22,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import de.stm.android.wow.character.util.Armory;
 import de.stm.android.wow.character.util.Const;
 
@@ -36,9 +34,9 @@ public class Search extends Activity implements Const {
 	/** URL */
 	private String ssearch;
 	/** ScrollView */
-	private ScrollView sv;
+	//private ScrollView sv;
 	/** TextView */
-	private TextView tv;
+	//private TextView tv;
 	/** EditText (URL Eingabefeld) */
 	private EditText et;
 	/** geladene XML Seite */
@@ -49,8 +47,8 @@ public class Search extends Activity implements Const {
 		@Override
 		public void handleMessage(Message msg) {
 			if (sbXMLPage != null && sbXMLPage.length() > 0) {
-				tv.setText(sbXMLPage);
-				sv.scrollTo(0, 0);
+				//tv.setText(sbXMLPage);
+				//sv.scrollTo(0, 0);
 			}
 		}
 	};
@@ -66,20 +64,19 @@ public class Search extends Activity implements Const {
 	 */
 	private void init() {
 		setContentView(R.layout.search);
-		et = (EditText) findViewById(R.id.editText);
+		et = (EditText) findViewById(R.id.editTextName);
 		Button bt = (Button) findViewById(R.id.buttonSearch);
 		bt.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				tv.setText("loading webpage...");
-				sv.scrollTo(0, 0);
+				//tv.setText("loading webpage...");
+				//sv.scrollTo(0, 0);
 				ssearch = et.getText().toString();
 
 				Thread background = new Thread(new Runnable() {
 					public void run() {
 						try {
 
-							sbXMLPage = armory.search(ssearch, Region.EU
-									.ordinal());
+							sbXMLPage = armory.search(ssearch, Armory.R.Region.EU);
 
 							handler.sendMessage(handler.obtainMessage());
 						} catch (Throwable t) {
@@ -113,10 +110,10 @@ public class Search extends Activity implements Const {
 			NodeList nodeList = doc.getElementsByTagName("character");
 			Node node = nodeList.item(0);
 			NamedNodeMap nodesMap = node.getAttributes();
-			tv.setText(node.getLocalName());
+			//tv.setText(node.getLocalName());
 			for (int i = 0; i < nodesMap.getLength(); i++) {
 				Node n = nodesMap.item(i);
-				tv.append(n.getNodeName() + ": " + n.getNodeValue() + "; ");
+				//tv.append(n.getNodeName() + ": " + n.getNodeValue() + "; ");
 			}
 		} catch (SAXException e) {
 			Log.e("Search", "SAX" + e.getMessage());
@@ -126,18 +123,4 @@ public class Search extends Activity implements Const {
 			Log.e("Search", "Parser Implementation" + e.getMessage());
 		}
 	}
-
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent ev) {
-//
-//		switch (keyCode) {
-//		case KeyEvent.KEYCODE_BACK:
-//	        setResult(RESULT_CANCELED);
-//	        finish();
-//			break;
-//		default:
-//			return false;
-//		}
-//		return true;
-//	}
 }

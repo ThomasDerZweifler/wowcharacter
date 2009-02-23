@@ -1,0 +1,13 @@
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent ev) {
+
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+	        setResult(RESULT_CANCELED);
+	        finish();
+			break;
+		default:
+			return false;
+		}
+		return true;
+	}
