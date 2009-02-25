@@ -2,6 +2,7 @@ package de.stm.android.wow.character;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,9 +20,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import de.stm.android.wow.character.util.Armory;
 import de.stm.android.wow.character.util.Const;
 
@@ -39,10 +42,15 @@ public class Search extends Activity implements Const {
 	//private TextView tv;
 	/** EditText (URL Eingabefeld) */
 	private EditText et;
+	/** Button */
+	private Button bt;
 	/** geladene XML Seite */
 	private StringBuilder sbXMLPage;
 	/** Armory */
 	private Armory armory = new Armory();
+	/** Region */
+	private Armory.R.Region region;
+	
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -63,9 +71,32 @@ public class Search extends Activity implements Const {
 	 * Initialisierungen
 	 */
 	private void init() {
+		/** View setzen */
 		setContentView(R.layout.search);
+		
+		/** Textfeld finden */
 		et = (EditText) findViewById(R.id.editTextName);
-		Button bt = (Button) findViewById(R.id.buttonSearch);
+		et.setOnKeyListener(new EditText.OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				//Log.i("search", Integer.toString(keyCode) + "~" + et.getText().toString());
+				
+				//Suchbutton de-/aktivieren
+				if (et.getText().toString().length() == 0) {
+					bt.setEnabled(false);
+				} else {
+					bt.setEnabled(true);
+				};
+				
+				//Return-Taste "deaktiviert"
+				if (keyCode == 66) {
+					return true;
+				};
+				return false;
+			}
+		});
+		
+		/** OnClickListener für Suchenbutton setzen */
+		bt = (Button) findViewById(R.id.buttonSearch);
 		bt.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				//tv.setText("loading webpage...");
@@ -76,7 +107,7 @@ public class Search extends Activity implements Const {
 					public void run() {
 						try {
 
-							sbXMLPage = armory.search(ssearch, Armory.R.Region.EU);
+							sbXMLPage = armory.search(ssearch, region);
 
 							handler.sendMessage(handler.obtainMessage());
 						} catch (Throwable t) {
@@ -89,6 +120,23 @@ public class Search extends Activity implements Const {
 
 			}
 		});
+		
+
+		/** 
+		 * Bei Auswahl der Sparche in Android wird bei deutsch nur de geliefert (ohne Ländercode)
+		 *  daher fallback auf von getCountry() auf getLanguage() eingebaut
+		 */
+		RadioGroup rg = (RadioGroup) findViewById(R.id.radio_region);
+		String locale = Locale.getDefault().getCountry();
+		if (locale.length() == 0) {
+			locale = Locale.getDefault().getLanguage();
+		}
+		
+		if (locale.equalsIgnoreCase("US")) {
+			rg.check(R.id.radio_US);
+		} else {
+			rg.check(R.id.radio_EU);
+		}
 	}
 
 	/**

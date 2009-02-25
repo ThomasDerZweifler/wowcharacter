@@ -17,7 +17,7 @@
 	<TableRow>
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/search_region"/>
+			android:text="@string/search_region" android:layout_gravity="center"/>
 		<RadioGroup android:layout_span="2"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
