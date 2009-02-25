@@ -6,8 +6,11 @@
 
 
 <string name="search_region">region:</string><string name="charlist_menu_search">search</string>
-<string name="charlist_menu_clear">clear list</string>
+<string name="charlist_menu_sort">sort</string><string name="charlist_menu_sort_name">by name</string><string name="charlist_menu_sort_level">by level</string><string name="charlist_menu_clear">clear list</string>
 
 <string name="region_radio_US">US</string>
 <string name="region_radio_EU">EU</string>
+
+
+
 </resources>

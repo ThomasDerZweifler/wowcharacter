@@ -4,6 +4,9 @@
 
 
 <string name="charlist_menu_search">Suche</string>
-<string name="charlist_menu_clear">Liste löschen</string>
+<string name="charlist_menu_sort">sortieren</string><string name="charlist_menu_sort_name">nach Name</string><string name="charlist_menu_sort_level">nach Level</string><string name="charlist_menu_clear">Liste löschen</string>
+
+
+
 
 </resources>
