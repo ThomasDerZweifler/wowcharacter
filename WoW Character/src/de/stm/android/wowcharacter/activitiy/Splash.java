@@ -1,7 +1,11 @@
-package de.stm.android.wow.character;
+package de.stm.android.wowcharacter.activitiy;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import de.stm.android.wowcharacter.R;
+import de.stm.android.wowcharacter.R.id;
+import de.stm.android.wowcharacter.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -65,7 +69,7 @@ public class Splash extends Activity implements OnClickListener {
     	timer.cancel();
 		//zum Suchdialog uebergehen
 		Intent intent = new Intent(this,
-				de.stm.android.wow.character.Characterlist.class);
+				de.stm.android.wowcharacter.activitiy.Characterlist.class);
 		startActivity(intent);    	
 		//diese Aktivitaet vom "History-Stack" nehmen
     	finish();

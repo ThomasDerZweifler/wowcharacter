@@ -1,4 +1,4 @@
-package de.stm.android.wow.character.util;
+package de.stm.android.wowcharacter.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -144,5 +144,4 @@ public class Armory {
 		
 		return sb;
 	}
-
 }

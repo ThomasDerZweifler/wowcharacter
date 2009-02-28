@@ -1,5 +1,9 @@
-package de.stm.android.wow.character;
+package de.stm.android.wowcharacter.activitiy;
 
+import de.stm.android.wowcharacter.R;
+import de.stm.android.wowcharacter.R.id;
+import de.stm.android.wowcharacter.R.layout;
+import de.stm.android.wowcharacter.R.menu;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,7 +55,7 @@ public class Characterlist extends ListActivity {
 
 	private void goToSearch() {
 		Intent intent = new Intent(this,
-				de.stm.android.wow.character.Search.class);
+				de.stm.android.wowcharacter.activitiy.Search.class);
 		startActivity(intent);    	
 	}
 }
