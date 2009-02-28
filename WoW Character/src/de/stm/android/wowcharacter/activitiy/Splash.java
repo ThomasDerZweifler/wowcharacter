@@ -3,10 +3,6 @@ package de.stm.android.wowcharacter.activitiy;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.R.id;
-import de.stm.android.wowcharacter.R.layout;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -16,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import de.stm.android.wowcharacter.R;
 
 /**
  * Splash

@@ -1,15 +1,12 @@
 package de.stm.android.wowcharacter.activitiy;
 
-import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.R.id;
-import de.stm.android.wowcharacter.R.layout;
-import de.stm.android.wowcharacter.R.menu;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import de.stm.android.wowcharacter.R;
 
 public class Characterlist extends ListActivity {
 	@Override
