@@ -8,20 +8,25 @@
 			android:layout_height="wrap_content"
 			android:text="@string/search_name" />
 		<EditText android:layout_height="wrap_content"
-			android:layout_width="fill_parent" android:id="@+id/editTextName"/>
+			android:layout_width="fill_parent"
+			android:id="@+id/editTextName"
+			android:scrollHorizontally="true"/>
 		<Button android:id="@+id/buttonSearch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/search_button" android:enabled="false"/>
+			android:text="@string/search_button"
+			android:enabled="false"/>
 	</TableRow>
 	<TableRow>
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/search_region" android:layout_gravity="center"/>
+			android:text="@string/search_region"
+			android:layout_gravity="center"/>
 		<RadioGroup android:layout_span="2"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:orientation="horizontal" android:id="@+id/radio_region">
+			android:orientation="horizontal"
+			android:id="@+id/radio_region">
 			<RadioButton android:id="@+id/radio_US"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -32,14 +37,11 @@
 				android:text="@string/region_radio_EU" />
 		</RadioGroup>
 	</TableRow>
-<!--<TableRow>
-		<Button android:id="@+id/buttonXML"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="XML interpretieren"
-			android:layout_span="3"/>
-	</TableRow>
-	<ScrollView android:id="@+id/scrollView"
+	<ListView android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:drawSelectorOnTop="false" />
+<!--	<ScrollView android:id="@+id/scrollView"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="1" >
