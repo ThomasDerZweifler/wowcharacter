@@ -32,8 +32,6 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.R.id;
-import de.stm.android.wowcharacter.R.layout;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.SearchResult;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
