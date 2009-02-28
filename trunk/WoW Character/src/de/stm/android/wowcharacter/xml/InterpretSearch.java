@@ -1,4 +1,4 @@
-package de.stm.android.wow.character.xml;
+package de.stm.android.wowcharacter.xml;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -15,9 +15,9 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.util.Log;
-import de.stm.android.wow.character.util.SearchResult;
+import de.stm.android.wowcharacter.util.SearchResult;
 
-public class ArmorySearch extends DefaultHandler {
+public class InterpretSearch extends DefaultHandler {
 	ArrayList<SearchResult> al;
 
 	@Override

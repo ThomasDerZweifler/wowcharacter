@@ -1,4 +1,4 @@
-package de.stm.android.wow.character.util;
+package de.stm.android.wowcharacter.util;
 
 public class SearchResult implements Comparable<SearchResult> {
 	public String name = "";

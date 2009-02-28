@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="de.stm.android.wow.character"
+      package="de.stm.android.wowcharacter"
       android:versionCode="1"
       android:versionName="1.0.0">
     <uses-permission android:name="android.permission.INTERNET" /> 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-<!--    <activity android:label="@string/app_name" android:icon="@drawable/icon" android:name="Wowcharacter">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> -->
-        <activity android:name="Splash" android:label="@string/app_name" android:icon="@drawable/icon"> 
+        <activity android:label="@string/app_name" android:icon="@drawable/icon" android:name=".activitiy.Splash"> 
  			 <intent-filter> 
    				<action android:name="android.intent.action.MAIN"/> 
    				<category android:name="android.intent.category.LAUNCHER"/> 
  			 </intent-filter> 
  		</activity> 
-        <activity android:name="Search"
-        	android:screenOrientation="sensor">
+        <activity android:screenOrientation="sensor" android:name=".activitiy.Search">
  			 <intent-filter> 
    				<action android:name="android.intent.action.VIEW" /> 
    				<category android:name="android.intent.category.DEFAULT" /> 
  			 </intent-filter> 
  		</activity>
-    	<activity android:name="Characterlist">
+    	<activity android:name=".activitiy.Characterlist">
     		<intent-filter>
     			<action android:name="android.intent.action.VIEW" />
     			<category android:name="android.intent.category.DEFAULT" />

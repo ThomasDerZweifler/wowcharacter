@@ -1,4 +1,4 @@
-package de.stm.android.wow.character;
+package de.stm.android.wowcharacter.activitiy;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -31,10 +31,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import de.stm.android.wow.character.util.Armory;
-import de.stm.android.wow.character.util.SearchResult;
-import de.stm.android.wow.character.util.Armory.R.Region;
-import de.stm.android.wow.character.xml.ArmorySearch;
+import de.stm.android.wowcharacter.R;
+import de.stm.android.wowcharacter.R.id;
+import de.stm.android.wowcharacter.R.layout;
+import de.stm.android.wowcharacter.util.Armory;
+import de.stm.android.wowcharacter.util.SearchResult;
+import de.stm.android.wowcharacter.util.Armory.R.Region;
+import de.stm.android.wowcharacter.xml.InterpretSearch;
 
 /**
  * Suchdialog
@@ -55,14 +58,14 @@ public class Search extends ListActivity {
 	/** Region */
 	private Armory.R.Region region;
 	
-	private ArmorySearch armorysearch = new ArmorySearch();
+	private InterpretSearch is = new InterpretSearch();
 	
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			bt.setEnabled(true);
 			if (sbXMLPage != null && sbXMLPage.length() > 0) {
-				ArrayList<SearchResult> alsr = armorysearch.readXML(sbXMLPage.toString());
+				ArrayList<SearchResult> alsr = is.readXML(sbXMLPage.toString());
 				Collections.sort(alsr);
 
 				SearchResult sr[] = new SearchResult[alsr.size()];
@@ -112,6 +115,7 @@ public class Search extends ListActivity {
 				 * hab noch keine Konstante gefunden
 				 */
 				if (keyCode == 66) {
+					bt.performClick();
 					return true;
 				};
 				return false;
@@ -136,7 +140,6 @@ public class Search extends ListActivity {
 					}
 				}, "WOW-Search");
 				background.start();
-
 			}
 		});
 		
