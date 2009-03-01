@@ -7,6 +7,12 @@ import java.net.URL;
 
 import android.graphics.drawable.Drawable;
 
+/**
+ * Ressource
+ * 
+ * @author tfunke
+ *
+ */
 public class Resource {
 
 	/**
