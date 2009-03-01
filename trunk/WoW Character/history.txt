@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
   
+(2009-03-01)
+	+ New:		Laden der Favoriten (Nutzung von db4o)
+  
 (2009-02-26)
 	+ Changed:	OnKeyListener durch OnTextChangeListener ersetzt 
   
