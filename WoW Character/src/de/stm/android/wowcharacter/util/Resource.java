@@ -23,11 +23,10 @@ public class Resource {
 		// imgView = (ImageView)findViewById(R.id.imageView);
 		// imgView.setImageDrawable(d);
 
-		InputStream is = null;
 		try {
 			URL url = new URL(address);
 			Object content = url.getContent();
-			is = (InputStream) content;
+			InputStream is = (InputStream) content;
 			Drawable d = Drawable.createFromStream(is, "src");
 			is.close();
 			return d;
