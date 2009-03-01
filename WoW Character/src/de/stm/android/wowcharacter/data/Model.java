@@ -21,6 +21,7 @@ public class Model {
 	/** Modell */
 	private static Model model;
 
+	/** Persister */
 	private Persister persister;
 
 	private Model() {
@@ -34,10 +35,10 @@ public class Model {
 	 * @return
 	 */
 	public static Model getInstance() {
-		if (model != null) {
-			return model;
+		if (model == null) {
+			model = new Model();
 		}
-		return new Model();
+		return model;
 	}
 
 	/**
@@ -47,15 +48,22 @@ public class Model {
 		loadCharacters();
 	}
 
-	public Map<String,WOWCharacter> getMapCharacters() {
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<String, WOWCharacter> getMapCharacters() {
 		return mapCharacters;
 	}
 
+	/**
+	 * 
+	 */
 	public void deleteAllFavoriteCharacters() {
 		persister.deleteAll();
 		mapCharacters.clear();
 	}
-	
+
 	/**
 	 * 
 	 */
