@@ -1,5 +1,6 @@
 package de.stm.android.wowcharacter.util;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -96,7 +97,6 @@ public class Armory {
 			return null;
 		}
 		InputStream is = null;
-		InputStreamReader isr = null;
 		StringBuilder sb = null;
 		try {
 			is = urlConn.getInputStream();
@@ -108,19 +108,18 @@ public class Armory {
 					is = new InflaterInputStream(is, new Inflater(true));
 				}
 			}
-			isr = new InputStreamReader(is);
+			BufferedReader bis = new BufferedReader(new InputStreamReader(is));
+			
 			sb = new StringBuilder();
-			char chars[] = new char[1024];
-			int len = 0;
-			while ((len = isr.read(chars, 0, chars.length)) >= 0) {
-				sb.append(chars, 0, len);
+			
+			String s;
+			while ( ( s = bis.readLine() ) != null ) {
+				sb.append(s);
 			}
-			isr.close();
-			is.close();
+
+			bis.close();
 		} catch (Exception e) {
 			/** */
-		} catch (Throwable t) {
-			Log.e("Armory", "Exception: " + t.toString());
 		}
 		
 		return sb;
