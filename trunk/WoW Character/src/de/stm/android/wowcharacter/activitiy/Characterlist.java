@@ -8,10 +8,10 @@ import java.util.Map;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.*;
 import android.widget.ArrayAdapter;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
@@ -104,7 +104,21 @@ public class Characterlist extends ListActivity {
 		//in Liste fuellen
 		setListAdapter(new ArrayAdapter<WOWCharacter>(this, 
 				android.R.layout.simple_list_item_1,
-				a));
+				a) {
+			@Override
+			public View getView( int position, View convertView, ViewGroup parent ) {
+				View view = super.getView( position, convertView, parent );
+				// Drawable d = Model.getInstance().rowBackground;
+				// view.setBackgroundDrawable( d );
+				GradientDrawable d = new GradientDrawable(
+						GradientDrawable.Orientation.BL_TR, new int[] {
+								Color.GRAY, Color.LTGRAY
+						} );
+				d.setCornerRadius( 3f );
+				view.setBackgroundDrawable( d );
+				return view;
+			}
+		});
 
 	}
 	

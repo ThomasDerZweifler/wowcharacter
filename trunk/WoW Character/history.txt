@@ -2,6 +2,8 @@
   -----------------------------
 
 (2009-03-04)
+	+ New:		Hintergrund fuer Listeneintraege
+	+ Changed:	Radiobuttons durch Togglebuttons ersetzt
 	+ Fixed:	Ladehemmung beim erneuten Suchen
 	+ Fixed:	Schreibschutzabfrage der SD-Card
 

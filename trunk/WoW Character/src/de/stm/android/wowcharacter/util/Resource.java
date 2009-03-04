@@ -22,7 +22,7 @@ public class Resource {
 	 *            (Webadresse)
 	 * @return
 	 */
-	private static Drawable getDrawable(String address) {
+	public static Drawable getDrawable(String address) {
 		// Aufruf und Nutzung:
 		// Resource.getDrawable("http://eu.wowarmory.com/images/portraits/wow-default/0-1-6.gif");
 		// ImageView imgView = new ImageView(this);
