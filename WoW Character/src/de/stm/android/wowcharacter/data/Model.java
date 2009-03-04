@@ -3,7 +3,9 @@ package de.stm.android.wowcharacter.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.graphics.drawable.Drawable;
 import de.stm.android.wowcharacter.util.Persister;
+import de.stm.android.wowcharacter.util.Resource;
 
 /**
  * Modell (singleton), mit Model.getInstance() anzusprechen
@@ -21,6 +23,8 @@ public class Model {
 	/** Modell */
 	private static Model model;
 
+	public Drawable rowBackground;
+	
 	/** Persister */
 	private Persister persister;
 
@@ -46,8 +50,13 @@ public class Model {
 	 */
 	private void init() {
 		loadCharacters();
+		loadImages();
 	}
 
+	private void loadImages() {
+		rowBackground = Resource.getDrawable("http://eu.wowarmory.com/images/portraits/wow-default/0-1-6.gif");
+	}
+	
 	/**
 	 * 
 	 * @return
