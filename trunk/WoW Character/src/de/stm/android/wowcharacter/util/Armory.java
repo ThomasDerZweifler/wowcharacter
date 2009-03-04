@@ -117,6 +117,8 @@ public class Armory {
 				sb.append(s);
 			}
 
+			bis.reset();//wichtig, da sonst keine neue Anfrage sofort gestellt werden kann!?
+
 			bis.close();
 		} catch (Exception e) {
 			/** */
