@@ -1,9 +1,11 @@
 package de.stm.android.wowcharacter.util;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.db4o.Db4o;
@@ -26,26 +28,36 @@ public class Persister {
 	/** Speicher */
 	private ObjectContainer db;
 
-	private Map<String, WOWCharacter> mapCharacters = new HashMap<String,WOWCharacter>();
+	private Map<String, WOWCharacter> mapCharacters = new HashMap<String, WOWCharacter>();
 
 	public Persister(String dbName) {
 		this.dbName = dbName;
 		load();
-//		testDB4o();
+		// testDB4o();
 	}
 
 	private void load() {
-		db = Db4o.openFile(dbName);
-		WOWCharacter proto = new WOWCharacter();// alle Objekte
-		ObjectSet<WOWCharacter> result = db.queryByExample(proto);
-		Iterator<WOWCharacter> r = result.iterator();
-		while (r.hasNext()) {
-			WOWCharacter character = (WOWCharacter) r.next();
-			String region = character.get("REGION").toString();
-			String server = character.get("SERVER").toString();
-			String name = character.get("NAME").toString();
-			String key = region + "." + server + "." + name;
-			mapCharacters.put(key, character);
+		File root = Environment.getExternalStorageDirectory();
+		if (root.canWrite()) {
+			try {
+
+				db = Db4o.openFile(dbName);
+				WOWCharacter proto = new WOWCharacter();// alle Objekte
+				ObjectSet<WOWCharacter> result = db.queryByExample(proto);
+				Iterator<WOWCharacter> r = result.iterator();
+				while (r.hasNext()) {
+					WOWCharacter character = (WOWCharacter) r.next();
+					String region = character.get("REGION").toString();
+					String server = character.get("SERVER").toString();
+					String name = character.get("NAME").toString();
+					String key = region + "." + server + "." + name;
+					mapCharacters.put(key, character);
+				}
+			} catch (Exception e) {
+				Log.e(getClass().getName(), "keine SD-Card ansprechbar");
+			}
+		} else {
+			Log.i(getClass().getName(), "SD-Card ist schreibgeschuetzt!");
 		}
 	}
 
@@ -58,12 +70,12 @@ public class Persister {
 	 */
 	public void testDB4o() {
 
-		db = Db4o.openFile(dbName);
-
-		deleteAll();
-
-		Log.i("db4o", "db4o version: " + Db4o.version());
 		try {
+			db = Db4o.openFile(dbName);
+
+			deleteAll();
+
+			Log.i("db4o", "db4o version: " + Db4o.version());
 
 			WOWCharacter c = new WOWCharacter();
 			c.put("NAME", "Stefan");
@@ -125,27 +137,32 @@ public class Persister {
 	 * 
 	 */
 	public void deleteAll() {
-		ObjectSet<WOWCharacter> result = db.queryByExample(new Object());
-		while (result.hasNext()) {
-			db.delete(result.next());
+		if (db != null) {
+			ObjectSet<WOWCharacter> result = db.queryByExample(new Object());
+			while (result.hasNext()) {
+				db.delete(result.next());
+			}
+			db.commit();
 		}
-		db.commit();
 	}
 
 	@SuppressWarnings("serial")
 	/** demo (evtl. zu erweitern um mehrere Attribute und All-, Existenzquantor) */
 	public ObjectSet<WOWCharacter> get(final Object attribute,
 			final Object value) {
-		ObjectSet<WOWCharacter> os = db.query(new Predicate<WOWCharacter>() {
-			public boolean match(WOWCharacter character) {
-				boolean b = false;
-				Object o = character.get(attribute);
-				if (o != null) {
-					b = o.equals(value);
+		ObjectSet<WOWCharacter> os = null;
+		if (db != null) {
+			os = db.query(new Predicate<WOWCharacter>() {
+				public boolean match(WOWCharacter character) {
+					boolean b = false;
+					Object o = character.get(attribute);
+					if (o != null) {
+						b = o.equals(value);
+					}
+					return b;
 				}
-				return b;
-			}
-		});
+			});
+		}
 		return os;
 	}
 
