@@ -1,6 +1,10 @@
 package de.stm.android.wowcharacter.activitiy;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -10,16 +14,25 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.WOWCharacter;
 
 public class Characterlist extends ListActivity {
-	Model model;
+	private Model model;
+	/** true beim erstmaligen Aufruf */
+	private boolean atFirst = true;
 	protected final static int CONTEXTMENU_REMOVE_FAVORITE = 0;
 	private Builder alertDeleteAll;
 
@@ -43,10 +56,12 @@ public class Characterlist extends ListActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		
 		Map<String, WOWCharacter> mapCharacters = model.getMapCharacters();
-		// wenn Characterliste leer, dann gleich zur Suche springen
-		if (mapCharacters.size() == 0) {
+		// wenn Characterliste leer, dann gleich zur Suche springen (nur beim ersten Aufruf)
+		if (atFirst && mapCharacters.size() == 0) {
 			goToSearch();
+			atFirst = false;
 		} else {
 			sortAndFill( "NAME" );
 		}

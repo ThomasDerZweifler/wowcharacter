@@ -6,7 +6,7 @@
 	<string name="search_button">Suchen</string>
 	<string name="search_name">Name:</string>
 	<string name="search_region">Region:</string>
-	<string name="search_contextMenu_addToFavorites">^^zu Favoriten hinzufügen</string>
+	<string name="search_contextMenu_addToFavorites">zu Favoriten hinzufügen</string>
 	
 	<string name="charlist_title">Favoriten</string>
 	<string name="charlist_menu_search">Suchen</string>
@@ -14,7 +14,7 @@
 	<string name="charlist_menu_sort_name">nach Namen</string>
 	<string name="charlist_menu_sort_level">nach Level</string>
 	<string name="charlist_menu_clear">Liste löschen</string>
-	<string name="charlist_contextMenu_removeFromFavorites">^^aus Favoriten löschen</string>
+	<string name="charlist_contextMenu_removeFromFavorites">aus Favoriten löschen</string>
 	
 	<string name="region_toggle_US">US</string>
 	<string name="region_toggle_EU">EU</string>
