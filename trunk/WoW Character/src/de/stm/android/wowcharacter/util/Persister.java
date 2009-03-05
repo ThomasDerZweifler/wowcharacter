@@ -23,6 +23,8 @@ public class Persister {
 	/** Speicher */
 	private ObjectContainer db;
 	private Map<String, WOWCharacter> mapCharacters = new HashMap<String, WOWCharacter>();
+	private int QUANTOR_EXISTS = 1;
+	private int QUANTOR_ALL = 2;
 
 	public Persister( String dbName ) {
 		this.dbName = dbName;
@@ -37,14 +39,9 @@ public class Persister {
 				db = Db4o.openFile( dbName );
 				WOWCharacter proto = new WOWCharacter();// alle Objekte
 				ObjectSet<WOWCharacter> result = db.queryByExample( proto );
-				Iterator<WOWCharacter> r = result.iterator();
-				while (r.hasNext()) {
-					WOWCharacter character = r.next();
-					String region = character.get( "REGION" ).toString();
-					String server = character.get( "SERVER" ).toString();
-					String name = character.get( "NAME" ).toString();
-					String key = region + "." + server + "." + name;
-					mapCharacters.put( key, character );
+				while (result.hasNext()) {
+					WOWCharacter character = result.next();
+					addCharacterToMap( character );
 				}
 			} catch (Exception e) {
 				Log.e( getClass().getName(), "keine SD-Card ansprechbar" );
@@ -54,6 +51,35 @@ public class Persister {
 		}
 	}
 
+	/**
+	 * @param character
+	 * @return
+	 */
+	public boolean addCharacterToMap( WOWCharacter character ) {
+		String region = character.get( "REGION" ).toString();
+		String server = character.get( "SERVER" ).toString();
+		String name = character.get( "NAME" ).toString();
+		String key = region + "." + server + "." + name;
+		mapCharacters.put( key, character );
+		return true;
+	}
+
+	/**
+	 * @param character
+	 * @return
+	 */
+	public boolean removeCharacterFromMap( WOWCharacter character ) {
+		String region = character.get( "REGION" ).toString();
+		String server = character.get( "SERVER" ).toString();
+		String name = character.get( "NAME" ).toString();
+		String key = region + "." + server + "." + name;
+		mapCharacters.remove( key );
+		return true;
+	}
+
+	/**
+	 * @return
+	 */
 	public Map<String, WOWCharacter> getMapCharacters() {
 		return mapCharacters;
 	}
@@ -116,7 +142,7 @@ public class Persister {
 	}
 
 	/**
-	 * 
+	 * Alle Eintraege loeschen
 	 */
 	public void deleteAll() {
 		if (db != null) {
@@ -125,11 +151,57 @@ public class Persister {
 				db.delete( result.next() );
 			}
 			db.commit();
+			mapCharacters.clear();
 		}
 	}
 
+	/**
+	 * Speichern eines Eintrages
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public boolean add( WOWCharacter character ) {
+		Log.i( getClass().getName(), "add " + character );
+		db.store( character );
+		db.commit();
+		addCharacterToMap( character );
+		return true;
+	}
+
+	/**
+	 * Favorit loeschen
+	 * 
+	 * @param character
+	 */
+	public void remove( WOWCharacter character ) {
+		if (db != null) {
+			Object region = character.get( "REGION" );
+			Object server = character.get( "SERVER" );
+			Object name = character.get( "NAME" );
+			ObjectSet<WOWCharacter> result = get( new Object[] {
+					"REGION", "SERVER", "NAME"
+			}, new Object[] {
+					region, server, name
+			}, QUANTOR_ALL );
+			while (result.hasNext()) {
+				db.delete( result.next() );
+			}
+			db.commit();
+			removeCharacterFromMap( character );
+		}
+	}
+
+	/**
+	 * Suche eines Characters
+	 * 
+	 * @param attributes
+	 *            Attribute
+	 * @param values
+	 *            Attributwerte
+	 * @return
+	 */
 	@SuppressWarnings("serial")
-	/*  demo (evtl. zu erweitern um mehrere Attribute und All-, Existenzquantor) */
 	public ObjectSet<WOWCharacter> get( final Object attribute, final Object value ) {
 		ObjectSet<WOWCharacter> os = null;
 		if (db != null) {
@@ -148,12 +220,63 @@ public class Persister {
 	}
 
 	/**
+	 * Suche eines Characters
+	 * 
+	 * @param attributes
+	 *            Attribute
+	 * @param values
+	 *            Attributwerte
+	 * @param quantor
+	 *            Existenz- oder Allquantor
+	 * @return
+	 */
+	@SuppressWarnings("serial")
+	public ObjectSet<WOWCharacter> get( final Object[] attributes, final Object[] values,
+			final int quantor ) {
+		ObjectSet<WOWCharacter> os = null;
+		if (db != null) {
+			os = db.query( new Predicate<WOWCharacter>() {
+				public boolean match( WOWCharacter character ) {
+					boolean b = false;
+					if (quantor == QUANTOR_EXISTS) {
+						int i = 0;
+						for (Object attribute : attributes) {
+							Object o = character.get( attribute );
+							if (o != null) {
+								b = o.equals( values[i] );
+								// mindestens eine Uebereinstimmung, dann keine weiteren Tests
+								break;
+							}
+							i++;
+						}
+					} else if (quantor == QUANTOR_ALL) {
+						int i = 0;
+						b = true;
+						for (Object attribute : attributes) {
+							Object o = character.get( attribute );
+							if (o != null) {
+								if (!o.equals( values[i] )) {
+									b = false;
+									break;
+								}
+							}
+							i++;
+						}
+					}
+					return b;
+				}
+			} );
+		}
+		return os;
+	}
+
+	/**
 	 * @param result
 	 */
 	public void listResult( ObjectSet<WOWCharacter> result ) {
 		while (result.hasNext()) {
-			WOWCharacter test = result.next();
-			Log.i( "db4o", test.toString() );
+			WOWCharacter character = result.next();
+			Log.i( getClass().getName(), character.toString() );
 		}
 	}
 }

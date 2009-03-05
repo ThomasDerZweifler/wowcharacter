@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="app_name">WoW Character</string>
-<string name="search_button">search</string><string name="search_name">name:</string>
+	<string name="app_name">WoW Character</string>
+	
+	<string name="search_title">Search</string>
+	<string name="search_button">search</string>
+	<string name="search_name">name:</string>
+	<string name="search_region">region:</string>
+	<string name="search_contextMenu_addToFavorites">^^add to Favorites</string>
+	
+	<string name="charlist_title">Favorites</string>
+	<string name="charlist_menu_search">Search</string>
+	<string name="charlist_menu_sort">Sort...</string>
+	<string name="charlist_menu_sort_name">by name</string>
+	<string name="charlist_menu_sort_level">by level</string>
+	<string name="charlist_menu_clear">Clear list</string>
+	<string name="charlist_contextMenu_removeFromFavorites">^^remove from favorites</string>
+	
+	<string name="region_toggle_US">US</string>
+	<string name="region_toggle_EU">EU</string>
 
-<string name="search_region">region:</string><string name="charlist_menu_search">search</string>
-<string name="charlist_menu_sort">sort</string><string name="charlist_menu_sort_name">by name</string><string name="charlist_menu_sort_level">by level</string><string name="charlist_menu_clear">clear list</string>
-
-<string name="region_toggle_US">US</string>
-<string name="region_toggle_EU">EU</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="warn">Attention:</string>
+	<string name="charlist_deleteAll">Really delete all favorites?</string>
 
 </resources>

@@ -18,11 +18,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.*;
 import de.stm.android.wowcharacter.R;
+import de.stm.android.wowcharacter.data.Model;
+import de.stm.android.wowcharacter.data.WOWCharacter;
 import de.stm.android.wowcharacter.util.Armory;
-import de.stm.android.wowcharacter.util.SearchResult;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
 import de.stm.android.wowcharacter.xml.InterpretSearch;
 
@@ -38,28 +41,32 @@ public class Search extends ListActivity {
 	private EditText et;
 	/** Button */
 	private Button bt;
-
 	private ToggleButton tb_EU;
-
 	private ToggleButton tb_US;
-	
 	/** geladene XML Seite */
 	private StringBuilder sbXMLPage;
+	private Model model;
 	/** Armory */
 	private Armory armory = new Armory();
 	/** Region */
 	private Armory.R.Region region;
+	protected final static int CONTEXTMENU_ADD_AS_FAVORITE = 0;
 	private InterpretSearch is = new InterpretSearch();
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage( Message msg ) {
 			bt.setEnabled( true );
 			if (sbXMLPage != null && sbXMLPage.length() > 0) {
-				ArrayList<SearchResult> alsr = is.readXML( sbXMLPage.toString() );
+				Region region = Region.EU;
+				if( tb_US.isChecked() ) {
+					region = Region.US;
+				}
+
+				ArrayList<WOWCharacter> alsr = is.readXML( sbXMLPage.toString(), region );
 				Collections.sort( alsr );
-				SearchResult sr[] = new SearchResult[alsr.size()];
+				WOWCharacter sr[] = new WOWCharacter[alsr.size()];
 				sr = alsr.toArray( sr );
-				setListAdapter( new ArrayAdapter<SearchResult>( Search.this,
+				setListAdapter( new ArrayAdapter<WOWCharacter>( Search.this,
 						android.R.layout.simple_list_item_1, sr ) {
 					@Override
 					public View getView( int position, View convertView, ViewGroup parent ) {
@@ -89,8 +96,12 @@ public class Search extends ListActivity {
 	 * Initialisierungen
 	 */
 	private void init() {
+		model = Model.getInstance();
 		/** View setzen */
 		setContentView( R.layout.search );
+		String sAppName = getString( R.string.app_name );
+		String sTitle = getString( R.string.search_title );
+		setTitle( sAppName + " (" + sTitle + ")" );
 		/** Textfeld finden */
 		et = (EditText)findViewById( R.id.editTextName );
 		et.addTextChangedListener( new TextWatcher() {
@@ -112,18 +123,13 @@ public class Search extends ListActivity {
 		} );
 		et.setOnKeyListener( new EditText.OnKeyListener() {
 			public boolean onKey( View v, int keyCode, KeyEvent event ) {
-				/**
-				 * Return-Taste (keyCode 66) "deaktiviert" hab noch keine Konstante gefunden
-				 */
-				if (keyCode == 66) {
+				if (keyCode == KeyEvent.KEYCODE_ENTER) {
 					bt.performClick();
 					return true;
 				}
-				;
 				return false;
 			}
 		} );
-		
 		bt = (Button)findViewById( R.id.buttonSearch );
 		/** OnClickListener für Suchenbutton setzen */
 		bt.setOnClickListener( new Button.OnClickListener() {
@@ -143,59 +149,67 @@ public class Search extends ListActivity {
 				background.start();
 			}
 		} );
-		
 		/**
 		 * Bei Auswahl der Sparche in Android wird bei deutsch nur de geliefert (ohne Ländercode)
 		 * daher fallback auf von getCountry() auf getLanguage() eingebaut
 		 */
-
 		tb_EU = (ToggleButton)findViewById( R.id.toggle_EU );
 		tb_US = (ToggleButton)findViewById( R.id.toggle_US );
-
 		tb_EU.setOnClickListener( new OnClickListener() {
 			public void onClick( View arg0 ) {
 				region = Region.EU;
-				tb_US.setChecked( false );//Radio-Button Funktionalitaet
-				if( !tb_US.isChecked() ) {
-					tb_EU.setChecked(true);
+				tb_US.setChecked( false );// Radio-Button Funktionalitaet
+				if (!tb_US.isChecked()) {
+					tb_EU.setChecked( true );
 				}
 			}
-		});
-
+		} );
 		tb_US.setOnClickListener( new OnClickListener() {
 			public void onClick( View arg0 ) {
 				region = Region.US;
-				tb_EU.setChecked( false );//Radio-Button Funktionalitaet
-				if( !tb_EU.isChecked() ) {
-					tb_US.setChecked(true);
+				tb_EU.setChecked( false );// Radio-Button Funktionalitaet
+				if (!tb_EU.isChecked()) {
+					tb_US.setChecked( true );
 				}
 			}
-		});
-
-		
-//		rg.setOnCheckedChangeListener( new OnCheckedChangeListener() {
-//			public void onCheckedChanged( RadioGroup group, int checkedId ) {
-//				switch (checkedId) {
-//				case R.id.toggle_EU:
-//					region = Region.EU;
-//					break;
-//				case R.id.toggle_US:
-//					region = Region.US;
-//					break;
-//				}
-//			}
-//		} );
+		} );
 		String locale = Locale.getDefault().getCountry();
 		if (locale.length() == 0) {
 			locale = Locale.getDefault().getLanguage();
 		}
-		if (locale.equalsIgnoreCase( "US" )) {
+		if (locale.equalsIgnoreCase( "US" ) || locale.equalsIgnoreCase( "GB" ) ) {
 			tb_US.setChecked( true );
 			tb_EU.setChecked( false );
 		} else {
-			tb_EU.setChecked( true );		
+			tb_EU.setChecked( true );
 			tb_US.setChecked( false );
 		}
+		getListView().setOnCreateContextMenuListener( new OnCreateContextMenuListener() {
+			public void onCreateContextMenu( ContextMenu cm, View view, ContextMenuInfo cmi ) {
+				WOWCharacter character = (WOWCharacter)getListAdapter().getItem( ((AdapterView.AdapterContextMenuInfo)cmi ).position );
+				cm.setHeaderTitle( character.toString() );
+				cm.add( 0, CONTEXTMENU_ADD_AS_FAVORITE, 0, R.string.search_contextMenu_addToFavorites );
+			}
+		} );
+	}
+
+	@Override
+	public boolean onContextItemSelected( MenuItem item ) {
+		switch (item.getItemId()) {
+		case CONTEXTMENU_ADD_AS_FAVORITE:
+			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo)item
+					.getMenuInfo();
+			WOWCharacter character = (WOWCharacter)getListAdapter().getItem( cmi.position );
+			Model.getInstance().addFavorite( character );
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected void onListItemClick( ListView l, View v, int position, long id ) {
+		WOWCharacter character = (WOWCharacter)getListAdapter().getItem( position );
+		model.getInfos( character );
 	}
 
 	/**
@@ -208,7 +222,6 @@ public class Search extends ListActivity {
 		} else {
 			bt.setEnabled( true );
 		}
-		;
 	}
 
 	/**

@@ -1,6 +1,10 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2009-03-05)
+	+ Fixed:	US wird jetzt auch bei "GB" voreingestellt
+	+ New:		Favoriten verwalten
+
 (2009-03-04)
 	+ New:		Hintergrund fuer Listeneintraege
 	+ Changed:	Radiobuttons durch Togglebuttons ersetzt
