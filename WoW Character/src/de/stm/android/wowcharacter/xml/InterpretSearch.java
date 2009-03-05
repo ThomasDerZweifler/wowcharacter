@@ -4,35 +4,37 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.*;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.util.Log;
-import de.stm.android.wowcharacter.util.SearchResult;
+import de.stm.android.wowcharacter.data.WOWCharacter;
+import de.stm.android.wowcharacter.util.Armory.R.Region;
 
 public class InterpretSearch extends DefaultHandler {
-	ArrayList<SearchResult> al;
+	ArrayList<WOWCharacter> al;
 
+	Region region;
+	
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
 	    if (localName.trim().equals("character")) {
-	    	SearchResult sr = new SearchResult();
-	    	sr.name = attributes.getValue("name");
-	    	sr.realm = attributes.getValue("realm");
+	    	WOWCharacter sr = new WOWCharacter();
+	    	sr.put( "NAME", attributes.getValue("name") );
+	    	sr.put( "SERVER", attributes.getValue("realm") );
+	    	sr.put( "LEVEL", attributes.getValue("level") );	    	
+	    	sr.put( "URL", attributes.getValue("url") );
+	    	sr.put( "REGION", region.name() );
 	    	
 	    	al.add(sr);
 	    }
 	}
 	
-	public ArrayList<SearchResult> readXML(String xml) {
-		al = new ArrayList<SearchResult>();
+	public ArrayList<WOWCharacter> readXML(String xml, Region region) {
+		this.region = region;
+		al = new ArrayList<WOWCharacter>();
 		
 		try {
 			SAXParserFactory spf = SAXParserFactory.newInstance();

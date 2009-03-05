@@ -40,15 +40,6 @@
             android:textOff="@string/region_toggle_EU"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-<!--			<RadioButton android:id="@+id/radio_US"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/region_radio_US" />
-			<RadioButton android:id="@+id/radio_EU"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/region_radio_EU" />-->
 		</RadioGroup>
 	</TableRow>
 	<ListView android:id="@android:id/list"
