@@ -34,7 +34,13 @@ public class Characterlist extends ListActivity {
 	/** true beim erstmaligen Aufruf */
 	private boolean atFirst = true;
 	protected final static int CONTEXTMENU_REMOVE_FAVORITE = 0;
+	/** Bestaetigungsdialog zum Loeschen aller Character */
 	private Builder alertDeleteAll;
+	/** Sortierrichtungen */
+	public static enum SortDirection {
+		ASCEND,
+		DESCEND
+	};
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -63,7 +69,7 @@ public class Characterlist extends ListActivity {
 			goToSearch();
 			atFirst = false;
 		} else {
-			sortAndFill( "NAME" );
+			sortAndFill( "NAME", SortDirection.ASCEND );
 		}
 	}
 
@@ -86,7 +92,7 @@ public class Characterlist extends ListActivity {
 				R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick( DialogInterface dialog, int whichButton ) {
 						model.deleteAllFavoriteCharacters();
-						sortAndFill( "NAME" );
+						sortAndFill( "NAME", SortDirection.ASCEND );
 					}
 				} ).setNegativeButton( R.string.no, new DialogInterface.OnClickListener() {
 			public void onClick( DialogInterface dialog, int whichButton ) {
@@ -108,7 +114,7 @@ public class Characterlist extends ListActivity {
 					.getMenuInfo();
 			WOWCharacter character = (WOWCharacter)getListAdapter().getItem( cmi.position );
 			Model.getInstance().removeFavorite( character );
-			sortAndFill( "NAME" );
+			sortAndFill( "NAME", SortDirection.ASCEND );
 			return true;
 		}
 		return false;
@@ -131,10 +137,10 @@ public class Characterlist extends ListActivity {
 			goToSearch();
 			return (true);
 		case R.id.sort_level:
-			sortAndFill( "LEVEL" );
+			sortAndFill( "LEVEL", SortDirection.DESCEND );
 			return (true);
 		case R.id.sort_name:
-			sortAndFill( "NAME" );
+			sortAndFill( "NAME", SortDirection.ASCEND );
 			return (true);
 		case R.id.clear_list:
 			alertDeleteAll.show();
@@ -149,7 +155,7 @@ public class Characterlist extends ListActivity {
 	 * @param attribute
 	 *            Attribut nach dem sortiert werden soll
 	 */
-	private void sortAndFill( final Object attribute ) {
+	private void sortAndFill( final Object attribute, final SortDirection direction ) {
 		Map<String, WOWCharacter> mapCharacters = model.getMapCharacters();
 		Collection<WOWCharacter> c = mapCharacters.values();
 		ArrayList<WOWCharacter> al = new ArrayList<WOWCharacter>( c );
@@ -157,12 +163,16 @@ public class Characterlist extends ListActivity {
 		Comparator<WOWCharacter> comp = new Comparator<WOWCharacter>() {
 			public int compare( WOWCharacter thisObject, WOWCharacter otherObject ) {
 				Object o = thisObject.get( attribute );
+				int result = 0;//nicht Vertauschen 
 				if (o instanceof String) {
-					return o.toString().compareTo( otherObject.get( attribute ).toString() );
+					result = o.toString().compareTo( otherObject.get( attribute ).toString() );
 				} else if (o instanceof Integer) {
-					return ((Integer)o).compareTo( ((Integer)otherObject.get( attribute )) );
+					result = ((Integer)o).compareTo( ((Integer)otherObject.get( attribute )) );
 				}
-				return 0;
+				if( direction == SortDirection.DESCEND ) {
+					result*=-1;
+				}
+				return result;
 			}
 		};
 		Collections.sort( al, comp );
