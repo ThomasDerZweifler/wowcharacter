@@ -17,10 +17,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import android.app.Activity;
 import android.app.ListActivity;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,23 +26,20 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.WOWCharacter;
+import de.stm.android.wowcharacter.renderer.SearchListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
 import de.stm.android.wowcharacter.xml.InterpretSearch;
@@ -89,57 +83,6 @@ public class Search extends ListActivity {
 	};
 
 	@SuppressWarnings("unchecked")
-	class SearchListAdapter extends ArrayAdapter {
-		private static final int res = R.layout.searchlistitem;
-		Activity context;
-		WOWCharacter[] item;
-
-		public SearchListAdapter(Activity context, WOWCharacter[] item) {
-			super(context, res, item);
-
-			this.context = context;
-			this.item = item;
-
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View row = convertView;
-
-			if (row == null) {
-				LayoutInflater inflater = context.getLayoutInflater();
-				row = inflater.inflate(res, null);
-			}
-
-			TextView charNameRealm = (TextView) row
-					.findViewById(R.id.CharNameRealm);
-			TextView charLevelRaceClass = (TextView) row
-					.findViewById(R.id.CharLevelRaceClass);
-			TextView charGuild = (TextView) row.findViewById(R.id.CharGuild);
-
-			String _level = item[position].get("LEVEL").toString();
-			String _race = item[position].get("RACE").toString();
-			String _class = item[position].get("CLASS").toString();
-
-			String _guild = item[position].get("GUILD").toString();
-			if (_guild.length() != 0) {
-				_guild = "Gilde: " + _guild;
-			}
-
-			charNameRealm.setText(item[position].toString());
-			charLevelRaceClass.setText("Level: " + _level + " " + _race + "-"
-					+ _class);
-			charGuild.setText(_guild);
-
-			GradientDrawable d = new GradientDrawable(
-					GradientDrawable.Orientation.BL_TR, new int[] { Color.GRAY,
-							Color.LTGRAY });
-			d.setCornerRadius(3f);
-			//row.setBackgroundDrawable(d);
-
-			return row;
-		}
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

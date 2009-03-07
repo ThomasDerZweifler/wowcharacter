@@ -28,6 +28,7 @@ import android.widget.ListView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.WOWCharacter;
+import de.stm.android.wowcharacter.renderer.SearchListAdapter;
 
 public class Characterlist extends ListActivity {
 	private Model model;
@@ -178,22 +179,23 @@ public class Characterlist extends ListActivity {
 		Collections.sort( al, comp );
 		WOWCharacter[] a = al.toArray( new WOWCharacter[al.size()] );
 		// in Liste fuellen
-		setListAdapter( new ArrayAdapter<WOWCharacter>( this, android.R.layout.simple_list_item_1,
-				a ) {
-			@Override
-			public View getView( int position, View convertView, ViewGroup parent ) {
-				View view = super.getView( position, convertView, parent );
-				// Drawable d = Model.getInstance().rowBackground;
-				// view.setBackgroundDrawable( d );
-				GradientDrawable d = new GradientDrawable( GradientDrawable.Orientation.BL_TR,
-						new int[] {
-								Color.GRAY, Color.LTGRAY
-						} );
-				d.setCornerRadius( 3f );
-				view.setBackgroundDrawable( d );
-				return view;
-			}
-		} );
+		setListAdapter(new SearchListAdapter(this, a));
+//		setListAdapter( new ArrayAdapter<WOWCharacter>( this, android.R.layout.simple_list_item_1,
+//				a ) {
+//			@Override
+//			public View getView( int position, View convertView, ViewGroup parent ) {
+//				View view = super.getView( position, convertView, parent );
+//				// Drawable d = Model.getInstance().rowBackground;
+//				// view.setBackgroundDrawable( d );
+//				GradientDrawable d = new GradientDrawable( GradientDrawable.Orientation.BL_TR,
+//						new int[] {
+//								Color.GRAY, Color.LTGRAY
+//						} );
+//				d.setCornerRadius( 3f );
+//				view.setBackgroundDrawable( d );
+//				return view;
+//			}
+//		} );
 	}
 
 	/**
