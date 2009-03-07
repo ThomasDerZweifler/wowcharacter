@@ -57,9 +57,9 @@ public class Persister {
 	 */
 	public boolean addCharacterToMap( WOWCharacter character ) {
 		String region = character.get( "REGION" ).toString();
-		String server = character.get( "SERVER" ).toString();
+		String realm = character.get( "REALM" ).toString();
 		String name = character.get( "NAME" ).toString();
-		String key = region + "." + server + "." + name;
+		String key = region + "." + realm + "." + name;
 		mapCharacters.put( key, character );
 		return true;
 	}
@@ -70,9 +70,9 @@ public class Persister {
 	 */
 	public boolean removeCharacterFromMap( WOWCharacter character ) {
 		String region = character.get( "REGION" ).toString();
-		String server = character.get( "SERVER" ).toString();
+		String realm = character.get( "REALM" ).toString();
 		String name = character.get( "NAME" ).toString();
-		String key = region + "." + server + "." + name;
+		String key = region + "." + realm + "." + name;
 		mapCharacters.remove( key );
 		return true;
 	}
@@ -94,7 +94,7 @@ public class Persister {
 			Log.i( "db4o", "db4o version: " + Db4o.version() );
 			WOWCharacter c = new WOWCharacter();
 			c.put( "NAME", "Stefan" );
-			c.put( "SERVER", "Lothar" );
+			c.put( "REALM", "Lothar" );
 			c.put( "REGION", "EU" );
 			c.put( "CLASS", "Class_Stefan" );
 			c.put( "LEVEL", new Integer( 80 ) );
@@ -102,7 +102,7 @@ public class Persister {
 			db.store( c );
 			c = new WOWCharacter();
 			c.put( "NAME", "Thomas" );
-			c.put( "SERVER", "Server1" );
+			c.put( "REALM", "Server1" );
 			c.put( "REGION", "EU" );
 			c.put( "CLASS", "Class_Thomas" );
 			c.put( "LEVEL", new Integer( 20 ) );
@@ -110,7 +110,7 @@ public class Persister {
 			db.store( c );
 			c = new WOWCharacter();
 			c.put( "NAME", "Goran" );
-			c.put( "SERVER", "Lothar" );
+			c.put( "REALM", "Lothar" );
 			c.put( "REGION", "US" );
 			c.put( "CLASS", "Class_Goran" );
 			c.put( "LEVEL", new Integer( 5 ) );
@@ -118,7 +118,7 @@ public class Persister {
 			db.store( c );
 			c = new WOWCharacter();
 			c.put( "NAME", "Anton" );
-			c.put( "SERVER", "Server3" );
+			c.put( "REALM", "Server3" );
 			c.put( "REGION", "US" );
 			c.put( "CLASS", "Class_Wincent" );
 			c.put( "LEVEL", new Integer( 40 ) );
@@ -177,12 +177,12 @@ public class Persister {
 	public void remove( WOWCharacter character ) {
 		if (db != null) {
 			Object region = character.get( "REGION" );
-			Object server = character.get( "SERVER" );
+			Object realm = character.get( "REALM" );
 			Object name = character.get( "NAME" );
 			ObjectSet<WOWCharacter> result = get( new Object[] {
-					"REGION", "SERVER", "NAME"
+					"REGION", "REALM", "NAME"
 			}, new Object[] {
-					region, server, name
+					region, realm, name
 			}, QUANTOR_ALL );
 			while (result.hasNext()) {
 				db.delete( result.next() );

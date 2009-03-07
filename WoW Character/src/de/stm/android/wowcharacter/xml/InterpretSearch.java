@@ -19,6 +19,8 @@ import de.stm.android.wowcharacter.data.WOWCharacter;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
 
 public class InterpretSearch extends DefaultHandler {
+	private static final String TAG = "InterpretSearch";
+	
 	ArrayList<WOWCharacter> al;
 
 	Region region;
@@ -30,8 +32,11 @@ public class InterpretSearch extends DefaultHandler {
 			try {
 				WOWCharacter sr = new WOWCharacter();
 				sr.put("NAME", attributes.getValue("name"));
-				sr.put("SERVER", attributes.getValue("realm"));
+				sr.put("REALM", attributes.getValue("realm"));
 				sr.put("LEVEL", new Integer(attributes.getValue("level")));
+				sr.put("RACE", attributes.getValue("race"));
+				sr.put("CLASS", attributes.getValue("class"));
+				sr.put("GUILD", attributes.getValue("guild"));
 				sr.put("URL", attributes.getValue("url"));
 				sr.put("REGION", region.name());
 				al.add(sr);
@@ -53,11 +58,11 @@ public class InterpretSearch extends DefaultHandler {
 			xr.setContentHandler(this);
 			xr.parse(new InputSource(new StringReader(xml)));
 		} catch (ParserConfigurationException e) {
-			Log.e("ArmorySearch", e.getMessage());
+			Log.e(TAG, e.getMessage());
 		} catch (SAXException e) {
-			Log.e("ArmorySearch", e.getMessage());
+			Log.e(TAG, e.getMessage());
 		} catch (IOException e) {
-			Log.e("ArmorySearch", e.getMessage());
+			Log.e(TAG, e.getMessage());
 		}
 
 		return al;
