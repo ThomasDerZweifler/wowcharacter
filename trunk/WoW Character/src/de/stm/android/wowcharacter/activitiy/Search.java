@@ -2,26 +2,47 @@ package de.stm.android.wowcharacter.activitiy;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
-import android.view.View.OnCreateContextMenuListener;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.WOWCharacter;
@@ -35,22 +56,17 @@ import de.stm.android.wowcharacter.xml.InterpretSearch;
  * @author tfunke
  */
 public class Search extends ListActivity {
-	/** URL */
-	private String searchtext;
-	/** EditText (URL Eingabefeld) */
 	private EditText et;
-	/** Button */
 	private Button bt;
 	private ToggleButton tb_EU;
 	private ToggleButton tb_US;
 	/** geladene XML Seite */
 	private StringBuilder sbXMLPage;
 	private Model model;
-	/** Armory */
+
 	private Armory armory = new Armory();
-	/** Region */
 	private Armory.R.Region region;
-	protected final static int CONTEXTMENU_ADD_AS_FAVORITE = 0;
+
 	private InterpretSearch is = new InterpretSearch();
 	Handler handler = new Handler() {
 		@Override
@@ -67,26 +83,63 @@ public class Search extends ListActivity {
 				Collections.sort(alsr);
 				WOWCharacter sr[] = new WOWCharacter[alsr.size()];
 				sr = alsr.toArray(sr);
-				setListAdapter(new ArrayAdapter<WOWCharacter>(Search.this,
-						android.R.layout.simple_list_item_1, sr) {
-					@Override
-					public View getView(int position, View convertView,
-							ViewGroup parent) {
-						View view = super
-								.getView(position, convertView, parent);
-						// Drawable d = Model.getInstance().rowBackground;
-						// view.setBackgroundDrawable( d );
-						GradientDrawable d = new GradientDrawable(
-								GradientDrawable.Orientation.BL_TR, new int[] {
-										Color.GRAY, Color.LTGRAY });
-						d.setCornerRadius(3f);
-						view.setBackgroundDrawable(d);
-						return view;
-					}
-				});
+				setListAdapter(new SearchListAdapter(Search.this, sr));
 			}
 		}
 	};
+
+	@SuppressWarnings("unchecked")
+	class SearchListAdapter extends ArrayAdapter {
+		private static final int res = R.layout.searchlistitem;
+		Activity context;
+		WOWCharacter[] item;
+
+		public SearchListAdapter(Activity context, WOWCharacter[] item) {
+			super(context, res, item);
+
+			this.context = context;
+			this.item = item;
+
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View row = convertView;
+
+			if (row == null) {
+				LayoutInflater inflater = context.getLayoutInflater();
+				row = inflater.inflate(res, null);
+			}
+
+			TextView charNameRealm = (TextView) row
+					.findViewById(R.id.CharNameRealm);
+			TextView charLevelRaceClass = (TextView) row
+					.findViewById(R.id.CharLevelRaceClass);
+			TextView charGuild = (TextView) row.findViewById(R.id.CharGuild);
+
+			String _level = item[position].get("LEVEL").toString();
+			String _race = item[position].get("RACE").toString();
+			String _class = item[position].get("CLASS").toString();
+
+			String _guild = item[position].get("GUILD").toString();
+			if (_guild.length() != 0) {
+				_guild = "Gilde: " + _guild;
+			}
+
+			charNameRealm.setText(item[position].toString());
+			charLevelRaceClass.setText("Level: " + _level + " " + _race + "-"
+					+ _class);
+			charGuild.setText(_guild);
+
+			GradientDrawable d = new GradientDrawable(
+					GradientDrawable.Orientation.BL_TR, new int[] { Color.GRAY,
+							Color.LTGRAY });
+			d.setCornerRadius(3f);
+			//row.setBackgroundDrawable(d);
+
+			return row;
+		}
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,11 +152,12 @@ public class Search extends ListActivity {
 	 */
 	private void init() {
 		model = Model.getInstance();
-		/** View setzen */
+		/** View und Titel setzen */
 		setContentView(R.layout.search);
 		String sAppName = getString(R.string.app_name);
 		String sTitle = getString(R.string.search_title);
 		setTitle(sAppName + " (" + sTitle + ")");
+
 		/** Textfeld finden */
 		et = (EditText) findViewById(R.id.editTextName);
 		et.addTextChangedListener(new TextWatcher() {
@@ -134,16 +188,17 @@ public class Search extends ListActivity {
 				return false;
 			}
 		});
-		bt = (Button) findViewById(R.id.buttonSearch);
+
 		/** OnClickListener für Suchenbutton setzen */
+		bt = (Button) findViewById(R.id.buttonSearch);
 		bt.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				bt.setEnabled(false);
-				searchtext = et.getText().toString();
 				Thread background = new Thread(new Runnable() {
 					public void run() {
 						try {
-							sbXMLPage = armory.search(searchtext, region);
+							sbXMLPage = armory.search(et.getText().toString(),
+									region);
 							handler.sendMessage(handler.obtainMessage());
 						} catch (Throwable t) {
 							// just end the background thread
@@ -153,11 +208,8 @@ public class Search extends ListActivity {
 				background.start();
 			}
 		});
-		/**
-		 * Bei Auswahl der Sparche in Android wird bei deutsch nur de geliefert
-		 * (ohne Ländercode) daher fallback auf von getCountry() auf
-		 * getLanguage() eingebaut
-		 */
+
+		/** Togglebuttonfunktionalität */
 		tb_EU = (ToggleButton) findViewById(R.id.toggle_EU);
 		tb_US = (ToggleButton) findViewById(R.id.toggle_US);
 		tb_EU.setOnClickListener(new OnClickListener() {
@@ -178,35 +230,44 @@ public class Search extends ListActivity {
 				}
 			}
 		});
+
+		/**
+		 * - bei Initialisierung gem. der Ländereinstellung bereits einen
+		 * Togglebutton markieren (bei der Auswahl der Sparche wird in Android
+		 * bei deutsch nur de geliefert (ohne Ländercode) daher Fallback von
+		 * getCountry() auf getLanguage() eingebaut
+		 */
 		String locale = Locale.getDefault().getCountry();
 		if (locale.length() == 0) {
 			locale = Locale.getDefault().getLanguage();
 		}
 		if (locale.equalsIgnoreCase("US")) {
 			tb_US.setChecked(true);
-			tb_EU.setChecked(false);
+			// tb_EU.setChecked(false);
 		} else {
 			tb_EU.setChecked(true);
-			tb_US.setChecked(false);
+			// tb_US.setChecked(false);
 		}
-		getListView().setOnCreateContextMenuListener(
-				new OnCreateContextMenuListener() {
-					public void onCreateContextMenu(ContextMenu cm, View view,
-							ContextMenuInfo cmi) {
-						WOWCharacter character = (WOWCharacter) getListAdapter()
-								.getItem(
-										((AdapterView.AdapterContextMenuInfo) cmi).position);
-						cm.setHeaderTitle(character.toString());
-						cm.add(0, CONTEXTMENU_ADD_AS_FAVORITE, 0,
-								R.string.search_contextMenu_addToFavorites);
-					}
-				});
+
+		/** Kontextmenü registrieren */
+		registerForContextMenu(getListView());
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		new MenuInflater(getApplication()).inflate(R.menu.searchcontext, menu);
+
+		WOWCharacter character = (WOWCharacter) getListAdapter().getItem(
+				((AdapterView.AdapterContextMenuInfo) menuInfo).position);
+		menu.setHeaderTitle(character.toString());
+		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case CONTEXTMENU_ADD_AS_FAVORITE:
+		case R.id.searchcontextmenu_add_favorite:
 			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo) item
 					.getMenuInfo();
 			WOWCharacter character = (WOWCharacter) getListAdapter().getItem(
