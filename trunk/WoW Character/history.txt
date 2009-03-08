@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2009-03-08)
+	+ Changed:	Search ImageButton
+
 (2009-03-07)
 	+ Changed:	Renderer fuer Listeneintraege
 

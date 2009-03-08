@@ -34,6 +34,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ToggleButton;
 import de.stm.android.wowcharacter.R;
@@ -51,7 +52,7 @@ import de.stm.android.wowcharacter.xml.InterpretSearch;
  */
 public class Search extends ListActivity {
 	private EditText et;
-	private Button bt;
+	private ImageButton bt;
 	private ToggleButton tb_EU;
 	private ToggleButton tb_US;
 	/** geladene XML Seite */
@@ -133,7 +134,7 @@ public class Search extends ListActivity {
 		});
 
 		/** OnClickListener für Suchenbutton setzen */
-		bt = (Button) findViewById(R.id.buttonSearch);
+		bt = (ImageButton) findViewById(R.id.buttonSearch);
 		bt.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				bt.setEnabled(false);
@@ -151,7 +152,8 @@ public class Search extends ListActivity {
 				background.start();
 			}
 		});
-
+		bt.setEnabled(false);
+		
 		/** Togglebuttonfunktionalität */
 		tb_EU = (ToggleButton) findViewById(R.id.toggle_EU);
 		tb_US = (ToggleButton) findViewById(R.id.toggle_US);
