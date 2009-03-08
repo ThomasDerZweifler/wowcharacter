@@ -3,7 +3,6 @@
 	<string name="app_name">WoW Character</string>
 	
 	<string name="search_title">Search</string>
-	<string name="search_button">search</string>
 	<string name="search_name">name:</string>
 	<string name="search_region">region:</string>
 	<string name="search_contextMenu_addToFavorites">add to Favorites</string>
