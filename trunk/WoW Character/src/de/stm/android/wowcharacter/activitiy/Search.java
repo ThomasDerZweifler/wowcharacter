@@ -76,9 +76,7 @@ public class Search extends ListActivity {
 				ArrayList<WOWCharacter> alsr = is.readXML(sbXMLPage.toString(),
 						region);
 				Collections.sort(alsr);
-				WOWCharacter sr[] = new WOWCharacter[alsr.size()];
-				sr = alsr.toArray(sr);
-				setListAdapter(new SearchListAdapter(Search.this, sr));
+				setListAdapter(new SearchListAdapter(Search.this, alsr));
 			}
 		}
 	};

@@ -177,9 +177,8 @@ public class Characterlist extends ListActivity {
 			}
 		};
 		Collections.sort( al, comp );
-		WOWCharacter[] a = al.toArray( new WOWCharacter[al.size()] );
 		// in Liste fuellen
-		setListAdapter(new SearchListAdapter(this, a));
+		setListAdapter(new SearchListAdapter(this, al));
 //		setListAdapter( new ArrayAdapter<WOWCharacter>( this, android.R.layout.simple_list_item_1,
 //				a ) {
 //			@Override

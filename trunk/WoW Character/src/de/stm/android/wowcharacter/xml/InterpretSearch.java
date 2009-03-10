@@ -21,9 +21,9 @@ import de.stm.android.wowcharacter.util.Armory.R.Region;
 public class InterpretSearch extends DefaultHandler {
 	private static final String TAG = "InterpretSearch";
 	
-	ArrayList<WOWCharacter> al;
+	private ArrayList<WOWCharacter> al;
 
-	Region region;
+	private Region region;
 
 	@Override
 	public void startElement(String uri, String localName, String name,
@@ -38,6 +38,7 @@ public class InterpretSearch extends DefaultHandler {
 				sr.put("CLASS", attributes.getValue("class"));
 				sr.put("GUILD", attributes.getValue("guild"));
 				sr.put("URL", attributes.getValue("url"));
+				sr.put("ICON", null);
 				sr.put("REGION", region.name());
 				al.add(sr);
 			} catch (Exception e) {
@@ -46,6 +47,12 @@ public class InterpretSearch extends DefaultHandler {
 		}
 	}
 
+	/**
+	 * 
+	 * @param xml
+	 * @param region
+	 * @return
+	 */
 	public ArrayList<WOWCharacter> readXML(String xml, Region region) {
 		this.region = region;
 		al = new ArrayList<WOWCharacter>();

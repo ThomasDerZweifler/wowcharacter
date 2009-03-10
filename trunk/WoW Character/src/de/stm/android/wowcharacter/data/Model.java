@@ -1,7 +1,13 @@
 package de.stm.android.wowcharacter.data;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import de.stm.android.wowcharacter.util.Persister;
@@ -63,6 +69,31 @@ public class Model {
 	 * @param character
 	 */
 	public void addFavorite( WOWCharacter character ) {
+//		String url = "http://eu.wowarmory.com/character-sheet.xml?" + character.get("URL");
+//		try {
+//			StringBuilder sb = Connection.getXML(url, character.get("REGION").toString(),  true);
+//		} catch( Exception e ) {
+//			
+//		}
+		URL url;
+		InputStream is = null;
+		try {
+			url = new URL("http://eu.wowarmory.com/images/portraits/wow-default/0-1-6.gif");
+			Object content = url.getContent();
+			is = (InputStream) content;
+			Bitmap bm = BitmapFactory.decodeStream(is);
+			character.put( "ICON", bm );
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		persister.add( character );
 	}
 

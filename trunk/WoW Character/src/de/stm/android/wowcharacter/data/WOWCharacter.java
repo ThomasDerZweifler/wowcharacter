@@ -1,11 +1,14 @@
 package de.stm.android.wowcharacter.data;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("serial")
-public class WOWCharacter extends HashMap<Object, Object> implements
+public class WOWCharacter implements
 		Comparable<WOWCharacter> {
 
+	Map<Object,Object> map = new HashMap<Object,Object>();
+	
 	public int compareTo(WOWCharacter other) {
 		Object o = get("REALM");
 		if (o != null) {
@@ -17,5 +20,13 @@ public class WOWCharacter extends HashMap<Object, Object> implements
 	@Override
 	public String toString() {
 		return get("NAME") + " @ " + get("REALM");
+	}
+	
+	public Object get(Object key) {
+		return map.get(key);
+	}
+	
+	public void put( Object key, Object value ) {
+		map.put(key, value);
 	}
 }
