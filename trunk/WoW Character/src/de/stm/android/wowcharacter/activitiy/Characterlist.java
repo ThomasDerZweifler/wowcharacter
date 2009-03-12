@@ -1,30 +1,17 @@
 package de.stm.android.wowcharacter.activitiy;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
+import java.util.*;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.*;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.WOWCharacter;
@@ -39,8 +26,7 @@ public class Characterlist extends ListActivity {
 	private Builder alertDeleteAll;
 	/** Sortierrichtungen */
 	public static enum SortDirection {
-		ASCEND,
-		DESCEND
+		ASCEND, DESCEND
 	};
 
 	@Override
@@ -63,7 +49,6 @@ public class Characterlist extends ListActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
 		Map<String, WOWCharacter> mapCharacters = model.getMapCharacters();
 		// wenn Characterliste leer, dann gleich zur Suche springen (nur beim ersten Aufruf)
 		if (atFirst && mapCharacters.size() == 0) {
@@ -89,8 +74,9 @@ public class Characterlist extends ListActivity {
 						R.string.charlist_contextMenu_removeFromFavorites );
 			}
 		} );
-		alertDeleteAll = new AlertDialog.Builder( this ).setTitle( R.string.warn ).setMessage( R.string.charlist_deleteAll ).setPositiveButton(
-				R.string.yes, new DialogInterface.OnClickListener() {
+		alertDeleteAll = new AlertDialog.Builder( this ).setTitle( R.string.warn ).setMessage(
+				R.string.charlist_deleteAll ).setPositiveButton( R.string.yes,
+				new DialogInterface.OnClickListener() {
 					public void onClick( DialogInterface dialog, int whichButton ) {
 						model.deleteAllFavoriteCharacters();
 						sortAndFill( "NAME", SortDirection.ASCEND );
@@ -114,10 +100,16 @@ public class Characterlist extends ListActivity {
 			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo)item
 					.getMenuInfo();
 			WOWCharacter character = (WOWCharacter)getListAdapter().getItem( cmi.position );
-			Model.getInstance().removeFavorite( character );
-			sortAndFill( "NAME", SortDirection.ASCEND );
-			return true;
+			boolean success = Model.getInstance().removeFavorite( character );
+			if (success) {
+				String s = getString( R.string.charlist_favorite_deleted_toast );
+				s = s.replace( "%1", character.toString() );
+				Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
+				sortAndFill( "NAME", SortDirection.ASCEND );
+				return true;
+			}
 		}
+		// TODO evtl. noch das fehlerhafte Loeschen behandeln
 		return false;
 	}
 
@@ -137,11 +129,17 @@ public class Characterlist extends ListActivity {
 		case R.id.search:
 			goToSearch();
 			return (true);
-		case R.id.sort_level:
+		case R.id.sort_level_asc:
+			sortAndFill( "LEVEL", SortDirection.ASCEND );
+			return (true);
+		case R.id.sort_level_desc:
 			sortAndFill( "LEVEL", SortDirection.DESCEND );
 			return (true);
-		case R.id.sort_name:
+		case R.id.sort_name_asc:
 			sortAndFill( "NAME", SortDirection.ASCEND );
+			return (true);
+		case R.id.sort_name_desc:
+			sortAndFill( "NAME", SortDirection.DESCEND );
 			return (true);
 		case R.id.clear_list:
 			alertDeleteAll.show();
@@ -164,37 +162,38 @@ public class Characterlist extends ListActivity {
 		Comparator<WOWCharacter> comp = new Comparator<WOWCharacter>() {
 			public int compare( WOWCharacter thisObject, WOWCharacter otherObject ) {
 				Object o = thisObject.get( attribute );
-				int result = 0;//nicht Vertauschen 
+				int result = 0;// nicht Vertauschen
 				if (o instanceof String) {
 					result = o.toString().compareTo( otherObject.get( attribute ).toString() );
 				} else if (o instanceof Integer) {
 					result = ((Integer)o).compareTo( ((Integer)otherObject.get( attribute )) );
 				}
-				if( direction == SortDirection.DESCEND ) {
-					result*=-1;
+				if (direction == SortDirection.DESCEND) {
+					result *= -1;
 				}
 				return result;
 			}
 		};
 		Collections.sort( al, comp );
 		// in Liste fuellen
-		setListAdapter(new SearchListAdapter(this, al));
-//		setListAdapter( new ArrayAdapter<WOWCharacter>( this, android.R.layout.simple_list_item_1,
-//				a ) {
-//			@Override
-//			public View getView( int position, View convertView, ViewGroup parent ) {
-//				View view = super.getView( position, convertView, parent );
-//				// Drawable d = Model.getInstance().rowBackground;
-//				// view.setBackgroundDrawable( d );
-//				GradientDrawable d = new GradientDrawable( GradientDrawable.Orientation.BL_TR,
-//						new int[] {
-//								Color.GRAY, Color.LTGRAY
-//						} );
-//				d.setCornerRadius( 3f );
-//				view.setBackgroundDrawable( d );
-//				return view;
-//			}
-//		} );
+		setListAdapter( new SearchListAdapter( this, al ) );
+		// setListAdapter( new ArrayAdapter<WOWCharacter>( this,
+		// android.R.layout.simple_list_item_1,
+		// a ) {
+		// @Override
+		// public View getView( int position, View convertView, ViewGroup parent ) {
+		// View view = super.getView( position, convertView, parent );
+		// // Drawable d = Model.getInstance().rowBackground;
+		// // view.setBackgroundDrawable( d );
+		// GradientDrawable d = new GradientDrawable( GradientDrawable.Orientation.BL_TR,
+		// new int[] {
+		// Color.GRAY, Color.LTGRAY
+		// } );
+		// d.setCornerRadius( 3f );
+		// view.setBackgroundDrawable( d );
+		// return view;
+		// }
+		// } );
 	}
 
 	/**

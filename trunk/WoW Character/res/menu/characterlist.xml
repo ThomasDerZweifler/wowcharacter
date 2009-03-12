@@ -8,12 +8,20 @@
 		android:icon="@android:drawable/ic_menu_more"
 		android:orderInCategory="2">
 		<menu>
-			<item android:id="@+id/sort_name"
-				android:title="@string/charlist_menu_sort_name"
+			<item android:id="@+id/sort_name_asc"
+				android:title="@string/charlist_menu_sort_name_asc"
 				android:icon="@android:drawable/ic_menu_sort_alphabetically"
 				android:orderInCategory="1" />
-			<item android:id="@+id/sort_level"
-				android:title="@string/charlist_menu_sort_level"
+			<item android:id="@+id/sort_name_desc"
+				android:title="@string/charlist_menu_sort_name_desc"
+				android:icon="@android:drawable/ic_menu_sort_alphabetically"
+				android:orderInCategory="1" />
+			<item android:id="@+id/sort_level_asc"
+				android:title="@string/charlist_menu_sort_level_asc"
+				android:icon="@android:drawable/ic_menu_sort_by_size"
+				android:orderInCategory="2" />
+			<item android:id="@+id/sort_level_desc"
+				android:title="@string/charlist_menu_sort_level_desc"
 				android:icon="@android:drawable/ic_menu_sort_by_size"
 				android:orderInCategory="2" />
 		</menu>

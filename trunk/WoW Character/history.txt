@@ -1,6 +1,11 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2009-03-12)
+	+ New:		Anzeige des Suchaktivitaet
+	+ New:		Toasts fuer das Loeschen und Hinzufuegen von Favoriten
+	+ New:		absteigendes/aufsteigendes Sortieren im Menue
+
 (2009-03-08)
 	+ Changed:	Search ImageButton
 
