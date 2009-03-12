@@ -210,24 +210,20 @@ public class Persister {
 	 * @param value
 	 * @return
 	 */
-	public boolean add(WOWCharacter character) {
-		try {
-			db.store(character);
-			db.commit();
-			addCharacterToMap(character);
-			Log.i(getClass().getName(), "stored " + character);
-		} catch (Exception e) {
-			Log.e(getClass().getName(), e.getLocalizedMessage());
-		}
-		return true;
+	public void add(WOWCharacter character) throws Exception {
+		db.store(character);
+		db.commit();
+		addCharacterToMap(character);
+		Log.i(getClass().getName(), "stored " + character);
 	}
 
 	/**
 	 * Favorit loeschen
 	 * 
 	 * @param character
+	 * @return true, wenn Character(s) geloescht werden konnte(en)
 	 */
-	public void remove(WOWCharacter character) {
+	public boolean remove(WOWCharacter character) {
 		if (db != null) {
 			Object region = character.get("REGION");
 			Object realm = character.get("REALM");
@@ -239,8 +235,12 @@ public class Persister {
 				db.delete(result.next());
 			}
 			db.commit();
-			removeCharacterFromMap(character);
+			if( result.size() > 0 ) {
+				removeCharacterFromMap(character);
+				return true;
+			}
 		}
+		return false;
 	}
 
 	/**

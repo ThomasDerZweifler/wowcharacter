@@ -68,7 +68,7 @@ public class Model {
 	 * 
 	 * @param character
 	 */
-	public void addFavorite( WOWCharacter character ) {
+	public void addFavorite( WOWCharacter character ) throws Exception {
 //		String url = "http://eu.wowarmory.com/character-sheet.xml?" + character.get("URL");
 //		try {
 //			StringBuilder sb = Connection.getXML(url, character.get("REGION").toString(),  true);
@@ -77,32 +77,23 @@ public class Model {
 //		}
 		URL url;
 		InputStream is = null;
-		try {
-			url = new URL("http://eu.wowarmory.com/images/portraits/wow-default/0-1-6.gif");
-			Object content = url.getContent();
-			is = (InputStream) content;
-			Bitmap bm = BitmapFactory.decodeStream(is);
-			character.put( "ICON", bm );
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		url = new URL("http://eu.wowarmory.com/images/portraits/wow-default/0-1-6.gif");
+		Object content = url.getContent();
+		is = (InputStream) content;
+		Bitmap bm = BitmapFactory.decodeStream(is);
+		character.put( "ICON", bm );
+		is.close();
 		persister.add( character );
 	}
 
 	/**
+	 * Favorit loeschen
 	 * 
 	 * @param character
+	 * @return true, wenn Character(s) geloescht werden konnte(en)
 	 */
-	public void removeFavorite( WOWCharacter character ) {
-		persister.remove( character );		
+	public boolean removeFavorite( WOWCharacter character ) {
+		return persister.remove( character );		
 	}
 
 	/**
