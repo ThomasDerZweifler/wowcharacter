@@ -20,6 +20,9 @@ public class Armory {
 	
 	private Locale locale;
 	
+	/**
+	 * Standardsprache (Sprache in Android) auslesen
+	 */
 	public Armory() {
 		locale = Locale.getDefault();
 	}
@@ -56,7 +59,7 @@ public class Armory {
 
 		String url = r + R.SEARCHPAGE + character + R.SEARCHTYPE_CHAR;
 		
-		StringBuilder sb = Connection.getXML(url, r, true);
+		StringBuilder sb = Connection.getXML(url, this.locale, true);
 		
 		return sb;
 	}

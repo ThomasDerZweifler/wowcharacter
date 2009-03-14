@@ -8,6 +8,9 @@
 	<string name="search_addToFavorites_ok_toast">Character \"%1\" added to favorites.</string>
 	<string name="search_addToFavorites_fail_toast">Character \"%1\" cannot add as favorite!</string>
 	<string name="search_contextMenu_addToFavorites">add to Favorites</string>
+	<string name="search_char_found_none_toast">no character found</string>
+	<string name="search_char_found_one_toast">one character found</string>
+	<string name="search_char_found_more_toast">%1 characters found</string>
 	
 	<string name="searchListAdapter_guild">Guild: </string>	
 	
@@ -21,6 +24,7 @@
 	<string name="charlist_favorite_deleted_toast">Character \"%1\" from favorites removed.</string>
 	<string name="charlist_menu_clear">Clear list</string>
 	<string name="charlist_contextMenu_removeFromFavorites">remove from favorites</string>
+	<string name="charlist_deleteAll">Really delete all favorites?</string>
 	
 	<string name="region_toggle_US">US</string>
 	<string name="region_toggle_EU">EU</string>
@@ -28,5 +32,4 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="warn">Attention:</string>
-	<string name="charlist_deleteAll">Really delete all favorites?</string>
 </resources>
