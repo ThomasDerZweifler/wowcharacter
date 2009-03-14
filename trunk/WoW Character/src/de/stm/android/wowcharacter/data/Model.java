@@ -12,6 +12,8 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import de.stm.android.wowcharacter.util.Persister;
 import de.stm.android.wowcharacter.util.Resource;
+import de.stm.android.wowcharacter.util.Armory.R;
+import de.stm.android.wowcharacter.util.Armory.R.Region;
 
 /**
  * Modell (singleton), mit Model.getInstance() anzusprechen
@@ -77,7 +79,26 @@ public class Model {
 //		}
 		URL url;
 		InputStream is = null;
-		url = new URL("http://eu.wowarmory.com/images/portraits/wow-default/0-1-6.gif");
+
+		
+		String server = R.URL_US;
+		String path = "images/portraits/wow-80/";
+		String file = character.get("GENDERID") + "-" + character.get("RACEID") + "-" + character.get("CLASSID") + ".gif";
+		
+		if ((R.Region)character.get("REGION") == Region.EU) {
+			server = R.URL_EU;
+		}
+		
+		int level = (Integer)character.get("LEVEL");
+		if (level < 60) {
+			path = "images/portraits/wow-default/";
+		} else if (level < 70) {
+			path = "images/portraits/wow/";
+		} else if (level < 80) {
+			path = "images/portraits/wow-70/";
+		}
+		
+		url = new URL( server + path + file );
 		Object content = url.getContent();
 		is = (InputStream) content;
 		Bitmap bm = BitmapFactory.decodeStream(is);

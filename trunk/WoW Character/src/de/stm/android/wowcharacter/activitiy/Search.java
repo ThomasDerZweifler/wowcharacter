@@ -58,6 +58,19 @@ public class Search extends ListActivity {
 				is.readXML( sbXMLPage.toString(), region, listModel );
 				SearchListAdapter sla = new SearchListAdapter( Search.this, listModel );
 				Collections.sort( listModel );
+				
+				String s;
+				int listsize = listModel.size();
+				if (listsize == 0) {
+					s = getString( R.string.search_char_found_none_toast );
+				} else if (listsize == 1) {
+					s = getString( R.string.search_char_found_one_toast );
+				} else {
+					s = getString( R.string.search_char_found_more_toast );
+					s = s.replace( "%1", Integer.toString( listsize ) );					
+				}
+				Toast.makeText( Search.this, s, Toast.LENGTH_SHORT ).show();
+				
 				setListAdapter( sla );					
 			}
 		}

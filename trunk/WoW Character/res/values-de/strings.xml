@@ -5,15 +5,26 @@
 	<string name="search_title">Suchen</string>
 	<string name="search_name">Name:</string>
 	<string name="search_region">Region:</string>
+	<string name="search_addToFavorites_ok_toast">Character \"%1\" wurde zu Favoriten hinzugefügt.</string>
+	<string name="search_addToFavorites_fail_toast">Character \"%1\" konnte nicht zu Favoriten hinzugefügt werden!</string>
 	<string name="search_contextMenu_addToFavorites">zu Favoriten hinzufügen</string>
+	<string name="search_char_found_none_toast">kein Character gefunden</string>
+	<string name="search_char_found_one_toast">ein Character gefunden</string>
+	<string name="search_char_found_more_toast">%1 Charactere gefunden</string>
+
+	<string name="searchListAdapter_guild">Gilde: </string>	
 	
 	<string name="charlist_title">Favoriten</string>
 	<string name="charlist_menu_search">Suchen</string>
 	<string name="charlist_menu_sort">Sortieren...</string>
-	<string name="charlist_menu_sort_name">nach Namen</string>
-	<string name="charlist_menu_sort_level">nach Level</string>
+	<string name="charlist_menu_sort_name_asc">nach Name, aufsteigend</string>
+	<string name="charlist_menu_sort_name_desc">nach Name, absteigend</string>
+	<string name="charlist_menu_sort_level_asc">nach Level, aufsteigend</string>
+	<string name="charlist_menu_sort_level_desc">nach Level, absteigend</string>
+	<string name="charlist_favorite_deleted_toast">Character \"%1\" aus aus Favoriten entfernt.</string>
 	<string name="charlist_menu_clear">Liste löschen</string>
 	<string name="charlist_contextMenu_removeFromFavorites">aus Favoriten löschen</string>
+	<string name="charlist_deleteAll">Wirklich alle Favoriten löschen?</string>
 	
 	<string name="region_toggle_US">US</string>
 	<string name="region_toggle_EU">EU</string>
@@ -21,5 +32,4 @@
 	<string name="yes">Ja</string>
 	<string name="no">Nein</string>
 	<string name="warn">Achtung:</string>
-	<string name="charlist_deleteAll">Wirklich alle Favoriten löschen?</string>
 </resources>

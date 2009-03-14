@@ -31,13 +31,17 @@ public class InterpretSearch extends DefaultHandler {
 				WOWCharacter sr = new WOWCharacter();
 				sr.put( "NAME", attributes.getValue( "name" ) );
 				sr.put( "REALM", attributes.getValue( "realm" ) );
+				sr.put( "FACTIONID", attributes.getValue( "factionId" ) );
 				sr.put( "LEVEL", new Integer( attributes.getValue( "level" ) ) );
+				sr.put( "GENDERID", attributes.getValue( "genderId" ) );
 				sr.put( "RACE", attributes.getValue( "race" ) );
+				sr.put( "RACEID", attributes.getValue( "raceId" ) );
 				sr.put( "CLASS", attributes.getValue( "class" ) );
+				sr.put( "CLASSID", attributes.getValue( "classId" ) );
 				sr.put( "GUILD", attributes.getValue( "guild" ) );
 				sr.put( "URL", attributes.getValue( "url" ) );
 				sr.put( "ICON", null );
-				sr.put( "REGION", region.name() );
+				sr.put( "REGION", region );
 				listModel.add( sr );
 			} catch (Exception e) {
 				/** */
