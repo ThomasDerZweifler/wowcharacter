@@ -201,7 +201,7 @@ public class Search extends ListActivity {
 					.getMenuInfo();
 			WOWCharacter character = (WOWCharacter)getListAdapter().getItem( cmi.position );
 			try {
-				Model.getInstance().addFavorite( character );
+				Model.getInstance().addFavorite( character, this );		
 				//Don 't call it Schnitzel;o)
 				String s = getString( R.string.search_addToFavorites_ok_toast );
 				s = s.replace( "%1", character.toString() );

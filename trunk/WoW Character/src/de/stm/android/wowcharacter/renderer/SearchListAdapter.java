@@ -1,11 +1,18 @@
 package de.stm.android.wowcharacter.renderer;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.view.*;
-import android.widget.*;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.WOWCharacter;
 
@@ -37,10 +44,14 @@ public class SearchListAdapter extends ArrayAdapter {
 		if (character != null) {
 			Object o = character.get( "ICON" );
 			if (o != null) {
-				Bitmap icon = (Bitmap)o;
-				if (icon != null) {
+				Uri imageUri =  Uri.parse(o.toString());
+				Bitmap icon;
+				try {
+					icon = android.provider.MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri );
 					ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
 					charImage.setImageBitmap( icon );
+				} catch (FileNotFoundException e) {
+				} catch (IOException e) {
 				}
 			}
 			o = character.get( "LEVEL" );

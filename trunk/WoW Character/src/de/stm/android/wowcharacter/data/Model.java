@@ -1,11 +1,10 @@
 package de.stm.android.wowcharacter.data;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -70,7 +69,7 @@ public class Model {
 	 * 
 	 * @param character
 	 */
-	public void addFavorite( WOWCharacter character ) throws Exception {
+	public void addFavorite( WOWCharacter character, Activity activity ) throws Exception {
 //		String url = "http://eu.wowarmory.com/character-sheet.xml?" + character.get("URL");
 //		try {
 //			StringBuilder sb = Connection.getXML(url, character.get("REGION").toString(),  true);
@@ -79,13 +78,12 @@ public class Model {
 //		}
 		URL url;
 		InputStream is = null;
-
 		
 		String server = R.URL_US;
 		String path = "images/portraits/wow-80/";
 		String file = character.get("GENDERID") + "-" + character.get("RACEID") + "-" + character.get("CLASSID") + ".gif";
 		
-		if ((R.Region)character.get("REGION") == Region.EU) {
+		if (character.get("REGION").equals(Region.EU.name()) ) {
 			server = R.URL_EU;
 		}
 		
@@ -102,8 +100,13 @@ public class Model {
 		Object content = url.getContent();
 		is = (InputStream) content;
 		Bitmap bm = BitmapFactory.decodeStream(is);
-		character.put( "ICON", bm );
 		is.close();
+		String key = Persister.getKey(character);
+		String keyIcon = key + ".ICON";
+				
+		String uri = android.provider.MediaStore.Images.Media.insertImage(activity.getContentResolver(), bm, keyIcon, "icon for " + key);
+		character.put( "ICON", uri );
+
 		persister.add( character );
 	}
 

@@ -91,13 +91,13 @@ public class Persister {
 		if (root.canWrite()) {
 			try {
 				db = Db4o.openFile(dbName);
-				Configuration conf = db.ext().configure();
-				conf.objectClass(WOWCharacter.class).updateDepth(2);
-				conf.activationDepth(5);
+//				Configuration conf = db.ext().configure();
+//				conf.objectClass(WOWCharacter.class).updateDepth(2);
+//				conf.activationDepth(5);
 //				conf.objectClass(Bitmap.class).translate(
 //						new BitmapTranslator());
-				conf.objectClass(WOWCharacter.class).cascadeOnUpdate(true);
-				conf.objectClass(WOWCharacter.class).cascadeOnActivate(true);
+//				conf.objectClass(WOWCharacter.class).cascadeOnUpdate(true);
+//				conf.objectClass(WOWCharacter.class).cascadeOnActivate(true);
 				WOWCharacter proto = new WOWCharacter();// alle Objekte
 				ObjectSet<WOWCharacter> result = db.queryByExample(proto);
 				while (result.hasNext()) {
