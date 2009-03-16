@@ -41,7 +41,7 @@ public class InterpretSearch extends DefaultHandler {
 				sr.put( "GUILD", attributes.getValue( "guild" ) );
 				sr.put( "URL", attributes.getValue( "url" ) );
 				sr.put( "ICON", null );
-				sr.put( "REGION", region );
+				sr.put( "REGION", region.name() );
 				listModel.add( sr );
 			} catch (Exception e) {
 				/** */
