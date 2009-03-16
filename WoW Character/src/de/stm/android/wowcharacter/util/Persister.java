@@ -1,11 +1,9 @@
 package de.stm.android.wowcharacter.util;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
@@ -44,6 +42,19 @@ public class Persister {
 		// testDB4o();
 	}
 
+	/**
+	 * 
+	 * @param character
+	 * @return
+	 */
+	public static String getKey( WOWCharacter character ) {
+		String region = character.get("REGION").toString();
+		String realm = character.get("REALM").toString();
+		String name = character.get("NAME").toString();
+		String key = region + "." + realm + "." + name;
+		return key;
+	}
+	
 	public class BitmapTranslator implements ObjectConstructor {
 
 		public Object onInstantiate(ObjectContainer container,
@@ -106,10 +117,7 @@ public class Persister {
 	 * @return
 	 */
 	public boolean addCharacterToMap(WOWCharacter character) {
-		String region = character.get("REGION").toString();
-		String realm = character.get("REALM").toString();
-		String name = character.get("NAME").toString();
-		String key = region + "." + realm + "." + name;
+		String key = getKey(character);
 		mapCharacters.put(key, character);
 		return true;
 	}
@@ -119,10 +127,7 @@ public class Persister {
 	 * @return
 	 */
 	public boolean removeCharacterFromMap(WOWCharacter character) {
-		String region = character.get("REGION").toString();
-		String realm = character.get("REALM").toString();
-		String name = character.get("NAME").toString();
-		String key = region + "." + realm + "." + name;
+		String key = getKey(character);
 		mapCharacters.remove(key);
 		return true;
 	}
