@@ -10,8 +10,7 @@ import android.util.Log;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.config.ObjectConstructor;
+import com.db4o.config.*;
 import com.db4o.ext.DatabaseClosedException;
 import com.db4o.ext.DatabaseReadOnlyException;
 import com.db4o.ext.Db4oException;
@@ -91,6 +90,13 @@ public class Persister {
 		if (root.canWrite()) {
 			try {
 				db = Db4o.openFile(dbName);
+				
+//				Configuration configuration = db.ext().configure();
+//				configuration.objectClass( "WOWCharacter" ).cascadeOnUpdate( true );
+//				configuration.objectClass( "WOWCharacter" ).cascadeOnDelete( true );
+//				ObjectClass oc = configuration.objectClass( "WOWCharacter" );
+//				oc.minimumActivationDepth( 20 );
+				
 //				Configuration conf = db.ext().configure();
 //				conf.objectClass(WOWCharacter.class).updateDepth(2);
 //				conf.activationDepth(5);
