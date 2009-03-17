@@ -9,8 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import de.stm.android.wowcharacter.util.Persister;
-import de.stm.android.wowcharacter.util.Resource;
+import de.stm.android.wowcharacter.util.*;
 import de.stm.android.wowcharacter.util.Armory.R;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
 
@@ -21,7 +20,8 @@ import de.stm.android.wowcharacter.util.Armory.R.Region;
  */
 public class Model {
 	/** Name der DB-Datei */
-	private final static String DB4OFILENAME = "/sdcard/wow.db4o";
+//	private final static String DB4OFILENAME = "/sdcard/wow.db4o";
+	private final static String DB4OFILENAME = "/data/data/de.stm.android.wowcharacter/wow.db4o";
 	/** Modell */
 	private static Model model;
 	public Drawable rowBackground;
@@ -102,10 +102,17 @@ public class Model {
 		Bitmap bm = BitmapFactory.decodeStream(is);
 		is.close();
 		String key = Persister.getKey(character);
-		String keyIcon = key + ".ICON";
+//		String keyIcon = key + ".ICON";
 				
-		String uri = android.provider.MediaStore.Images.Media.insertImage(activity.getContentResolver(), bm, keyIcon, "icon for " + key);
-		character.put( "ICON", uri );
+//		String uri = android.provider.MediaStore.Images.Media.insertImage(activity.getContentResolver(), bm, keyIcon, "icon for " + key);
+//		character.put( "ICON", uri );
+
+		int[] pixels = new int[bm.getWidth()*bm.getHeight()];
+		bm.getPixels( pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight() );
+
+		BitmapDb4o bm4o = new BitmapDb4o( key, pixels, bm.getWidth(), bm.getHeight() );
+
+		character.put( "BITMAP", bm4o );
 
 		persister.add( character );
 	}
