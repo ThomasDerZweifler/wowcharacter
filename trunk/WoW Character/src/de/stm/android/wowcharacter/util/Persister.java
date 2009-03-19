@@ -4,17 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.os.Environment;
 import android.util.Log;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.*;
-import com.db4o.ext.DatabaseClosedException;
-import com.db4o.ext.DatabaseReadOnlyException;
-import com.db4o.ext.Db4oException;
-import com.db4o.ext.ObjectNotStorableException;
+import com.db4o.*;
 import com.db4o.query.Predicate;
 
 import de.stm.android.wowcharacter.data.WOWCharacter;
@@ -38,7 +30,6 @@ public class Persister {
 		// deleteAll();
 
 		load();
-		// testDB4o();
 	}
 
 	/**
@@ -53,68 +44,22 @@ public class Persister {
 		String key = region + "." + realm + "." + name;
 		return key;
 	}
-	
-	public class BitmapTranslator implements ObjectConstructor {
 
-		public Object onInstantiate(ObjectContainer container,
-				Object storedObject) {
-			try {
-				return storedObject;
-			} catch (RuntimeException e) {
-				throw new Db4oException(e);
-			}
-		}
-
-		public void onActivate(ObjectContainer container,
-				Object applicationObject, Object storedObject) {
-			Log.i("onActivate()",applicationObject + "__" + storedObject );
-		}
-
-		public Object onStore(ObjectContainer container,
-				Object applicationObject) {
-			try {
-				return applicationObject;
-			} catch (RuntimeException e) {
-				throw new ObjectNotStorableException(e.getMessage());
-			}
-		}
-
-		public Class storedClass() {
-			return String.class;
-		}
-
-	}
-
+	/**
+	 * Laden der Favoriten
+	 */
 	private void load() {
-		File root = Environment.getExternalStorageDirectory();
-		if (root.canWrite()) {
-			try {
-				db = Db4o.openFile(dbName);
-				
-//				Configuration configuration = db.ext().configure();
-//				configuration.objectClass( "WOWCharacter" ).cascadeOnUpdate( true );
-//				configuration.objectClass( "WOWCharacter" ).cascadeOnDelete( true );
-//				ObjectClass oc = configuration.objectClass( "WOWCharacter" );
-//				oc.minimumActivationDepth( 20 );
-				
-//				Configuration conf = db.ext().configure();
-//				conf.objectClass(WOWCharacter.class).updateDepth(2);
-//				conf.activationDepth(5);
-//				conf.objectClass(Bitmap.class).translate(
-//						new BitmapTranslator());
-//				conf.objectClass(WOWCharacter.class).cascadeOnUpdate(true);
-//				conf.objectClass(WOWCharacter.class).cascadeOnActivate(true);
-				WOWCharacter proto = new WOWCharacter();// alle Objekte
-				ObjectSet<WOWCharacter> result = db.queryByExample(proto);
-				while (result.hasNext()) {
-					WOWCharacter character = result.next();
-					addCharacterToMap(character);
-				}
-			} catch (Exception e) {
-				Log.e(getClass().getName(), "keine SD-Card ansprechbar");
+		try {
+			db = Db4o.openFile(dbName);
+			
+			WOWCharacter proto = new WOWCharacter();// alle Objekte
+			ObjectSet<WOWCharacter> result = db.queryByExample(proto);
+			while (result.hasNext()) {
+				WOWCharacter character = result.next();
+				addCharacterToMap(character);
 			}
-		} else {
-			Log.i(getClass().getName(), "SD-Card ist schreibgeschuetzt!");
+		} catch (Exception e) {
+			Log.e(getClass().getName(), "db4o error");
 		}
 	}
 
@@ -143,63 +88,6 @@ public class Persister {
 	 */
 	public Map<String, WOWCharacter> getMapCharacters() {
 		return mapCharacters;
-	}
-
-	/**
-	 * 
-	 */
-	public void testDB4o() {
-		try {
-			db = Db4o.openFile(dbName);
-			deleteAll();
-			Log.i("db4o", "db4o version: " + Db4o.version());
-			WOWCharacter c = new WOWCharacter();
-			c.put("NAME", "Stefan");
-			c.put("REALM", "Lothar");
-			c.put("REGION", "EU");
-			c.put("CLASS", "Class_Stefan");
-			c.put("LEVEL", new Integer(80));
-			c.put("XML", "XML_Stefan");
-			db.store(c);
-			c = new WOWCharacter();
-			c.put("NAME", "Thomas");
-			c.put("REALM", "Server1");
-			c.put("REGION", "EU");
-			c.put("CLASS", "Class_Thomas");
-			c.put("LEVEL", new Integer(20));
-			c.put("XML", "XML_Thomas");
-			db.store(c);
-			c = new WOWCharacter();
-			c.put("NAME", "Goran");
-			c.put("REALM", "Lothar");
-			c.put("REGION", "US");
-			c.put("CLASS", "Class_Goran");
-			c.put("LEVEL", new Integer(5));
-			c.put("XML", "XML_Goran");
-			db.store(c);
-			c = new WOWCharacter();
-			c.put("NAME", "Anton");
-			c.put("REALM", "Server3");
-			c.put("REGION", "US");
-			c.put("CLASS", "Class_Wincent");
-			c.put("LEVEL", new Integer(40));
-			c.put("XML", "XML_Wincent");
-			db.store(c);
-			Log.i("db4o", "...stored characters: ");
-			WOWCharacter proto = new WOWCharacter();// alle Objekte
-			ObjectSet<WOWCharacter> result = db.queryByExample(proto);
-			listResult(result);
-			Log.i("db4o", "...get object(s) (Name = Thomas): ");
-			result = get("NAME", "Thomas");
-			listResult(result);
-			// TODO Sort-Direction
-		} catch (DatabaseClosedException e1) {
-			Log.e("db4o", e1.toString());
-		} catch (DatabaseReadOnlyException e1) {
-			Log.e("db4o", e1.toString());
-		} finally {
-			db.close();
-		}
 	}
 
 	/**

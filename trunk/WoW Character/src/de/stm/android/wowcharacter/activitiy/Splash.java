@@ -17,7 +17,8 @@ import de.stm.android.wowcharacter.R;
 /**
  * Splash
  * 
- * @author tfunke
+ * @version $Revision:  $Date: $
+ * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
  *
  */
 public class Splash extends Activity implements OnClickListener {
