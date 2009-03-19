@@ -2,6 +2,13 @@ package de.stm.android.wowcharacter.util;
 
 import java.util.Locale;
 
+/**
+ * Armory
+ * 
+ * @version $Revision:  $Date: $
+ * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ *
+ */
 public class Armory {
 	public static class R {
 		public static enum Region {

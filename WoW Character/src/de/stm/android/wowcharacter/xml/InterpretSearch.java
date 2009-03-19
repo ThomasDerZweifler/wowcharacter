@@ -16,7 +16,9 @@ import de.stm.android.wowcharacter.util.Armory.R.Region;
 /**
  * Suchergebnis interpretieren
  * 
- * @version $Revision: $Date: $
+ * @version $Revision:  $Date: $
+ * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ *
  */
 public class InterpretSearch extends DefaultHandler {
 	private static final String TAG = "InterpretSearch";
@@ -40,7 +42,6 @@ public class InterpretSearch extends DefaultHandler {
 				sr.put( "CLASSID", attributes.getValue( "classId" ) );
 				sr.put( "GUILD", attributes.getValue( "guild" ) );
 				sr.put( "URL", attributes.getValue( "url" ) );
-				sr.put( "ICON", null );
 				sr.put( "REGION", region.name() );
 				listModel.add( sr );
 			} catch (Exception e) {

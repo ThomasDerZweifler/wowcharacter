@@ -1,18 +1,22 @@
 package de.stm.android.wowcharacter.renderer;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.*;
 import android.widget.*;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.WOWCharacter;
 import de.stm.android.wowcharacter.util.BitmapDb4o;
 
+/**
+ * Zeilenrenderer
+ * 
+ * @version $Revision: $Date: $
+ * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ * 
+ */
 @SuppressWarnings("unchecked")
 public class SearchListAdapter extends ArrayAdapter {
 	private static final int res = R.layout.searchlistitem;
@@ -20,7 +24,6 @@ public class SearchListAdapter extends ArrayAdapter {
 	private ArrayList<WOWCharacter> item;
 
 	/**
-	 * 
 	 * @param context
 	 * @param item
 	 */
@@ -39,36 +42,17 @@ public class SearchListAdapter extends ArrayAdapter {
 		}
 		WOWCharacter character = item.get( position );
 		if (character != null) {
-//			Object o = character.get( "ICON" );
-//			if (o != null) {
-//				Uri imageUri =  Uri.parse(o.toString());
-//				Bitmap icon;
-//				try {
-//					icon = android.provider.MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri );
-//					ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
-//					charImage.setImageBitmap( icon );
-//				} catch (FileNotFoundException e) {
-//				} catch (IOException e) {
-//				}
-//			}
-
 			Object o = character.get( "BITMAP" );
-			if (o instanceof BitmapDb4o ) {
+			if (o instanceof BitmapDb4o) {
 				ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
-
 				BitmapDb4o bmDb4o = (BitmapDb4o)o;
-				
 				int[] pixels = bmDb4o.getPixels();
-
 				int width = bmDb4o.getWidth();
 				int height = bmDb4o.getHeight();
-				
-				Bitmap bm = Bitmap.createBitmap(pixels, 0, width, width, height,
-                        Bitmap.Config.ARGB_8888);//TODO Modus noch abspeichern
-
+				Bitmap bm = Bitmap.createBitmap( pixels, 0, width, width, height,
+						Bitmap.Config.ARGB_8888 );// TODO Modus noch abspeichern
 				charImage.setImageBitmap( bm );
 			}
-
 			o = character.get( "LEVEL" );
 			Object o1 = character.get( "RACE" );
 			Object o2 = character.get( "CLASS" );
@@ -93,11 +77,6 @@ public class SearchListAdapter extends ArrayAdapter {
 			}
 			TextView charNameRealm = (TextView)row.findViewById( R.id.CharNameRealm );
 			charNameRealm.setText( character.toString() );
-			// GradientDrawable d = new GradientDrawable(
-			// GradientDrawable.Orientation.BL_TR, new int[] { Color.GRAY,
-			// Color.LTGRAY });
-			// d.setCornerRadius(3f);
-			// row.setBackgroundDrawable(d);
 		}
 		return row;
 	}

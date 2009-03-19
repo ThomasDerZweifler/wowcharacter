@@ -1,18 +1,22 @@
 package de.stm.android.wowcharacter.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Locale;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
+import java.util.zip.*;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+/**
+ * Laden von Inhalten aus dem Internet
+ * 
+ * @version $Revision:  $Date: $
+ * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ *
+ */
 public class Connection {
 	/**
 	 * XML von URL lesen
@@ -36,22 +40,8 @@ public class Connection {
 			urlConn.setRequestProperty("Connection", "close");
 			urlConn.setConnectTimeout(1000 * 10 * 60); // timeout after 10
 														// minutes
-			// urlConn
-			// .addRequestProperty(
-			// "User-Agent",
-			// "Mozilla/5.0 (Windows; U; Windows NT 6.0; rv:1.9.1b3pre)
-			// Gecko/20090218 Firefox/3.0 SeaMonkey/2.0a3pre" );
-			// urlConn.addRequestProperty( "Accept",
-			// "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-			// );
 			urlConn.addRequestProperty( "Accept-Charset", "utf-8" );
-			// urlConn.addRequestProperty( "Accept-Charset",
-			// "ISO-8859-1,ISO-8859-2" );
-
 			urlConn.addRequestProperty("Accept-Language", locale.toString().replace("_", "-"));
-			// urlConn.addRequestProperty( "Accept-Language",
-			// "en-us;q=0.5,en;q=0.3" );
-
 			urlConn.addRequestProperty("Accept-Encoding", packed ? "gzip,deflate" : "identity");
 		} catch (IOException ioe) {
 			Log.e("Armory", "Could not connect to server!");
@@ -87,5 +77,19 @@ public class Connection {
 		
 		return sb;
 	}
-
+	
+	/**
+	 * Bild von URL lesen
+	 * 
+	 * @param url
+	 * @return
+	 * @throws IOException
+	 */
+	public static Bitmap getBitmap( URL url ) throws IOException {
+		Object content = url.getContent();
+		InputStream is = (InputStream) content;
+		Bitmap bm = BitmapFactory.decodeStream(is);
+		is.close();
+		return bm;
+	}
 }

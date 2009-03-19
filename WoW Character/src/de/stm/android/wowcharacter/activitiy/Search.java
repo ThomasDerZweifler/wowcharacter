@@ -30,7 +30,9 @@ import de.stm.android.wowcharacter.xml.InterpretSearch;
 /**
  * Suchdialog
  * 
- * @author tfunke
+ * @version $Revision:  $Date: $
+ * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ * 
  */
 public class Search extends ListActivity {
 	private EditText et;
@@ -42,6 +44,7 @@ public class Search extends ListActivity {
 	private Model model;
 	private Armory armory = new Armory();
 	private Armory.R.Region region;
+	private Thread searchThread;
 	private InterpretSearch is = new InterpretSearch();
 	ArrayList<WOWCharacter> listModel = new ArrayList<WOWCharacter>();
 	Handler handler = new Handler() {
@@ -58,7 +61,9 @@ public class Search extends ListActivity {
 				is.readXML( sbXMLPage.toString(), region, listModel );
 				SearchListAdapter sla = new SearchListAdapter( Search.this, listModel );
 				Collections.sort( listModel );
-				
+
+				setListAdapter( sla );					
+
 				String s;
 				int listsize = listModel.size();
 				if (listsize == 0) {
@@ -71,7 +76,6 @@ public class Search extends ListActivity {
 				}
 				Toast.makeText( Search.this, s, Toast.LENGTH_SHORT ).show();
 				
-				setListAdapter( sla );					
 			}
 		}
 	};
@@ -129,7 +133,7 @@ public class Search extends ListActivity {
 			public void onClick( View v ) {
 				bt.setEnabled( false );
                 setProgressBarIndeterminateVisibility(true);
-				Thread background = new Thread( new Runnable() {
+				searchThread = new Thread( new Runnable() {
 					public void run() {
 						try {
 							sbXMLPage = armory.search( et.getText().toString(), region );
@@ -139,7 +143,7 @@ public class Search extends ListActivity {
 						}
 					}
 				}, "WOW-Search" );
-				background.start();
+				searchThread.start();
 			}
 		} );
 		bt.setEnabled( false );
@@ -201,7 +205,7 @@ public class Search extends ListActivity {
 					.getMenuInfo();
 			WOWCharacter character = (WOWCharacter)getListAdapter().getItem( cmi.position );
 			try {
-				Model.getInstance().addFavorite( character, this );		
+				Model.getInstance().addFavorite( character );		
 				//Don 't call it Schnitzel;o)
 				String s = getString( R.string.search_addToFavorites_ok_toast );
 				s = s.replace( "%1", character.toString() );

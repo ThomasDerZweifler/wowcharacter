@@ -17,6 +17,13 @@ import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.WOWCharacter;
 import de.stm.android.wowcharacter.renderer.SearchListAdapter;
 
+/**
+ * 
+ * 
+ * @version $Revision:  $Date: $
+ * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ *
+ */
 public class Characterlist extends ListActivity {
 	private Model model;
 	/** true beim erstmaligen Aufruf */

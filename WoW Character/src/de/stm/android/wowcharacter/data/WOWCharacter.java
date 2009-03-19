@@ -3,7 +3,13 @@ package de.stm.android.wowcharacter.data;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("serial")
+/**
+ * WOW Character
+ * 
+ * @version $Revision:  $Date: $
+ * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ *
+ */
 public class WOWCharacter implements
 		Comparable<WOWCharacter> {
 

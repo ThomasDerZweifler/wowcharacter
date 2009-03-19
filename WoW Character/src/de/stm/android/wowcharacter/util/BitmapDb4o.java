@@ -1,16 +1,30 @@
 package de.stm.android.wowcharacter.util;
 
+/**
+ * Bitmap die persistiert werden kann
+ * 
+ * @version $Revision:  $Date: $
+ * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ *
+ */
 public class BitmapDb4o {
 	private String name;
 	private int width;
 	private int height;
 	private int[] pixels;
 	
+	/**
+	 * 
+	 * @param name
+	 * @param pixels
+	 * @param width
+	 * @param height
+	 */
 	public BitmapDb4o( String name, int[] pixels, int width, int height ) {
-		this.name = name;
-		this.pixels = pixels;
-		this.width = width;
-		this.height = height;
+		setName( name );
+		setPixels( pixels );
+		setWidth( width );
+		setHeight( height );
 	}
 
 	public String getName() {
@@ -44,5 +58,4 @@ public class BitmapDb4o {
 	public void setPixels( int[] pixels ) {
 		this.pixels = pixels;
 	}
-
 }
