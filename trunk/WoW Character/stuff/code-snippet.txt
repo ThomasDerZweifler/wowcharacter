@@ -11,3 +11,17 @@
 		}
 		return true;
 	}
+	
+	--------- Applikation beenden ----------
+		int pid = android.os.Process.myPid();
+		android.os.Process.killProcess(pid);
+		
+	---------- Timer -------
+		Timer timer = new Timer("WOW-Timer");
+		TimerTask timerTask = new TimerTask() {
+			public void run() {
+				goToCharacterList();
+			}
+		};
+		timer.schedule(timerTask, 5000);
+	
