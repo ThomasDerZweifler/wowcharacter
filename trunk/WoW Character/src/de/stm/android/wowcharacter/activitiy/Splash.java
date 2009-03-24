@@ -1,13 +1,12 @@
 package de.stm.android.wowcharacter.activitiy;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
@@ -22,7 +21,24 @@ import de.stm.android.wowcharacter.R;
  *
  */
 public class Splash extends Activity implements OnClickListener {
-	private Timer timer;
+    private static final int STOPSPLASH = 0;
+    //time in milliseconds
+    private static final long SPLASHTIME = 3000;
+    //handler for splash screen
+    private Handler splashHandler = new Handler() {
+         /* (non-Javadoc)
+          * @see android.os.Handler#handleMessage(android.os.Message)
+          */
+         @Override
+         public void handleMessage(Message msg) {
+              switch (msg.what) {
+              case STOPSPLASH:
+            	   goToCharacterList();
+                   break;
+              }
+              super.handleMessage(msg);
+         }
+    };
 	
 	/** Called when the activity is first created. */
     @Override
@@ -32,13 +48,6 @@ public class Splash extends Activity implements OnClickListener {
     }
 
 	private void init() {
-		timer = new Timer("WOW-Timer");
-		TimerTask timerTask = new TimerTask() {
-			public void run() {
-				goToCharacterList();
-			}
-		};
-		timer.schedule(timerTask, 5000);
 		
 		setContentView(R.layout.splash);				
         ((RelativeLayout) findViewById(R.id.splash)).setOnClickListener(this);
@@ -50,7 +59,12 @@ public class Splash extends Activity implements OnClickListener {
             mTextView.setText("Version: " + pi.versionName);
         } catch (NameNotFoundException e) {
             // should never happen 
-        }; 
+        };
+        
+        Message msg = new Message();
+        msg.what = STOPSPLASH;
+        splashHandler.sendMessageDelayed(msg, SPLASHTIME);
+
 	}
 	  
     /**
@@ -64,7 +78,6 @@ public class Splash extends Activity implements OnClickListener {
      *
      */
 	private void goToCharacterList() {
-    	timer.cancel();
 		//zum Suchdialog uebergehen
 		Intent intent = new Intent(this,
 				de.stm.android.wowcharacter.activitiy.Characterlist.class);
