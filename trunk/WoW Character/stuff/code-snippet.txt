@@ -24,4 +24,37 @@
 			}
 		};
 		timer.schedule(timerTask, 5000);
+	---------- xml ---------
+	/**
+	 * XML auswerten
+	 * 
+	 * @param xmlString
+	 */
+	public void interpretXML( String xmlString ) {
+		StringReader inStream = new StringReader( xmlString );
+		InputSource inSource = new InputSource( inStream );
+		Document doc = null;
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			// dbf.setValidating( false );
+			// dbf.setNamespaceAware( false );
+			doc = db.parse( inSource );
+			// Demo TODO Auswerten (DTD evtl. nutzen), Bilder laden etc.
+			NodeList nodeList = doc.getElementsByTagName( "character" );
+			Node node = nodeList.item( 0 );
+			NamedNodeMap nodesMap = node.getAttributes();
+			// tv.setText(node.getLocalName());
+			for (int i = 0; i < nodesMap.getLength(); i++) {
+				Node n = nodesMap.item( i );
+				// tv.append(n.getNodeName() + ": " + n.getNodeValue() + "; ");
+			}
+		} catch (SAXException e) {
+			Log.e( "Search", "SAX" + e.getMessage() );
+		} catch (IOException e) {
+			Log.e( "Search", "URI" + e.getMessage() );
+		} catch (ParserConfigurationException e) {
+			Log.e( "Search", "Parser Implementation" + e.getMessage() );
+		}
+	}
 	
