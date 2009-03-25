@@ -98,7 +98,7 @@ public class Search extends ListActivity {
 	 */
 	private void init() {
 		model = Model.getInstance();
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);//fuer Fortschrittskreis in Titelzeile
 		/** View und Titel setzen */
 		setContentView( R.layout.search );
         setProgressBarIndeterminateVisibility(false);
