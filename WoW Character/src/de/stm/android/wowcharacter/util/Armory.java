@@ -1,6 +1,10 @@
 package de.stm.android.wowcharacter.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Locale;
+
+import android.util.Log;
 
 /**
  * Armory
@@ -62,6 +66,13 @@ public class Armory {
 		String r = R.URL_EU;
 		if (region == R.Region.US) {
 			r = R.URL_US;
+		}
+
+		try {
+			character = URLEncoder.encode(character, "UTF-8");
+			Log.i("Armory", character);
+		} catch (UnsupportedEncodingException e) {
+			// sollte nicht eintreffen
 		}
 
 		String url = r + R.SEARCHPAGE + character + R.SEARCHTYPE_CHAR;
