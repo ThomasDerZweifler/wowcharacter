@@ -91,7 +91,7 @@ public class Persister {
 	}
 
 	/**
-	 * Speichern eines Eintrages
+	 * Speichern eines Eintrages (Ueberschreiben eines vorhandenen Eintrags)
 	 * 
 	 * @param value
 	 * @return
