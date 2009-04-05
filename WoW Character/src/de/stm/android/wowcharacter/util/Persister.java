@@ -33,19 +33,6 @@ public class Persister {
 	}
 
 	/**
-	 * 
-	 * @param character
-	 * @return
-	 */
-	public static String getKey( WOWCharacter character ) {
-		String region = character.get("REGION").toString();
-		String realm = character.get("REALM").toString();
-		String name = character.get("NAME").toString();
-		String key = region + "." + realm + "." + name;
-		return key;
-	}
-
-	/**
 	 * Laden der Favoriten
 	 */
 	private void load() {
@@ -68,7 +55,7 @@ public class Persister {
 	 * @return
 	 */
 	public boolean addCharacterToMap(WOWCharacter character) {
-		String key = getKey(character);
+		String key = character.getKey();
 		mapCharacters.put(key, character);
 		return true;
 	}
@@ -78,7 +65,7 @@ public class Persister {
 	 * @return
 	 */
 	public boolean removeCharacterFromMap(WOWCharacter character) {
-		String key = getKey(character);
+		String key = character.getKey();
 		mapCharacters.remove(key);
 		return true;
 	}
