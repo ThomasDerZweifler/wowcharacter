@@ -81,7 +81,7 @@ public class Model {
 			Bitmap bm = Connection.getBitmap( url );
 			int[] pixels = new int[bm.getWidth() * bm.getHeight()];
 			bm.getPixels( pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight() );
-			String key = Persister.getKey( character );
+			String key = character.getKey();
 			BitmapDb4o bm4o = new BitmapDb4o( key, pixels, bm.getWidth(), bm.getHeight() );
 			character.put( "BITMAP", bm4o );
 		} catch (IOException ioe) {

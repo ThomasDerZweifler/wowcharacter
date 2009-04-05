@@ -18,8 +18,8 @@ import de.stm.android.wowcharacter.util.BitmapDb4o;
  * 
  */
 @SuppressWarnings("unchecked")
-public class SearchListAdapter extends ArrayAdapter {
-	private static final int res = R.layout.searchlistitem;
+public class CharacterListAdapter extends ArrayAdapter {
+	private static final int res = R.layout.characterlistitem;
 	private Activity context;
 	private ArrayList<WOWCharacter> item;
 
@@ -27,7 +27,7 @@ public class SearchListAdapter extends ArrayAdapter {
 	 * @param context
 	 * @param item
 	 */
-	public SearchListAdapter( Activity context, ArrayList<WOWCharacter> item ) {
+	public CharacterListAdapter( Activity context, ArrayList<WOWCharacter> item ) {
 		super( context, res, item );
 		this.context = context;
 		this.item = item;
@@ -43,16 +43,16 @@ public class SearchListAdapter extends ArrayAdapter {
 		WOWCharacter character = item.get( position );
 		if (character != null) {
 			Object o = character.get( "BITMAP" );
-//			if (o instanceof BitmapDb4o) {
-//				ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
-//				BitmapDb4o bmDb4o = (BitmapDb4o)o;
-//				int[] pixels = bmDb4o.getPixels();
-//				int width = bmDb4o.getWidth();
-//				int height = bmDb4o.getHeight();
-//				Bitmap bm = Bitmap.createBitmap( pixels, 0, width, width, height,
-//						Bitmap.Config.ARGB_8888 );// TODO Modus noch abspeichern
-//				charImage.setImageBitmap( bm );
-//			}
+			if (o instanceof BitmapDb4o) {
+				ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
+				BitmapDb4o bmDb4o = (BitmapDb4o)o;
+				int[] pixels = bmDb4o.getPixels();
+				int width = bmDb4o.getWidth();
+				int height = bmDb4o.getHeight();
+				Bitmap bm = Bitmap.createBitmap( pixels, 0, width, width, height,
+						Bitmap.Config.ARGB_8888 );// TODO Modus noch abspeichern
+				charImage.setImageBitmap( bm );
+			}
 			o = character.get( "LEVEL" );
 			Object o1 = character.get( "RACE" );
 			Object o2 = character.get( "CLASS" );

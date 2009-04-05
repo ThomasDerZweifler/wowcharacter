@@ -1,5 +1,6 @@
 package de.stm.android.wowcharacter.data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,9 @@ import java.util.Map;
 public class WOWCharacter implements
 		Comparable<WOWCharacter> {
 
+	private static final long serialVersionUID = 1L;
+	public static final String ID_WOWCHARACTER = "de.stm.android.wowcharacter.data.WOWCharacter";
+	
 	Map<Object,Object> map = new HashMap<Object,Object>();
 	
 	public int compareTo(WOWCharacter other) {
@@ -34,5 +38,17 @@ public class WOWCharacter implements
 	
 	public void put( Object key, Object value ) {
 		map.put(key, value);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getKey() {
+		String region = get("REGION").toString();
+		String realm = get("REALM").toString();
+		String name = get("NAME").toString();
+		String key = region + "." + realm + "." + name;
+		return key;
 	}
 }

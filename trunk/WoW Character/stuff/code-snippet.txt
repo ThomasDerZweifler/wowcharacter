@@ -57,4 +57,20 @@
 			Log.e( "Search", "Parser Implementation" + e.getMessage() );
 		}
 	}
+	------------ ListViewBackground -------------------
+		setListAdapter(new ArrayAdapter<WOWCharacter>(this,
+				android.R.layout.simple_list_item_1, a) {
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				View view = super.getView(position, convertView, parent);
+				// Drawable d = Model.getInstance().rowBackground;
+				// view.setBackgroundDrawable( d );
+				GradientDrawable d = new GradientDrawable(
+						GradientDrawable.Orientation.BL_TR, new int[] {
+								Color.GRAY, Color.LTGRAY });
+				d.setCornerRadius(3f);
+				view.setBackgroundDrawable(d);
+				return view;
+			}
+		});
 	
