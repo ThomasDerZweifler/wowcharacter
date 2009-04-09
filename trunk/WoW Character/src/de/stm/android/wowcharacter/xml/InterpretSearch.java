@@ -17,8 +17,9 @@ import de.stm.android.wowcharacter.util.Armory.R.Region;
  * Suchergebnis interpretieren
  * 
  * @version $Revision:  $Date: $
- * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
- *
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>
+ * @author <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
+ * 
  */
 public class InterpretSearch extends DefaultHandler {
 	private static final String TAG = "InterpretSearch";
@@ -31,18 +32,18 @@ public class InterpretSearch extends DefaultHandler {
 		if (localName.trim().equals( "character" )) {
 			try {
 				WOWCharacter sr = new WOWCharacter();
-				sr.put( "NAME", attributes.getValue( "name" ) );
-				sr.put( "REALM", attributes.getValue( "realm" ) );
-				sr.put( "FACTIONID", attributes.getValue( "factionId" ) );
-				sr.put( "LEVEL", new Integer( attributes.getValue( "level" ) ) );
-				sr.put( "GENDERID", attributes.getValue( "genderId" ) );
-				sr.put( "RACE", attributes.getValue( "race" ) );
-				sr.put( "RACEID", attributes.getValue( "raceId" ) );
-				sr.put( "CLASS", attributes.getValue( "class" ) );
-				sr.put( "CLASSID", attributes.getValue( "classId" ) );
-				sr.put( "GUILD", attributes.getValue( "guild" ) );
-				sr.put( "URL", attributes.getValue( "url" ) );
-				sr.put( "REGION", region.name() );
+				sr.put( WOWCharacter.Data.NAME, attributes.getValue( "name" ) );
+				sr.put( WOWCharacter.Data.REALM, attributes.getValue( "realm" ) );
+				sr.put( WOWCharacter.Data.FACTIONID, attributes.getValue( "factionId" ) );
+				sr.put( WOWCharacter.Data.LEVEL, new Integer( attributes.getValue( "level" ) ) );
+				sr.put( WOWCharacter.Data.GENDERID, attributes.getValue( "genderId" ) );
+				sr.put( WOWCharacter.Data.RACE, attributes.getValue( "race" ) );
+				sr.put( WOWCharacter.Data.RACEID, attributes.getValue( "raceId" ) );
+				sr.put( WOWCharacter.Data.CLASS, attributes.getValue( "class" ) );
+				sr.put( WOWCharacter.Data.CLASSID, attributes.getValue( "classId" ) );
+				sr.put( WOWCharacter.Data.GUILD, attributes.getValue( "guild" ) );
+				sr.put( WOWCharacter.Data.URL, attributes.getValue( "url" ) );
+				sr.put( WOWCharacter.Data.REGION, region.name() );
 				listModel.add( sr );
 			} catch (Exception e) {
 				/** */

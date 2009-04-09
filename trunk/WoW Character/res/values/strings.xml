@@ -26,7 +26,8 @@
 	<string name="charlist_contextMenu_removeFromFavorites">remove from favorites</string>
 	<string name="charlist_deleteAll">Really delete all favorites?</string>
 	
-	<string name="charview_health">Health</string>
+	<string name="charview_title">characterdetails</string>
+	<string name="charview_health">health</string>
 
 	<string name="region_toggle_US">US</string>
 	<string name="region_toggle_EU">EU</string>

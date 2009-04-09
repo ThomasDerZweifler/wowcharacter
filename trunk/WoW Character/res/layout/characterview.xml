@@ -2,7 +2,8 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android" 
   	android:layout_width="fill_parent" 
     android:layout_height="fill_parent"> 
-    <TableRow>
+    <TableRow
+    	android:padding="5px">
 		<ImageView android:id="@+id/CharImage"
 	    	android:layout_gravity="left" />	
 		<LinearLayout android:orientation="vertical">
@@ -29,20 +30,6 @@
 		<FrameLayout android:id="@android:id/tabcontent"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:paddingTop="65px">
-			<TextView android:id="@+id/characterviewtabstats" 
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent"
-				android:text="characterviewtabstats" />
-
-			<LinearLayout android:id="@+id/characterviewtabitems" 
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
-				<ListView android:id="@+id/ItemListView"
-					android:layout_width="fill_parent"
-					android:layout_height="fill_parent" />
-			</LinearLayout>
-
-		</FrameLayout>					
+			android:paddingTop="65px" />
 	</TabHost>
 </TableLayout>

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.WOWCharacter;
+import de.stm.android.wowcharacter.data.WOWCharacter.Data;
 import de.stm.android.wowcharacter.renderer.CharacterListAdapter;
 
 /**
@@ -196,14 +197,14 @@ public class Characterlist extends ListActivity {
 		// Sortierung
 		Comparator<WOWCharacter> comp = new Comparator<WOWCharacter>() {
 			public int compare(WOWCharacter thisObject, WOWCharacter otherObject) {
-				Object o = thisObject.get(attribute);
+				Object o = thisObject.get(Data.valueOf((String)attribute));
 				int result = 0;// nicht Vertauschen
 				if (o instanceof String) {
 					result = o.toString().compareTo(
-							otherObject.get(attribute).toString());
+							otherObject.get(Data.valueOf((String)attribute)).toString());
 				} else if (o instanceof Integer) {
 					result = ((Integer) o).compareTo(((Integer) otherObject
-							.get(attribute)));
+							.get(Data.valueOf((String)attribute))));
 				}
 				if (direction == SortDirection.DESCEND) {
 					result *= -1;
