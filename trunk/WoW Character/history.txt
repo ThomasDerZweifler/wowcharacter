@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2009-04-09)
+	+ New:		Fortschrittsbalken mit Text
+
 (2009-03-16)
 	+ Changed:	Keine SD-Karte mehr notwending (jetzt alles in "/data/data/appName/...")
 	+ New:		Persistieren der Icons via int[]
