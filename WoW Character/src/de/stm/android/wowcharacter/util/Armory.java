@@ -4,8 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
 
-import android.util.Log;
-
 /**
  * Armory
  * 
@@ -27,6 +25,8 @@ public class Armory {
 		
 		final static public String SEARCHTYPE_ALL = "&searchType=all";
 		final static public String SEARCHTYPE_CHAR = "&searchType=characters";
+
+		final static public String CHARACTERSHEETPAGE = "character-sheet.xml?";	
 	}
 	
 	private Locale locale;
@@ -35,7 +35,7 @@ public class Armory {
 	 * Standardsprache (Sprache in Android) auslesen
 	 */
 	public Armory() {
-		locale = Locale.getDefault();
+		this.locale = Locale.getDefault();
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public class Armory {
 	 * @return 
 	 */
 	public Locale getLocale() {
-		return locale;
+		return this.locale;
 	}
 
 	/**
@@ -63,19 +63,45 @@ public class Armory {
 	 * @return
 	 */
 	public StringBuilder search(String character, R.Region region) {
-		String r = R.URL_EU;
+		String server = R.URL_EU;
 		if (region == R.Region.US) {
-			r = R.URL_US;
+			server = R.URL_US;
 		}
 
 		try {
 			character = URLEncoder.encode(character, "UTF-8");
-			Log.i("Armory", character);
 		} catch (UnsupportedEncodingException e) {
-			// sollte nicht eintreffen
+			// should never happen
 		}
 
-		String url = r + R.SEARCHPAGE + character + R.SEARCHTYPE_CHAR;
+		String url = server + R.SEARCHPAGE + character + R.SEARCHTYPE_CHAR;
+		
+		StringBuilder sb = Connection.getXML(url, this.locale, true);
+		
+		return sb;
+	}
+	
+	public StringBuilder charactersheet(String character, String server, R.Region region) {
+		try {
+			character = URLEncoder.encode(character, "UTF-8");
+			server = URLEncoder.encode(server, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// should never happen
+		}
+
+		// Sample: r=Lothar&amp;n=Etienne
+		String urlquery = "r=" + server + "&amp;n=" + character;
+		
+		return charactersheet(urlquery, region);
+	}
+	
+	public StringBuilder charactersheet(String urlquery, R.Region region) {
+		String server = R.URL_EU;
+		if (region == R.Region.US) {
+			server = R.URL_US;
+		}
+		
+		String url = server + R.CHARACTERSHEETPAGE + urlquery;
 		
 		StringBuilder sb = Connection.getXML(url, this.locale, true);
 		

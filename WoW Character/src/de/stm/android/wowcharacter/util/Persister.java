@@ -10,6 +10,7 @@ import com.db4o.*;
 import com.db4o.query.Predicate;
 
 import de.stm.android.wowcharacter.data.WOWCharacter;
+import de.stm.android.wowcharacter.data.WOWCharacter.Data;
 
 /**
  * Speicher der Charactere
@@ -111,11 +112,11 @@ public class Persister {
 	 */
 	public boolean remove(WOWCharacter character) {
 		if (db != null) {
-			Object region = character.get("REGION");
-			Object realm = character.get("REALM");
-			Object name = character.get("NAME");
-			ObjectSet<WOWCharacter> result = get(new Object[] { "REGION",
-					"REALM", "NAME" }, new Object[] { region, realm, name },
+			Object region = character.get( Data.REGION );
+			Object realm = character.get( Data.REALM );
+			Object name = character.get( Data.NAME);
+			ObjectSet<WOWCharacter> result = get(new Object[] { Data.REGION.name(),
+					Data.REALM.name(), Data.NAME.name() }, new Object[] { region, realm, name },
 					QUANTOR_ALL);
 			while (result.hasNext()) {
 				db.delete(result.next());
@@ -146,7 +147,7 @@ public class Persister {
 			os = db.query(new Predicate<WOWCharacter>() {
 				public boolean match(WOWCharacter character) {
 					boolean b = false;
-					Object o = character.get(attribute);
+					Object o = character.get(Data.valueOf((String) attribute));
 					if (o != null) {
 						b = o.equals(value);
 					}
@@ -179,7 +180,7 @@ public class Persister {
 					if (quantor == QUANTOR_EXISTS) {
 						int i = 0;
 						for (Object attribute : attributes) {
-							Object o = character.get(attribute);
+							Object o = character.get(Data.valueOf((String)attribute));
 							if (o != null) {
 								b = o.equals(values[i]);
 								// mindestens eine Uebereinstimmung, dann keine
@@ -192,7 +193,7 @@ public class Persister {
 						int i = 0;
 						b = true;
 						for (Object attribute : attributes) {
-							Object o = character.get(attribute);
+							Object o = character.get(Data.valueOf((String)attribute));
 							if (o != null) {
 								if (!o.equals(values[i])) {
 									b = false;

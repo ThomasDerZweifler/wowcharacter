@@ -86,7 +86,6 @@ public class Search extends ListActivity {
 		}
 	};
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );

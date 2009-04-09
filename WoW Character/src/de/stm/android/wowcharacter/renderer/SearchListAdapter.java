@@ -3,12 +3,14 @@ package de.stm.android.wowcharacter.renderer;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.WOWCharacter;
-import de.stm.android.wowcharacter.util.BitmapDb4o;
+import de.stm.android.wowcharacter.data.WOWCharacter.Data;
 
 /**
  * Zeilenrenderer
@@ -42,7 +44,7 @@ public class SearchListAdapter extends ArrayAdapter {
 		}
 		WOWCharacter character = item.get( position );
 		if (character != null) {
-			Object o = character.get( "BITMAP" );
+			Object o = character.get( Data.BITMAP );
 //			if (o instanceof BitmapDb4o) {
 //				ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
 //				BitmapDb4o bmDb4o = (BitmapDb4o)o;
@@ -53,9 +55,9 @@ public class SearchListAdapter extends ArrayAdapter {
 //						Bitmap.Config.ARGB_8888 );// TODO Modus noch abspeichern
 //				charImage.setImageBitmap( bm );
 //			}
-			o = character.get( "LEVEL" );
-			Object o1 = character.get( "RACE" );
-			Object o2 = character.get( "CLASS" );
+			o = character.get( Data.LEVEL );
+			Object o1 = character.get( Data.RACE );
+			Object o2 = character.get( Data.CLASS );
 			if (o != null && o1 != null && o2 != null) {
 				String level = o.toString();
 				String race = o1.toString();
@@ -66,7 +68,7 @@ public class SearchListAdapter extends ArrayAdapter {
 					charLevelRaceClass.setText( "Level: " + level + " " + race + "-" + _class );
 				}
 			}
-			o = character.get( "GUILD" );
+			o = character.get( Data.GUILD );
 			if (o != null) {
 				String guild = o.toString();
 				if (guild.length() > 0) {

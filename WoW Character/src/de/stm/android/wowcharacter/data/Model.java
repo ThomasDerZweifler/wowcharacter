@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.graphics.Bitmap;
 import android.util.Log;
+import de.stm.android.wowcharacter.data.WOWCharacter.Data;
 import de.stm.android.wowcharacter.util.*;
 import de.stm.android.wowcharacter.util.Armory.R;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
@@ -63,12 +64,12 @@ public class Model {
 	public void addFavorite( WOWCharacter character ) throws Exception {
 		String server = R.URL_US;
 		String path = "images/portraits/wow-80/";
-		String file = character.get( "GENDERID" ) + "-" + character.get( "RACEID" ) + "-"
-				+ character.get( "CLASSID" ) + ".gif";
-		if (character.get( "REGION" ).equals( Region.EU.name() )) {
+		String file = character.get( Data.GENDERID ) + "-" + character.get( Data.RACEID ) + "-"
+				+ character.get( Data.CLASSID ) + ".gif";
+		if (character.get( Data.REGION ).equals( Region.EU.name() )) {
 			server = R.URL_EU;
 		}
-		int level = (Integer)character.get( "LEVEL" );
+		int level = (Integer)character.get( Data.LEVEL );
 		if (level < 60) {
 			path = "images/portraits/wow-default/";
 		} else if (level < 70) {
@@ -83,7 +84,7 @@ public class Model {
 			bm.getPixels( pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight() );
 			String key = character.getKey();
 			BitmapDb4o bm4o = new BitmapDb4o( key, pixels, bm.getWidth(), bm.getHeight() );
-			character.put( "BITMAP", bm4o );
+			character.put( Data.BITMAP, bm4o );
 		} catch (IOException ioe) {
 			Log.i( getClass().getName(), "bitmap not loaded" );
 		}
