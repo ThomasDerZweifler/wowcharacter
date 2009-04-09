@@ -20,13 +20,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.WOWCharacter;
 import de.stm.android.wowcharacter.data.WOWCharacter.Data;
+import de.stm.android.wowcharacter.gui.CustomProgressBar;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.BitmapDb4o;
 
@@ -147,9 +147,11 @@ public class Characterview extends Activity {
 		nl = doc.getElementsByTagName("health");
 
 		int health = Integer.parseInt(nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
-		ProgressBar pb = (ProgressBar)findViewById(R.id.progress_health);
+		
+		CustomProgressBar pb = (CustomProgressBar)findViewById(R.id.progress_health);
 		pb.setMax(health);
 		pb.setProgress(health);
+		pb.setProcessingText(Integer.toString(health));
 		//Log.i("Characterview:interpretXML", nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
 	}
 	

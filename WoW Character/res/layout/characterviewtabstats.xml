@@ -10,7 +10,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px" />
-		<ProgressBar android:id="@+id/progress_health"
+		<de.stm.android.wowcharacter.gui.CustomProgressBar android:id="@+id/progress_health"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px"
@@ -28,7 +28,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px"/>
-		<ProgressBar android:id="@+id/progress_res"
+		<de.stm.android.wowcharacter.gui.CustomProgressBar android:id="@+id/progress_res"
+		    android:text="Test-Text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px"
