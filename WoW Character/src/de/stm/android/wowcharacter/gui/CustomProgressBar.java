@@ -123,6 +123,7 @@ public class CustomProgressBar extends ProgressBar {
 		if (processingText != null && processingText.length() > 0) {
 			if (this.orientation == HORIZONTAL) {
 				paint.setColor(this.textColor);
+				paint.setAntiAlias(true);
 				canvas.drawText(processingText, xText, yText, paint);
 			}
 		}
@@ -170,5 +171,4 @@ public class CustomProgressBar extends ProgressBar {
 		super.setMax(max);
 		this.max = max;
 	}
-
 }
