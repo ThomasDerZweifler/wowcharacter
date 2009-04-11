@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -145,14 +146,42 @@ public class Characterview extends Activity {
 		}
 		
 		nl = doc.getElementsByTagName("health");
-
 		int health = Integer.parseInt(nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
 		
-		CustomProgressBar pb = (CustomProgressBar)findViewById(R.id.progress_health);
-		pb.setMax(health);
-		pb.setProgress(health);
-		pb.setProcessingText(Integer.toString(health));
-		//Log.i("Characterview:interpretXML", nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
+		CustomProgressBar pbone = (CustomProgressBar)findViewById(R.id.progress_health);
+		pbone.setProgressDrawable(getResources().getDrawable(R.drawable.progress_horizontal_life));
+		pbone.setMax(health);
+		pbone.setProgress(health);
+		pbone.setProcessingText(Integer.toString(health));
+		
+		nl = doc.getElementsByTagName("secondBar");
+		String secondType = nl.item(0).getAttributes().getNamedItem("type").getNodeValue();
+		int secondValue = Integer.parseInt(nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
+		int secondText;
+		Drawable secondColor;
+
+		if (secondType.equals("r")) {
+			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_rage);
+			secondText = R.string.charview_second_rage;
+		} else if (secondType.equals("e")) {
+			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_energy);
+			secondText = R.string.charview_second_energy;
+		} else if (secondType.equals("p")) {
+			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_runic);
+			secondText = R.string.charview_second_runic;
+		} else {
+			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_mana);
+			secondText = R.string.charview_second_mana;
+		}
+
+		TextView tvtwo = (TextView)findViewById(R.id.charview_res);
+		tvtwo.setText(secondText);
+		
+		CustomProgressBar pbtwo = (CustomProgressBar)findViewById(R.id.progress_res);
+		pbtwo.setProgressDrawable(secondColor);
+		pbtwo.setMax(secondValue);
+		pbtwo.setProgress(secondValue);
+		pbtwo.setProcessingText(Integer.toString(secondValue));
 	}
 	
 	private Document getXML() {

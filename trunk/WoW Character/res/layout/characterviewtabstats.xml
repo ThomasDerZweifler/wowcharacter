@@ -16,7 +16,7 @@
 			android:layout_margin="5px"
 
 			android:indeterminateOnly="false"
-			android:progressDrawable="@drawable/progress_horizontal_green"
+			android:progressDrawable="@drawable/progress_horizontal_life"
 			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
 			android:minHeight="20dip"
 			android:maxHeight="20dip"/>
@@ -35,7 +35,7 @@
 			android:layout_margin="5px"
 			
 			android:indeterminateOnly="false"
-			android:progressDrawable="@drawable/progress_horizontal_blue"
+			android:progressDrawable="@drawable/progress_horizontal_mana"
 			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
 			android:minHeight="20dip"
 			android:maxHeight="20dip"/>

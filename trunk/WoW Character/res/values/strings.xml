@@ -28,6 +28,10 @@
 	
 	<string name="charview_title">characterdetails</string>
 	<string name="charview_health">health</string>
+	<string name="charview_second_mana">mana</string>
+	<string name="charview_second_rage">rage</string>
+	<string name="charview_second_energy">energy</string>
+	<string name="charview_second_runic">runic</string>
 
 	<string name="region_toggle_US">US</string>
 	<string name="region_toggle_EU">EU</string>
