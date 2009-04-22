@@ -60,6 +60,7 @@ public class Model {
 	 * Character ("Platzhalter", weitere Infos noch abzurufen) als Favorit speichern
 	 * 
 	 * @param character
+	 * @throws Exception
 	 */
 	public void addFavorite( WOWCharacter character ) throws Exception {
 		String server = R.URL_US;
@@ -91,6 +92,10 @@ public class Model {
 		persister.add( character );
 	}
 
+	public void add( WOWCharacter character ) throws Exception {
+		persister.add(character);
+	}
+	
 	/**
 	 * Favorit loeschen
 	 * 
@@ -121,5 +126,9 @@ public class Model {
 	 */
 	public void getInfos( WOWCharacter character ) {
 		Log.i( getClass().getName(), "getInfos()" + character );
+	}
+
+	public void changeCharacter(WOWCharacter character) throws Exception {
+		persister.change(character);
 	}
 }

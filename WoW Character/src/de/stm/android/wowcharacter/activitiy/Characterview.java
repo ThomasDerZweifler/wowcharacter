@@ -188,13 +188,25 @@ public class Characterview extends Activity {
 		String xml = (String)character.get(Data.XML);
 		
 		if (xml == null || xml.length() == 0) {
-			xml = armory.charactersheet((String)character.get(Data.URL), Armory.R.Region.valueOf((String)character.get(Data.REGION))).toString();
+			StringBuilder sb = armory.charactersheet((String)character.get(Data.URL), Armory.R.Region.valueOf((String)character.get(Data.REGION)));
+			if(sb != null) {
+				xml = sb.toString();
+				character.put(Data.XML, xml);
+
+				try {
+					Model.getInstance().changeCharacter(character);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(new InputSource(new StringReader(xml.toString())));
+			StringReader sr = new StringReader(xml.toString());
+			InputSource is = new InputSource(sr);
+			Document doc = db.parse(is);
 
 			return doc;
 		} catch (ParserConfigurationException e) {
