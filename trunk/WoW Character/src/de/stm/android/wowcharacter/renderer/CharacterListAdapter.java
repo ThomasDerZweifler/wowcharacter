@@ -54,6 +54,7 @@ public class CharacterListAdapter extends ArrayAdapter {
 						Bitmap.Config.ARGB_8888 );// TODO Modus noch abspeichern
 				charImage.setImageBitmap( bm );
 			}
+
 			o = character.get( Data.LEVEL );
 			Object o1 = character.get( Data.RACE );
 			Object o2 = character.get( Data.CLASS );

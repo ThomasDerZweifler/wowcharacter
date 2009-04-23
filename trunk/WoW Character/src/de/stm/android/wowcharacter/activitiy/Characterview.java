@@ -204,9 +204,7 @@ public class Characterview extends Activity {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			StringReader sr = new StringReader(xml.toString());
-			InputSource is = new InputSource(sr);
-			Document doc = db.parse(is);
+			Document doc = db.parse(new InputSource(new StringReader(xml.toString())));
 
 			return doc;
 		} catch (ParserConfigurationException e) {

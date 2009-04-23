@@ -4,11 +4,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
+import com.db4o.*;
 import com.db4o.config.Configuration;
 import com.db4o.query.Predicate;
 
@@ -41,7 +40,9 @@ public class Persister {
 	 */
 	private void load() {
 		try {
-			openDB();
+			db = Db4o.openFile(dbName);
+			Configuration config = db.ext().configure();      
+		    config.objectClass(WOWCharacter.class).cascadeOnUpdate(true);//wichtig (!), damit HashMap in Test.class persistiert wird!
 			
 			WOWCharacter proto = new WOWCharacter();// alle Objekte
 			ObjectSet<WOWCharacter> result = db.queryByExample(proto);
@@ -51,8 +52,6 @@ public class Persister {
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getName(), "db4o error");
-		} finally {
-			closeDB();			
 		}
 	}
 
@@ -87,9 +86,13 @@ public class Persister {
 	 * Alle Eintraege loeschen
 	 */
 	public void deleteAll() {
-		closeDB();
+		if (db != null) {
+			db.close();
+		}
 		new File(dbName).delete();
 		mapCharacters.clear();
+		// neue db wieder zur Verfuegung stellen
+		db = Db4o.openFile(dbName);
 	}
 
 	/**
@@ -99,37 +102,10 @@ public class Persister {
 	 * @return
 	 */
 	public void add(WOWCharacter character) throws Exception {
-		openDB();
-		if (db != null) {
-			db.store(character);
-			db.commit();
-			addCharacterToMap(character);
-			Log.i(getClass().getName(), "stored " + character);
-		}
-		closeDB();
-	}
-	
-	private void openDB() {
-		if(db == null) {
-			try {
-				db = Db4o.openFile(dbName);
-				Configuration config = db.ext().configure();      
-		        config.objectClass(WOWCharacter.class).cascadeOnUpdate(true);//wichtig (!), damit HashMap in Test.class persistiert wird!
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private void closeDB() {
-		if(db == null) {
-			try {
-				db.close();				
-				db = null;
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}		
+		db.store(character);
+		db.commit();
+		addCharacterToMap(character);
+		Log.i(getClass().getName(), "stored " + character);
 	}
 
 	/**
@@ -139,7 +115,6 @@ public class Persister {
 	 * @return true, wenn Character(s) geloescht werden konnte(en)
 	 */
 	public boolean remove(WOWCharacter character) {
-		openDB();
 		if (db != null) {
 			Object region = character.get( Data.REGION );
 			Object realm = character.get( Data.REALM );
@@ -148,11 +123,9 @@ public class Persister {
 					Data.REALM.name(), Data.NAME.name() }, new Object[] { region, realm, name },
 					QUANTOR_ALL);
 			while (result.hasNext()) {
-				WOWCharacter persitedCharacter = result.next();
-				db.delete(persitedCharacter);
-				db.commit();
+				db.delete(result.next());
 			}
-			closeDB();
+			db.commit();
 			if( result.size() > 0 ) {
 				removeCharacterFromMap(character);
 				Log.i(getClass().getName(), "deleted " + character);
@@ -258,10 +231,8 @@ public class Persister {
 	 * @throws Exception
 	 */
 	public void change(WOWCharacter character) throws Exception {
-//			db.store(character);
-//			db.commit();
-		remove(character);
-		add(character);
+		db.store(character);
+		db.commit();
 	}
 
 }

@@ -86,16 +86,13 @@ public class Model {
 			String key = character.getKey();
 			BitmapDb4o bm4o = new BitmapDb4o( key, pixels, bm.getWidth(), bm.getHeight() );
 			character.put( Data.BITMAP, bm4o );
+			
 		} catch (IOException ioe) {
 			Log.i( getClass().getName(), "bitmap not loaded" );
 		}
 		persister.add( character );
 	}
 
-	public void add( WOWCharacter character ) throws Exception {
-		persister.add(character);
-	}
-	
 	/**
 	 * Favorit loeschen
 	 * 
