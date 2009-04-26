@@ -6,7 +6,7 @@ import java.util.Map;
 
 import android.graphics.Bitmap;
 import android.util.Log;
-import de.stm.android.wowcharacter.data.WOWCharacter.Data;
+import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.util.*;
 import de.stm.android.wowcharacter.util.Armory.R;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
@@ -14,7 +14,6 @@ import de.stm.android.wowcharacter.util.Armory.R.Region;
 /**
  * Modell (singleton), mit Model.getInstance() anzusprechen
  * 
- * @version $Revision: $Date: $
  * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
  */
 public class Model {
@@ -52,7 +51,7 @@ public class Model {
 	/**
 	 * @return
 	 */
-	public Map<String, WOWCharacter> getMapCharacters() {
+	public Map<String, Character> getMapCharacters() {
 		return persister.getMapCharacters();
 	}
 
@@ -62,7 +61,7 @@ public class Model {
 	 * @param character
 	 * @throws Exception
 	 */
-	public void addFavorite( WOWCharacter character ) throws Exception {
+	public void addFavorite( Character character ) throws Exception {
 		String server = R.URL_US;
 		String path = "images/portraits/wow-80/";
 		String file = character.get( Data.GENDERID ) + "-" + character.get( Data.RACEID ) + "-"
@@ -99,7 +98,7 @@ public class Model {
 	 * @param character
 	 * @return true, wenn Character(s) geloescht werden konnte(en)
 	 */
-	public boolean removeFavorite( WOWCharacter character ) {
+	public boolean removeFavorite( Character character ) {
 		return persister.remove( character );
 	}
 
@@ -121,11 +120,11 @@ public class Model {
 	 * 
 	 * @param character
 	 */
-	public void getInfos( WOWCharacter character ) {
+	public void getInfos( Character character ) {
 		Log.i( getClass().getName(), "getInfos()" + character );
 	}
 
-	public void changeCharacter(WOWCharacter character) throws Exception {
+	public void changeCharacter(Character character) throws Exception {
 		persister.change(character);
 	}
 }

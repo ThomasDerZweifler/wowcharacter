@@ -25,24 +25,34 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
-import de.stm.android.wowcharacter.data.WOWCharacter;
-import de.stm.android.wowcharacter.data.WOWCharacter.Data;
+import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.BitmapDb4o;
 
+/**
+ * 
+ * Detailansicht eines Charakters
+ * 
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
+ * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
+ * 
+ */
 public class Characterview extends Activity {
-	private WOWCharacter character;
+	private Character character;
 	private Armory armory = new Armory();
+	private Document doc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		String sCharacter = getIntent().getStringExtra(WOWCharacter.ID_WOWCHARACTER);
+		String sCharacter = getIntent().getStringExtra(Character.ID_WOWCHARACTER);
 		character = Model.getInstance().getMapCharacters().get(sCharacter);
 		init();
 		fillHeader();
-		fillDetails();		
+		fillDetails();
+		fillItems();
 	}
 
 	private void init() {
@@ -53,6 +63,7 @@ public class Characterview extends Activity {
 		setTitle( sAppName + " (" + sTitle + ")" );
 
 		initTabs();
+		doc = getXML();
 	}
 
 	private void initTabs() {
@@ -81,7 +92,7 @@ public class Characterview extends Activity {
 		spec.setContent(new TabHost.TabContentFactory() {
 			public View createTabContent(String tag) {
 				LayoutInflater inflater = getLayoutInflater();
-				return inflater.inflate(R.layout.characterviewtabitems, null);
+				return inflater.inflate(R.layout.characterviewtabitemlist, null);
 			}
 		});
 		spec.setIndicator("Items");
@@ -130,7 +141,6 @@ public class Characterview extends Activity {
 	}
 
 	private void fillDetails() {
-		Document doc = getXML();
 		NodeList nl;
 				
 		if (doc == null) {
@@ -182,6 +192,10 @@ public class Characterview extends Activity {
 		pbtwo.setMax(secondValue);
 		pbtwo.setProgress(secondValue);
 		pbtwo.setProcessingText(Integer.toString(secondValue));
+	}
+	
+	private void fillItems(){
+		
 	}
 	
 	private Document getXML() {

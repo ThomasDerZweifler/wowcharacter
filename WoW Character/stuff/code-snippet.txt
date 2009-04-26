@@ -74,3 +74,14 @@
 			}
 		});
 	
+	------------ ViewFlipper -------------------
+
+		//setContentView( R.layout.splash );
+		//View splash = findViewById( R.id.splash );
+		//setContentView( v );
+		viewFlipper.addView( splash );
+
+		viewFlipper.setInAnimation( AnimationUtils.loadAnimation( this, R.anim.rotate ) );
+		viewFlipper.setOutAnimation( AnimationUtils.loadAnimation( this, R.anim.slide_left_out ) );
+		viewFlipper.setFlipInterval( 2000 );
+		viewFlipper.startFlipping();	

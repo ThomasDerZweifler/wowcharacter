@@ -4,16 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * WOW Character
+ * Characterdetails
  * 
- * @version $Revision:  $Date: $
- * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
+ * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  *
  */
-public class WOWCharacter implements
-		Comparable<WOWCharacter> {
+public class Character implements
+		Comparable<Character> {
 
-	private static final long serialVersionUID = 1L;
 	public static final String ID_WOWCHARACTER = "de.stm.android.wowcharacter.data.WOWCharacter";
 	
 	public static enum Data {
@@ -35,7 +34,7 @@ public class WOWCharacter implements
 	
 	Map<Object,Object> map = new HashMap<Object,Object>();
 	
-	public int compareTo(WOWCharacter other) {
+	public int compareTo(Character other) {
 		Object o = get(Data.REALM);
 		if (o != null) {
 			return o.toString().compareTo(other.get(Data.REALM).toString());

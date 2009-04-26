@@ -4,26 +4,29 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.db4o.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
 import com.db4o.query.Predicate;
 
-import de.stm.android.wowcharacter.data.WOWCharacter;
-import de.stm.android.wowcharacter.data.WOWCharacter.Data;
+import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.Character.Data;
 
 /**
+ * 
  * Speicher der Charactere
  * 
- * @author tfunke
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
+ *
  */
 public class Persister {
 	private String dbName;
 	/** Speicher */
 	private ObjectContainer db;
-	private Map<String, WOWCharacter> mapCharacters = new HashMap<String, WOWCharacter>();
+	private Map<String, Character> mapCharacters = new HashMap<String, Character>();
 	private int QUANTOR_EXISTS = 1;
 	private int QUANTOR_ALL = 2;
 
@@ -42,12 +45,12 @@ public class Persister {
 		try {
 			db = Db4o.openFile(dbName);
 			Configuration config = db.ext().configure();      
-		    config.objectClass(WOWCharacter.class).cascadeOnUpdate(true);//wichtig (!), damit HashMap in Test.class persistiert wird!
+		    config.objectClass(Character.class).cascadeOnUpdate(true);//wichtig (!), damit HashMap in Test.class persistiert wird!
 			
-			WOWCharacter proto = new WOWCharacter();// alle Objekte
-			ObjectSet<WOWCharacter> result = db.queryByExample(proto);
+			Character proto = new Character();// alle Objekte
+			ObjectSet<Character> result = db.queryByExample(proto);
 			while (result.hasNext()) {
-				WOWCharacter character = result.next();
+				Character character = result.next();
 				addCharacterToMap(character);
 			}
 		} catch (Exception e) {
@@ -59,7 +62,7 @@ public class Persister {
 	 * @param character
 	 * @return
 	 */
-	public boolean addCharacterToMap(WOWCharacter character) {
+	public boolean addCharacterToMap(Character character) {
 		String key = character.getKey();
 		mapCharacters.put(key, character);
 		return true;
@@ -69,7 +72,7 @@ public class Persister {
 	 * @param character
 	 * @return
 	 */
-	public boolean removeCharacterFromMap(WOWCharacter character) {
+	public boolean removeCharacterFromMap(Character character) {
 		String key = character.getKey();
 		mapCharacters.remove(key);
 		return true;
@@ -78,7 +81,7 @@ public class Persister {
 	/**
 	 * @return
 	 */
-	public Map<String, WOWCharacter> getMapCharacters() {
+	public Map<String, Character> getMapCharacters() {
 		return mapCharacters;
 	}
 
@@ -101,7 +104,7 @@ public class Persister {
 	 * @param value
 	 * @return
 	 */
-	public void add(WOWCharacter character) throws Exception {
+	public void add(Character character) throws Exception {
 		db.store(character);
 		db.commit();
 		addCharacterToMap(character);
@@ -114,12 +117,12 @@ public class Persister {
 	 * @param character
 	 * @return true, wenn Character(s) geloescht werden konnte(en)
 	 */
-	public boolean remove(WOWCharacter character) {
+	public boolean remove(Character character) {
 		if (db != null) {
 			Object region = character.get( Data.REGION );
 			Object realm = character.get( Data.REALM );
 			Object name = character.get( Data.NAME);
-			ObjectSet<WOWCharacter> result = get(new Object[] { Data.REGION.name(),
+			ObjectSet<Character> result = get(new Object[] { Data.REGION.name(),
 					Data.REALM.name(), Data.NAME.name() }, new Object[] { region, realm, name },
 					QUANTOR_ALL);
 			while (result.hasNext()) {
@@ -145,12 +148,12 @@ public class Persister {
 	 * @return
 	 */
 	@SuppressWarnings("serial")
-	public ObjectSet<WOWCharacter> get(final Object attribute,
+	public ObjectSet<Character> get(final Object attribute,
 			final Object value) {
-		ObjectSet<WOWCharacter> os = null;
+		ObjectSet<Character> os = null;
 		if (db != null) {
-			os = db.query(new Predicate<WOWCharacter>() {
-				public boolean match(WOWCharacter character) {
+			os = db.query(new Predicate<Character>() {
+				public boolean match(Character character) {
 					boolean b = false;
 					Object o = character.get(Data.valueOf((String) attribute));
 					if (o != null) {
@@ -175,12 +178,12 @@ public class Persister {
 	 * @return
 	 */
 	@SuppressWarnings("serial")
-	public ObjectSet<WOWCharacter> get(final Object[] attributes,
+	public ObjectSet<Character> get(final Object[] attributes,
 			final Object[] values, final int quantor) {
-		ObjectSet<WOWCharacter> os = null;
+		ObjectSet<Character> os = null;
 		if (db != null) {
-			os = db.query(new Predicate<WOWCharacter>() {
-				public boolean match(WOWCharacter character) {
+			os = db.query(new Predicate<Character>() {
+				public boolean match(Character character) {
 					boolean b = false;
 					if (quantor == QUANTOR_EXISTS) {
 						int i = 0;
@@ -218,9 +221,9 @@ public class Persister {
 	/**
 	 * @param result
 	 */
-	public void listResult(ObjectSet<WOWCharacter> result) {
+	public void listResult(ObjectSet<Character> result) {
 		while (result.hasNext()) {
-			WOWCharacter character = result.next();
+			Character character = result.next();
 			Log.i(getClass().getName(), character.toString());
 		}
 	}
@@ -230,7 +233,7 @@ public class Persister {
 	 * @param character
 	 * @throws Exception
 	 */
-	public void change(WOWCharacter character) throws Exception {
+	public void change(Character character) throws Exception {
 		db.store(character);
 		db.commit();
 	}

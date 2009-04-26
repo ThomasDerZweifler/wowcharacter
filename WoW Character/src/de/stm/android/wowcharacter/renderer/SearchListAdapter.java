@@ -9,27 +9,27 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.data.WOWCharacter;
-import de.stm.android.wowcharacter.data.WOWCharacter.Data;
+import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.Character.Data;
 
 /**
- * Zeilenrenderer
+ * Charakterzeilenrenderer für Suchliste
  * 
- * @version $Revision: $Date: $
- * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
+ * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  * 
  */
 @SuppressWarnings("unchecked")
 public class SearchListAdapter extends ArrayAdapter {
 	private static final int res = R.layout.searchlistitem;
 	private Activity context;
-	private ArrayList<WOWCharacter> item;
+	private ArrayList<Character> item;
 
 	/**
 	 * @param context
 	 * @param item
 	 */
-	public SearchListAdapter( Activity context, ArrayList<WOWCharacter> item ) {
+	public SearchListAdapter( Activity context, ArrayList<Character> item ) {
 		super( context, res, item );
 		this.context = context;
 		this.item = item;
@@ -42,7 +42,7 @@ public class SearchListAdapter extends ArrayAdapter {
 			LayoutInflater inflater = context.getLayoutInflater();
 			row = inflater.inflate( res, null );
 		}
-		WOWCharacter character = item.get( position );
+		Character character = item.get( position );
 		if (character != null) {
 			Object o = character.get( Data.BITMAP );
 //			if (o instanceof BitmapDb4o) {
