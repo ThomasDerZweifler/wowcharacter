@@ -5,10 +5,11 @@ import java.net.URLEncoder;
 import java.util.Locale;
 
 /**
- * Armory
  * 
- * @version $Revision:  $Date: $
- * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ * Abruf der XML-Daten aus dem Armory
+ * 
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
+ * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  *
  */
 public class Armory {
@@ -27,6 +28,8 @@ public class Armory {
 		final static public String SEARCHTYPE_CHAR = "&searchType=characters";
 
 		final static public String CHARACTERSHEETPAGE = "character-sheet.xml?";	
+
+		final static public String ITEMINFOPAGE = "item-info.xml?i=";	
 	}
 	
 	private Locale locale;
@@ -102,6 +105,19 @@ public class Armory {
 		}
 		
 		String url = server + R.CHARACTERSHEETPAGE + urlquery;
+		
+		StringBuilder sb = Connection.getXML(url, this.locale, true);
+		
+		return sb;
+	}
+	
+	public StringBuilder iteminfo(int id, R.Region region) {
+		String server = R.URL_EU;
+		if (region == R.Region.US) {
+			server = R.URL_US;
+		}
+		
+		String url = server + R.ITEMINFOPAGE + Integer.toString(id);
 		
 		StringBuilder sb = Connection.getXML(url, this.locale, true);
 		

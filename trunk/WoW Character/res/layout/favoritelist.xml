@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:baselineAligned="true"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	
+	<ViewFlipper android:id="@+id/flipperView"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="fill_parent">
+		
+		<RelativeLayout android:id="@+id/splash" 
+			android:layout_height="fill_parent"
+			android:layout_width="fill_parent">
+			<ImageView android:id="@+id/splash_image"
+				android:layout_height="wrap_content"
+				android:src="@drawable/wow_logo_wrath"
+				android:layout_centerInParent="true"
+				android:layout_width="fill_parent"/>
+			<TextView android:id="@+id/splash_label_app" 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/app_name"
+				android:layout_centerHorizontal="true"
+				android:layout_below="@+id/splash_image" />
+			<TextView android:id="@+id/splash_label_ver" 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_below="@+id/splash_label_app" />		
+		</RelativeLayout>
+		
+		<LinearLayout 
+			android:orientation="vertical"
+			android:baselineAligned="true"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent">
+			<ListView android:id="@android:id/list"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:drawSelectorOnTop="false" />
+		</LinearLayout>
+	</ViewFlipper>
+</LinearLayout>

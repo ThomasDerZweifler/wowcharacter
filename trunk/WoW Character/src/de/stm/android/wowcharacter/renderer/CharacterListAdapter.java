@@ -7,28 +7,28 @@ import android.graphics.Bitmap;
 import android.view.*;
 import android.widget.*;
 import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.data.WOWCharacter;
-import de.stm.android.wowcharacter.data.WOWCharacter.Data;
+import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.util.BitmapDb4o;
 
 /**
- * Zeilenrenderer
+ * Charakterzeilenrenderer für Favoritenliste
  * 
- * @version $Revision: $Date: $
- * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
+ * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  * 
  */
 @SuppressWarnings("unchecked")
 public class CharacterListAdapter extends ArrayAdapter {
 	private static final int res = R.layout.characterlistitem;
 	private Activity context;
-	private ArrayList<WOWCharacter> item;
+	private ArrayList<Character> item;
 
 	/**
 	 * @param context
 	 * @param item
 	 */
-	public CharacterListAdapter( Activity context, ArrayList<WOWCharacter> item ) {
+	public CharacterListAdapter( Activity context, ArrayList<Character> item ) {
 		super( context, res, item );
 		this.context = context;
 		this.item = item;
@@ -41,7 +41,7 @@ public class CharacterListAdapter extends ArrayAdapter {
 			LayoutInflater inflater = context.getLayoutInflater();
 			row = inflater.inflate( res, null );
 		}
-		WOWCharacter character = item.get( position );
+		Character character = item.get( position );
 		if (character != null) {
 			Object o = character.get( Data.BITMAP );
 			if (o instanceof BitmapDb4o) {

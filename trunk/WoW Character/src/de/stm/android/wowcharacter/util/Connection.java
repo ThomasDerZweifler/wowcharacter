@@ -11,9 +11,9 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 /**
+ * 
  * Laden von Inhalten aus dem Internet
  * 
- * @version $Revision:  $Date: $
  * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
  *
  */

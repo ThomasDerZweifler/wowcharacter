@@ -27,7 +27,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
-import de.stm.android.wowcharacter.data.WOWCharacter;
+import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.renderer.SearchListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
@@ -36,11 +36,11 @@ import de.stm.android.wowcharacter.xml.InterpretSearch;
 /**
  * Suchdialog
  * 
- * @version $Revision:  $Date: $
- * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
+ * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  * 
  */
-public class Search extends ListActivity {
+public class Searchlist extends ListActivity {
 	private EditText et;
 	private ImageButton bt;
 	private ToggleButton tb_EU;
@@ -52,7 +52,7 @@ public class Search extends ListActivity {
 	private Armory.R.Region region;
 	private Thread searchThread;
 	private InterpretSearch is = new InterpretSearch();
-	ArrayList<WOWCharacter> listModel = new ArrayList<WOWCharacter>();
+	ArrayList<Character> listModel = new ArrayList<Character>();
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage( Message msg ) {
@@ -65,7 +65,7 @@ public class Search extends ListActivity {
 				}
 				listModel.clear();
 				is.readXML( sbXMLPage.toString(), region, listModel );
-				SearchListAdapter sla = new SearchListAdapter( Search.this, listModel );
+				SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
 				Collections.sort( listModel );
 
 				setListAdapter( sla );					
@@ -80,7 +80,7 @@ public class Search extends ListActivity {
 					s = getString( R.string.search_char_found_more_toast );
 					s = s.replace( "%1", Integer.toString( listsize ) );					
 				}
-				Toast.makeText( Search.this, s, Toast.LENGTH_SHORT ).show();
+				Toast.makeText( Searchlist.this, s, Toast.LENGTH_SHORT ).show();
 				
 			}
 		}
@@ -99,7 +99,7 @@ public class Search extends ListActivity {
 		model = Model.getInstance();
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);//fuer Fortschrittskreis in Titelzeile
 		/** View und Titel setzen */
-		setContentView( R.layout.search );
+		setContentView( R.layout.searchlist );
         setProgressBarIndeterminateVisibility(false);
 		String sAppName = getString( R.string.app_name );
 		String sTitle = getString( R.string.search_title );
@@ -196,7 +196,7 @@ public class Search extends ListActivity {
 	@Override
 	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo menuInfo ) {
 		new MenuInflater( getApplication() ).inflate( R.menu.searchcontext, menu );
-		WOWCharacter character = (WOWCharacter)getListAdapter().getItem(
+		Character character = (Character)getListAdapter().getItem(
 				((AdapterView.AdapterContextMenuInfo)menuInfo).position );
 		menu.setHeaderTitle( character.toString() );
 		super.onCreateContextMenu( menu, v, menuInfo );
@@ -208,7 +208,7 @@ public class Search extends ListActivity {
 		case R.id.searchcontextmenu_add_favorite:
 			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo)item
 					.getMenuInfo();
-			WOWCharacter character = (WOWCharacter)getListAdapter().getItem( cmi.position );
+			Character character = (Character)getListAdapter().getItem( cmi.position );
 			try {
 				Model.getInstance().addFavorite( character );		
 				//Don 't call it Schnitzel;o)
@@ -227,7 +227,7 @@ public class Search extends ListActivity {
 
 	@Override
 	protected void onListItemClick( ListView l, View v, int position, long id ) {
-		WOWCharacter character = (WOWCharacter)getListAdapter().getItem( position );
+		Character character = (Character)getListAdapter().getItem( position );
 		model.getInfos( character );
 	}
 

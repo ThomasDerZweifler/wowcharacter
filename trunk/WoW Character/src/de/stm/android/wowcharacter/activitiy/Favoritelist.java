@@ -1,43 +1,81 @@
 package de.stm.android.wowcharacter.activitiy;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.view.*;
+import android.os.Handler;
+import android.os.Message;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Model;
-import de.stm.android.wowcharacter.data.WOWCharacter;
-import de.stm.android.wowcharacter.data.WOWCharacter.Data;
+import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.renderer.CharacterListAdapter;
 
 /**
  * 
+ * Einstiegspunkt für Splash gefolgt von der Favoritenliste. Wenn Favoritenliste leer,
+ * dann wird in die Suche verzweigt
  * 
- * @version $Revision: $Date: $
- * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
+ * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  * 
  */
-public class Characterlist extends ListActivity {
+public class Favoritelist extends ListActivity {
 	private Model model;
 	/** true beim erstmaligen Aufruf */
 	private boolean atFirst = true;
 	protected final static int CONTEXTMENU_REMOVE_FAVORITE = 0;
 	/** Bestaetigungsdialog zum Loeschen aller Character */
 	private Builder alertDeleteAll;
-
+	/** NachrichtenID zum Beenden des Splash */
+	private static final int STOPSPLASH = 0;
+    /** time in milliseconds */
+    private static final long SPLASHTIME = 3000;
 	/** Sortierrichtungen */
 	public static enum SortDirection {
 		ASCEND, DESCEND
 	};
+    private Handler splashHandler = new Handler() {
+        /* (non-Javadoc)
+         * @see android.os.Handler#handleMessage(android.os.Message)
+         */
+        @Override
+        public void handleMessage(Message msg) {
+             switch (msg.what) {
+             case STOPSPLASH:
+            	 goToCharacterList();
+            	 break;
+             }
+             super.handleMessage(msg);
+        }
+   };
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,28 +96,24 @@ public class Characterlist extends ListActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Map<String, WOWCharacter> mapCharacters = model.getMapCharacters();
-		// wenn Characterliste leer, dann gleich zur Suche springen (nur beim
-		// ersten Aufruf)
-		if (atFirst && mapCharacters.size() == 0) {
-			goToSearch();
-			atFirst = false;
-		} else {
-			sortAndFill("NAME", SortDirection.ASCEND);
-		}
+		sortAndFill("NAME", SortDirection.ASCEND);
 	}
 
 	private void init() {
-		setContentView(R.layout.characterlist);
-		String sAppName = getString(R.string.app_name);
-		String sTitle = getString(R.string.charlist_title);
-		setTitle(sAppName + " (" + sTitle + ")");
+		setContentView(R.layout.favoritelist);
+
+        Message msg = new Message();
+        msg.what = STOPSPLASH;
+        splashHandler.sendMessageDelayed(msg, SPLASHTIME);
+
+		initSplash();
+		
 		model = Model.getInstance();
 		getListView().setOnCreateContextMenuListener(
 				new OnCreateContextMenuListener() {
 					public void onCreateContextMenu(ContextMenu cm, View view,
 							ContextMenuInfo cmi) {
-						WOWCharacter character = (WOWCharacter) getListAdapter()
+						Character character = (Character) getListAdapter()
 								.getItem(
 										((AdapterView.AdapterContextMenuInfo) cmi).position);
 						cm.setHeaderTitle(character.toString());
@@ -107,9 +141,26 @@ public class Characterlist extends ListActivity {
 						});
 	}
 
+	private void initSplash() {
+        ((RelativeLayout) findViewById(R.id.splash)).setOnClickListener(new OnClickListener(){
+        	public void onClick(View v) {
+        		goToCharacterList();
+        	}
+        });
+        
+        TextView mTextView = (TextView) findViewById(R.id.splash_label_ver);
+
+        try {
+            PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+            mTextView.setText("Version: " + pi.versionName);
+        } catch (NameNotFoundException e) {
+            // should never happen 
+        };		
+	}
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		WOWCharacter character = (WOWCharacter) getListAdapter().getItem(
+		Character character = (Character) getListAdapter().getItem(
 				position);
 
 		model.getInfos(character);
@@ -122,7 +173,7 @@ public class Characterlist extends ListActivity {
 		case CONTEXTMENU_REMOVE_FAVORITE:
 			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo) item
 					.getMenuInfo();
-			WOWCharacter character = (WOWCharacter) getListAdapter().getItem(
+			Character character = (Character) getListAdapter().getItem(
 					cmi.position);
 			boolean success = Model.getInstance().removeFavorite(character);
 			if (success) {
@@ -180,13 +231,13 @@ public class Characterlist extends ListActivity {
 	 */
 	private void sortAndFill(final Object attribute,
 			final SortDirection direction) {
-		Map<String, WOWCharacter> mapCharacters = model.getMapCharacters();
-		Collection<WOWCharacter> c = mapCharacters.values();
-		ArrayList<WOWCharacter> al = new ArrayList<WOWCharacter>(c);
+		Map<String, Character> mapCharacters = model.getMapCharacters();
+		Collection<Character> c = mapCharacters.values();
+		ArrayList<Character> al = new ArrayList<Character>(c);
 		// Comparator der Attribut zum Sortieren nutzt TODO auf/absteigende
 		// Sortierung
-		Comparator<WOWCharacter> comp = new Comparator<WOWCharacter>() {
-			public int compare(WOWCharacter thisObject, WOWCharacter otherObject) {
+		Comparator<Character> comp = new Comparator<Character>() {
+			public int compare(Character thisObject, Character otherObject) {
 				Object o = thisObject.get(Data.valueOf((String)attribute));
 				int result = 0;// nicht Vertauschen
 				if (o instanceof String) {
@@ -208,18 +259,38 @@ public class Characterlist extends ListActivity {
 
 	}
 
+	private void goToCharacterList() {
+		splashHandler.removeMessages(STOPSPLASH);
+		
+		ViewFlipper flipper = (ViewFlipper)findViewById(R.id.flipperView);
+		flipper.showNext();
+
+		String sAppName = getString(R.string.app_name);
+		String sTitle = getString(R.string.charlist_title);
+		setTitle(sAppName + " (" + sTitle + ")");
+
+		Map<String, Character> mapCharacters = model.getMapCharacters();
+		// wenn Characterliste leer, dann gleich zur Suche springen (nur beim
+		// ersten Aufruf)
+		if (atFirst && mapCharacters.size() == 0) {
+			goToSearch();
+			atFirst = false;
+		}
+
+	}
+
 	/**
 	 * 
 	 */
 	private void goToSearch() {
-		Intent intent = new Intent(this, de.stm.android.wowcharacter.activitiy.Search.class);
+		Intent intent = new Intent(this, de.stm.android.wowcharacter.activitiy.Searchlist.class);
 		startActivity(intent);
 	}
 
-	private void goToDetails(WOWCharacter character) {
+	private void goToDetails(Character character) {
 		Intent intent = new Intent(this,
 				de.stm.android.wowcharacter.activitiy.Characterview.class);
-		intent.putExtra(WOWCharacter.ID_WOWCHARACTER, character.getKey());
+		intent.putExtra(Character.ID_WOWCHARACTER, character.getKey());
 		startActivity(intent);
 	}
 }

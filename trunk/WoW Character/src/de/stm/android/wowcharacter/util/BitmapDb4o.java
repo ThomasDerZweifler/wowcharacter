@@ -1,9 +1,9 @@
 package de.stm.android.wowcharacter.util;
 
 /**
+ * 
  * Bitmap die persistiert werden kann
  * 
- * @version $Revision:  $Date: $
  * @author <a href="mailto:tfunke@icubic.de">Thomas Funke</a>
  *
  */

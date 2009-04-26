@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 /**
  * Fortschrittsbalken mit Text
  * 
- * @author
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>
  * 
  */
 public class CustomProgressBar extends ProgressBar {

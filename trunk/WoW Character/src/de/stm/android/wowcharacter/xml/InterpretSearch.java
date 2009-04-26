@@ -10,20 +10,19 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.util.Log;
-import de.stm.android.wowcharacter.data.WOWCharacter;
+import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
 
 /**
- * Suchergebnis interpretieren
+ * Suchergebnis (XML-Daten) interpretieren
  * 
- * @version $Revision:  $Date: $
- * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>
- * @author <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
+ * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  * 
  */
 public class InterpretSearch extends DefaultHandler {
 	private static final String TAG = "InterpretSearch";
-	private ArrayList<WOWCharacter> listModel;
+	private ArrayList<Character> listModel;
 	private Region region;
 
 	@Override
@@ -31,19 +30,19 @@ public class InterpretSearch extends DefaultHandler {
 			throws SAXException {
 		if (localName.trim().equals( "character" )) {
 			try {
-				WOWCharacter sr = new WOWCharacter();
-				sr.put( WOWCharacter.Data.NAME, attributes.getValue( "name" ) );
-				sr.put( WOWCharacter.Data.REALM, attributes.getValue( "realm" ) );
-				sr.put( WOWCharacter.Data.FACTIONID, attributes.getValue( "factionId" ) );
-				sr.put( WOWCharacter.Data.LEVEL, new Integer( attributes.getValue( "level" ) ) );
-				sr.put( WOWCharacter.Data.GENDERID, attributes.getValue( "genderId" ) );
-				sr.put( WOWCharacter.Data.RACE, attributes.getValue( "race" ) );
-				sr.put( WOWCharacter.Data.RACEID, attributes.getValue( "raceId" ) );
-				sr.put( WOWCharacter.Data.CLASS, attributes.getValue( "class" ) );
-				sr.put( WOWCharacter.Data.CLASSID, attributes.getValue( "classId" ) );
-				sr.put( WOWCharacter.Data.GUILD, attributes.getValue( "guild" ) );
-				sr.put( WOWCharacter.Data.URL, attributes.getValue( "url" ) );
-				sr.put( WOWCharacter.Data.REGION, region.name() );
+				Character sr = new Character();
+				sr.put( Character.Data.NAME, attributes.getValue( "name" ) );
+				sr.put( Character.Data.REALM, attributes.getValue( "realm" ) );
+				sr.put( Character.Data.FACTIONID, attributes.getValue( "factionId" ) );
+				sr.put( Character.Data.LEVEL, new Integer( attributes.getValue( "level" ) ) );
+				sr.put( Character.Data.GENDERID, attributes.getValue( "genderId" ) );
+				sr.put( Character.Data.RACE, attributes.getValue( "race" ) );
+				sr.put( Character.Data.RACEID, attributes.getValue( "raceId" ) );
+				sr.put( Character.Data.CLASS, attributes.getValue( "class" ) );
+				sr.put( Character.Data.CLASSID, attributes.getValue( "classId" ) );
+				sr.put( Character.Data.GUILD, attributes.getValue( "guild" ) );
+				sr.put( Character.Data.URL, attributes.getValue( "url" ) );
+				sr.put( Character.Data.REGION, region.name() );
 				listModel.add( sr );
 			} catch (Exception e) {
 				/** */
@@ -60,7 +59,7 @@ public class InterpretSearch extends DefaultHandler {
 	 * @param listModel
 	 * @return
 	 */
-	public void readXML( String xml, Region region, ArrayList<WOWCharacter> listModel ) {
+	public void readXML( String xml, Region region, ArrayList<Character> listModel ) {
 		this.listModel = listModel;
 		this.region = region;
 		try {
