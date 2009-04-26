@@ -81,6 +81,12 @@
 		//setContentView( v );
 		viewFlipper.addView( splash );
 
+		//besser, weil setContentView(R.layout.splash) nur einmal funktioniert, da Initialisierung
+		LayoutInflater inflater = getLayoutInflater();
+		View splash = inflater.inflate(R.layout.splash, null);
+		viewFlipper.addView( splash );
+
+
 		viewFlipper.setInAnimation( AnimationUtils.loadAnimation( this, R.anim.rotate ) );
 		viewFlipper.setOutAnimation( AnimationUtils.loadAnimation( this, R.anim.slide_left_out ) );
 		viewFlipper.setFlipInterval( 2000 );
