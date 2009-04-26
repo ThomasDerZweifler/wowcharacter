@@ -47,8 +47,6 @@ import de.stm.android.wowcharacter.renderer.CharacterListAdapter;
  */
 public class Favoritelist extends ListActivity {
 	private Model model;
-	/** true beim erstmaligen Aufruf */
-	private boolean atFirst = true;
 	protected final static int CONTEXTMENU_REMOVE_FAVORITE = 0;
 	/** Bestaetigungsdialog zum Loeschen aller Character */
 	private Builder alertDeleteAll;
@@ -270,13 +268,11 @@ public class Favoritelist extends ListActivity {
 		setTitle(sAppName + " (" + sTitle + ")");
 
 		Map<String, Character> mapCharacters = model.getMapCharacters();
-		// wenn Characterliste leer, dann gleich zur Suche springen (nur beim
-		// ersten Aufruf)
-		if (atFirst && mapCharacters.size() == 0) {
-			goToSearch();
-			atFirst = false;
-		}
 
+		// wenn Characterliste leer, dann gleich zur Suche springen
+		if (mapCharacters.size() == 0) {
+			goToSearch();
+		}
 	}
 
 	/**
