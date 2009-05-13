@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -31,8 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.renderer.CharacterListAdapter;
 
@@ -261,6 +262,8 @@ public class Favoritelist extends ListActivity {
 		splashHandler.removeMessages(STOPSPLASH);
 		
 		ViewFlipper flipper = (ViewFlipper)findViewById(R.id.flipperView);
+		flipper.setInAnimation( AnimationUtils.loadAnimation( this, R.anim.fade_in ) );
+		flipper.setOutAnimation( AnimationUtils.loadAnimation( this, R.anim.fade_out ) );
 		flipper.showNext();
 
 		String sAppName = getString(R.string.app_name);
