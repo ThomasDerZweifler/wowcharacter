@@ -2,14 +2,9 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="fill_parent"
 	android:layout_width="fill_parent"
-	android:stretchColumns="1" android:baselineAligned="true">
+	android:baselineAligned="true" android:stretchColumns="0">
 	<TableRow>
-		<TextView android:text="@string/charview_health"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="5px" />
 		<de.stm.android.wowcharacter.gui.CustomProgressBar android:id="@+id/progress_health"
-			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px"
 
@@ -17,16 +12,12 @@
 			android:progressDrawable="@drawable/progress_horizontal_life"
 			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
 			android:minHeight="20dip"
-			android:maxHeight="20dip"/>
+			android:maxHeight="20dip"
+			android:layout_width="fill_parent"/>
 	</TableRow>
 	<TableRow>
-		<TextView android:id="@+id/charview_res"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="5px"/>
 		<de.stm.android.wowcharacter.gui.CustomProgressBar android:id="@+id/progress_res"
 		    android:text="Test-Text"
-			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px"
 			
@@ -34,14 +25,39 @@
 			android:progressDrawable="@drawable/progress_horizontal_mana"
 			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
 			android:minHeight="20dip"
-			android:maxHeight="20dip"/>
+			android:maxHeight="20dip"
+			android:layout_width="fill_parent"/>
 	</TableRow>
 	<TableRow>
 		<ImageView android:src="@drawable/horizontal_line"
-			android:layout_span="2"
-			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:maxHeight="1px"
-			android:minHeight="1px"/>
+			android:minHeight="1px"
+			android:layout_width="fill_parent"
+			android:layout_margin="5px"/>
+	</TableRow>
+	<TableRow>
+		<de.stm.android.wowcharacter.gui.CustomProgressBar android:id="@+id/progress_prof_one"
+			android:layout_height="wrap_content"
+			android:layout_margin="5px"
+
+			android:indeterminateOnly="false"
+			android:progressDrawable="@drawable/progress_horizontal_mana"
+			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+			android:minHeight="20dip"
+			android:maxHeight="20dip"
+			android:layout_width="fill_parent"/>
+	</TableRow>
+	<TableRow>
+		<de.stm.android.wowcharacter.gui.CustomProgressBar android:id="@+id/progress_prof_two"
+			android:layout_height="wrap_content"
+			android:layout_margin="5px"
+
+			android:indeterminateOnly="false"
+			android:progressDrawable="@drawable/progress_horizontal_mana"
+			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+			android:minHeight="20dip"
+			android:maxHeight="20dip"
+			android:layout_width="fill_parent"/>
 	</TableRow>
 </TableLayout>

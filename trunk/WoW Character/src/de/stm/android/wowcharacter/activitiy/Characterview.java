@@ -9,6 +9,7 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -24,8 +25,8 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
 import de.stm.android.wowcharacter.util.Armory;
@@ -142,6 +143,10 @@ public class Characterview extends Activity {
 
 	private void fillDetails() {
 		NodeList nl;
+		CustomProgressBar progbar;
+		int value_progress;
+		int value_max;
+		String barname = "";
 				
 		if (doc == null) {
 			// XML holen fehlgeschlagen
@@ -155,20 +160,27 @@ public class Characterview extends Activity {
 			return;
 		}
 		
+		/* erster Balken */
+		
 		nl = doc.getElementsByTagName("health");
-		int health = Integer.parseInt(nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
+		value_progress = value_max = Integer.parseInt(nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
 		
-		CustomProgressBar pbone = (CustomProgressBar)findViewById(R.id.progress_health);
-		pbone.setProgressDrawable(getResources().getDrawable(R.drawable.progress_horizontal_life));
-		pbone.setMax(health);
-		pbone.setProgress(health);
-		pbone.setProcessingText(Integer.toString(health));
+		progbar = (CustomProgressBar)findViewById(R.id.progress_health);
+		progbar.setProgressDrawable(getResources().getDrawable(R.drawable.progress_horizontal_life));
+		progbar.setMax(value_max);
+		progbar.setProgress(value_progress);
+		barname = getResources().getString(R.string.charview_health);
+		progbar.setProcessingText(barname + ": " + value_progress);
 		
-		nl = doc.getElementsByTagName("secondBar");
-		String secondType = nl.item(0).getAttributes().getNamedItem("type").getNodeValue();
-		int secondValue = Integer.parseInt(nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
+		/* zweiter Balken */
+		
+		String secondType = "";
 		int secondText;
 		Drawable secondColor;
+		
+		nl = doc.getElementsByTagName("secondBar");
+		secondType = nl.item(0).getAttributes().getNamedItem("type").getNodeValue();
+		value_progress = value_max = Integer.parseInt(nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
 
 		if (secondType.equals("r")) {
 			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_rage);
@@ -183,15 +195,31 @@ public class Characterview extends Activity {
 			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_mana);
 			secondText = R.string.charview_second_mana;
 		}
-
-		TextView tvtwo = (TextView)findViewById(R.id.charview_res);
-		tvtwo.setText(secondText);
 		
-		CustomProgressBar pbtwo = (CustomProgressBar)findViewById(R.id.progress_res);
-		pbtwo.setProgressDrawable(secondColor);
-		pbtwo.setMax(secondValue);
-		pbtwo.setProgress(secondValue);
-		pbtwo.setProcessingText(Integer.toString(secondValue));
+		progbar = (CustomProgressBar)findViewById(R.id.progress_res);
+		progbar.setProgressDrawable(secondColor);
+		progbar.setMax(value_max);
+		progbar.setProgress(value_progress);
+		barname = getResources().getString(secondText);
+		progbar.setProcessingText(barname + ": " + value_progress);
+		
+		/* dritter und vierter Balken */
+
+		nl = doc.getElementsByTagName("skill");
+		
+		for (int i = 0; i < nl.getLength(); i++) {
+			int bar = (i == 0) ? R.id.progress_prof_one : R.id.progress_prof_two;
+
+			value_progress = Integer.parseInt(nl.item(i).getAttributes().getNamedItem("value").getNodeValue());
+			value_max = Integer.parseInt(nl.item(i).getAttributes().getNamedItem("max").getNodeValue());
+			barname = nl.item(i).getAttributes().getNamedItem("name").getNodeValue();
+			
+			progbar = (CustomProgressBar)findViewById(bar);
+			progbar.setMax(value_max);
+			progbar.setProgress(value_progress);
+			progbar.setProcessingText(barname + ": " + value_progress + "/" + value_max);
+
+		}
 	}
 	
 	private void fillItems(){
