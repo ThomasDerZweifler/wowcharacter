@@ -1,6 +1,10 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2009-06-16)
+	+ Changed:	nach evtl. gescheiterter Onlineabfrage fuer Charakterdetails, Versuch Offline Ergebnis anzuzeigen
+	+ New:	Fullscreen fuer Splash
+
 (2009-04-22)
 	+ Fixed:	Speicherung der HashMap in WOWCharacter.class (cascadeOnUpdate())
 

@@ -3,13 +3,9 @@ package de.stm.android.wowcharacter.activitiy;
 import java.io.IOException;
 import java.io.StringReader;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -19,89 +15,80 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TabHost;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
-import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.BitmapDb4o;
 
 /**
- * 
  * Detailansicht eines Charakters
  * 
- * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
- * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
- * 
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>, <a
+ *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
 public class Characterview extends Activity {
 	private Character character;
-	private Armory armory = new Armory();
 	private Document doc;
+	private TabHost tabHost;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		String sCharacter = getIntent().getStringExtra(Character.ID_WOWCHARACTER);
-		character = Model.getInstance().getMapCharacters().get(sCharacter);
+	protected void onCreate( Bundle savedInstanceState ) {
+		super.onCreate( savedInstanceState );
 		init();
 		fillHeader();
+		initTabs();
 		fillDetails();
 		fillItems();
 	}
 
 	private void init() {
 		setContentView( R.layout.characterview );
-
+		
+		Boolean onlineResults = getIntent().getBooleanExtra( "ONLINE", false );
+		
 		String sAppName = getString( R.string.app_name );
 		String sTitle = getString( R.string.charview_title );
-		setTitle( sAppName + " (" + sTitle + ")" );
-
-		initTabs();
-		doc = getXML();
+		setTitle( sAppName + " (" + sTitle + ")" + " - " + ( onlineResults ? "online" : "offline" ) );
+		
+		String sCharacter = getIntent().getStringExtra( Character.ID_WOWCHARACTER );
+		character = Model.getInstance().getMapCharacters().get( sCharacter );
+		String xml = character.get( Data.XML ).toString();
+		doc = xmlToDocument( xml );
 	}
 
 	private void initTabs() {
-		TabHost tabs = (TabHost) findViewById(R.id.CharacterViewTab);
-		tabs.setup();
-
-		TabHost.TabSpec spec;
-		
-		tabs.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-			public void onTabChanged(String tabId) {
-				Log.i("Characterview", tabId);
+		tabHost = (TabHost)findViewById( R.id.CharacterViewTab );
+		tabHost.setup();
+		tabHost.setOnTabChangedListener( new TabHost.OnTabChangeListener() {
+			public void onTabChanged( String tabId ) {
+				Log.i( "Characterview", tabId );
 			}
-		});
-
-		spec = tabs.newTabSpec("details");
-		spec.setContent(new TabHost.TabContentFactory() {
-			public View createTabContent(String tag) {
+		} );
+		TabHost.TabSpec specDetails = tabHost.newTabSpec( "details" );
+		specDetails.setContent( new TabHost.TabContentFactory() {
+			public View createTabContent( String tag ) {
 				LayoutInflater inflater = getLayoutInflater();
-				return inflater.inflate(R.layout.characterviewtabstats, null);
+				return inflater.inflate( R.layout.characterviewtabstats, null );
 			}
-		});
-		spec.setIndicator("Details");
-		tabs.addTab(spec);
-
-		spec = tabs.newTabSpec("items");
-		spec.setContent(new TabHost.TabContentFactory() {
-			public View createTabContent(String tag) {
+		} );
+		specDetails.setIndicator( "Details" );
+		tabHost.addTab( specDetails );
+		TabHost.TabSpec specItems = tabHost.newTabSpec( "items" );
+		specItems.setContent( new TabHost.TabContentFactory() {
+			public View createTabContent( String tag ) {
 				LayoutInflater inflater = getLayoutInflater();
-				return inflater.inflate(R.layout.characterviewtabitemlist, null);
+				return inflater.inflate( R.layout.characterviewtabitemlist, null );
 			}
-		});
-		spec.setIndicator("Items");
-		tabs.addTab(spec);
-
-		tabs.setCurrentTab(0);
+		} );
+		specItems.setIndicator( "Items" );
+		tabHost.addTab( specItems );
+		tabHost.setCurrentTab( 0 );
 	}
-	
+
 	private void fillHeader() {
 		if (character != null) {
 			Object o = character.get( Data.BITMAP );
@@ -138,7 +125,7 @@ public class Characterview extends Activity {
 			}
 			TextView charNameRealm = (TextView)findViewById( R.id.CharNameRealm );
 			charNameRealm.setText( character.toString() );
-		}		
+		}
 	}
 
 	private void fillDetails() {
@@ -147,107 +134,82 @@ public class Characterview extends Activity {
 		int value_progress;
 		int value_max;
 		String barname = "";
-				
 		if (doc == null) {
 			// XML holen fehlgeschlagen
 			return;
 		}
-		
-		nl = doc.getElementsByTagName("characterTab");
-		
+		nl = doc.getElementsByTagName( "characterTab" );
 		if (nl.getLength() == 0) {
 			// keine Charakterdaten vorhanden
 			return;
 		}
-		
 		/* erster Balken */
-		
-		nl = doc.getElementsByTagName("health");
-		value_progress = value_max = Integer.parseInt(nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
-		
-		progbar = (CustomProgressBar)findViewById(R.id.progress_health);
-		progbar.setProgressDrawable(getResources().getDrawable(R.drawable.progress_horizontal_life));
-		progbar.setMax(value_max);
-		progbar.setProgress(value_progress);
-		barname = getResources().getString(R.string.charview_health);
-		progbar.setProcessingText(barname + ": " + value_progress);
-		
+		nl = doc.getElementsByTagName( "health" );
+		value_progress = value_max = Integer.parseInt( nl.item( 0 ).getAttributes().getNamedItem(
+				"effective" ).getNodeValue() );
+		progbar = (CustomProgressBar)findViewById( R.id.progress_health );
+		progbar.setProgressDrawable( getResources().getDrawable(
+				R.drawable.progress_horizontal_life ) );
+		progbar.setMax( value_max );
+		progbar.setProgress( value_progress );
+		barname = getResources().getString( R.string.charview_health );
+		progbar.setProcessingText( barname + ": " + value_progress );
 		/* zweiter Balken */
-		
 		String secondType = "";
 		int secondText;
 		Drawable secondColor;
-		
-		nl = doc.getElementsByTagName("secondBar");
-		secondType = nl.item(0).getAttributes().getNamedItem("type").getNodeValue();
-		value_progress = value_max = Integer.parseInt(nl.item(0).getAttributes().getNamedItem("effective").getNodeValue());
-
-		if (secondType.equals("r")) {
-			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_rage);
+		nl = doc.getElementsByTagName( "secondBar" );
+		secondType = nl.item( 0 ).getAttributes().getNamedItem( "type" ).getNodeValue();
+		value_progress = value_max = Integer.parseInt( nl.item( 0 ).getAttributes().getNamedItem(
+				"effective" ).getNodeValue() );
+		if (secondType.equals( "r" )) {
+			secondColor = getResources().getDrawable( R.drawable.progress_horizontal_rage );
 			secondText = R.string.charview_second_rage;
-		} else if (secondType.equals("e")) {
-			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_energy);
+		} else if (secondType.equals( "e" )) {
+			secondColor = getResources().getDrawable( R.drawable.progress_horizontal_energy );
 			secondText = R.string.charview_second_energy;
-		} else if (secondType.equals("p")) {
-			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_runic);
+		} else if (secondType.equals( "p" )) {
+			secondColor = getResources().getDrawable( R.drawable.progress_horizontal_runic );
 			secondText = R.string.charview_second_runic;
 		} else {
-			secondColor = getResources().getDrawable(R.drawable.progress_horizontal_mana);
+			secondColor = getResources().getDrawable( R.drawable.progress_horizontal_mana );
 			secondText = R.string.charview_second_mana;
 		}
-		
-		progbar = (CustomProgressBar)findViewById(R.id.progress_res);
-		progbar.setProgressDrawable(secondColor);
-		progbar.setMax(value_max);
-		progbar.setProgress(value_progress);
-		barname = getResources().getString(secondText);
-		progbar.setProcessingText(barname + ": " + value_progress);
-		
+		progbar = (CustomProgressBar)findViewById( R.id.progress_res );
+		progbar.setProgressDrawable( secondColor );
+		progbar.setMax( value_max );
+		progbar.setProgress( value_progress );
+		barname = getResources().getString( secondText );
+		progbar.setProcessingText( barname + ": " + value_progress );
 		/* dritter und vierter Balken */
-
-		nl = doc.getElementsByTagName("skill");
-		
+		nl = doc.getElementsByTagName( "skill" );
 		for (int i = 0; i < nl.getLength(); i++) {
 			int bar = (i == 0) ? R.id.progress_prof_one : R.id.progress_prof_two;
-
-			value_progress = Integer.parseInt(nl.item(i).getAttributes().getNamedItem("value").getNodeValue());
-			value_max = Integer.parseInt(nl.item(i).getAttributes().getNamedItem("max").getNodeValue());
-			barname = nl.item(i).getAttributes().getNamedItem("name").getNodeValue();
-			
-			progbar = (CustomProgressBar)findViewById(bar);
-			progbar.setMax(value_max);
-			progbar.setProgress(value_progress);
-			progbar.setProcessingText(barname + ": " + value_progress + "/" + value_max);
-
+			value_progress = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "value" )
+					.getNodeValue() );
+			value_max = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "max" )
+					.getNodeValue() );
+			barname = nl.item( i ).getAttributes().getNamedItem( "name" ).getNodeValue();
+			progbar = (CustomProgressBar)findViewById( bar );
+			progbar.setMax( value_max );
+			progbar.setProgress( value_progress );
+			progbar.setProcessingText( barname + ": " + value_progress + "/" + value_max );
 		}
 	}
-	
-	private void fillItems(){
-		
+
+	private void fillItems() {
 	}
 	
-	private Document getXML() {
-		String xml = (String)character.get(Data.XML);
-		
-		if (xml == null || xml.length() == 0) {
-			StringBuilder sb = armory.charactersheet((String)character.get(Data.URL), Armory.R.Region.valueOf((String)character.get(Data.REGION)));
-			if(sb != null) {
-				xml = sb.toString();
-				character.put(Data.XML, xml);
-
-				try {
-					Model.getInstance().changeCharacter(character);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
+	/**
+	 * 
+	 * @param xml
+	 * @return
+	 */
+	private Document xmlToDocument( String xml ) {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(new InputSource(new StringReader(xml.toString())));
-
+			Document doc = db.parse( new InputSource( new StringReader( xml.toString() ) ) );
 			return doc;
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
@@ -258,7 +220,6 @@ public class Characterview extends Activity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 }
