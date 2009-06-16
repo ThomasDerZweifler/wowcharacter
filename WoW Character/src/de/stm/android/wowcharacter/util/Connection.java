@@ -38,8 +38,7 @@ public class Connection {
 			urlConn = url.openConnection();
 			urlConn.addRequestProperty("User-Agent", "Firefox/3.0");
 			urlConn.setRequestProperty("Connection", "close");
-			urlConn.setConnectTimeout(1000 * 10 * 60); // timeout after 10
-														// minutes
+			urlConn.setConnectTimeout(1000 * 5);
 			urlConn.addRequestProperty( "Accept-Charset", "utf-8" );
 			urlConn.addRequestProperty("Accept-Language", locale.toString().replace("_", "-"));
 			urlConn.addRequestProperty("Accept-Encoding", packed ? "gzip,deflate" : "identity");
@@ -74,7 +73,7 @@ public class Connection {
 		} catch (Exception e) {
 			/** */
 		}
-		
+
 		return sb;
 	}
 	
