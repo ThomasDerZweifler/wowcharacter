@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2009-10-25)
+	+ Changed:	BitmpDb4o ersetzt durch byte[]
+
 (2009-06-16)
 	+ Changed:	nach evtl. gescheiterter Onlineabfrage fuer Charakterdetails, Versuch Offline Ergebnis anzuzeigen
 	+ New:	Fullscreen fuer Splash

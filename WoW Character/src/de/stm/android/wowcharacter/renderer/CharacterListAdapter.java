@@ -4,15 +4,19 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.view.*;
-import android.widget.*;
+import android.graphics.BitmapFactory;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.Character.Data;
-import de.stm.android.wowcharacter.util.BitmapDb4o;
 
 /**
- * Charakterzeilenrenderer für Favoritenliste
+ * Charakterzeilenrenderer fuer Favoritenliste
  * 
  * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
  * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
@@ -44,14 +48,10 @@ public class CharacterListAdapter extends ArrayAdapter {
 		Character character = item.get( position );
 		if (character != null) {
 			Object o = character.get( Data.BITMAP );
-			if (o instanceof BitmapDb4o) {
+			if (o instanceof byte[]) {
 				ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
-				BitmapDb4o bmDb4o = (BitmapDb4o)o;
-				int[] pixels = bmDb4o.getPixels();
-				int width = bmDb4o.getWidth();
-				int height = bmDb4o.getHeight();
-				Bitmap bm = Bitmap.createBitmap( pixels, 0, width, width, height,
-						Bitmap.Config.ARGB_8888 );// TODO Modus noch abspeichern
+				byte[] blob = (byte[])o;
+				Bitmap bm = BitmapFactory.decodeByteArray(blob, 0, blob.length);
 				charImage.setImageBitmap( bm );
 			}
 
