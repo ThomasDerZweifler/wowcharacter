@@ -3,7 +3,10 @@ package de.stm.android.wowcharacter.activitiy;
 import java.io.IOException;
 import java.io.StringReader;
 
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -12,17 +15,20 @@ import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TabHost;
+import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
-import de.stm.android.wowcharacter.util.BitmapDb4o;
 
 /**
  * Detailansicht eines Charakters
@@ -45,6 +51,9 @@ public class Characterview extends Activity {
 		fillItems();
 	}
 
+	/**
+	 * Initialisierungen
+	 */
 	private void init() {
 		setContentView( R.layout.characterview );
 		
@@ -60,6 +69,9 @@ public class Characterview extends Activity {
 		doc = xmlToDocument( xml );
 	}
 
+	/**
+	 * Karteikarten initialisieren
+	 */
 	private void initTabs() {
 		tabHost = (TabHost)findViewById( R.id.CharacterViewTab );
 		tabHost.setup();
@@ -89,17 +101,16 @@ public class Characterview extends Activity {
 		tabHost.setCurrentTab( 0 );
 	}
 
+	/**
+	 * Kopf fuellen
+	 */
 	private void fillHeader() {
 		if (character != null) {
 			Object o = character.get( Data.BITMAP );
-			if (o instanceof BitmapDb4o) {
+			if (o instanceof byte[]) {
 				ImageView charImage = (ImageView)findViewById( R.id.CharImage );
-				BitmapDb4o bmDb4o = (BitmapDb4o)o;
-				int[] pixels = bmDb4o.getPixels();
-				int width = bmDb4o.getWidth();
-				int height = bmDb4o.getHeight();
-				Bitmap bm = Bitmap.createBitmap( pixels, 0, width, width, height,
-						Bitmap.Config.ARGB_8888 );// TODO Modus noch abspeichern
+				byte[] blob = (byte[])o;
+				Bitmap bm = BitmapFactory.decodeByteArray(blob, 0, blob.length);
 				charImage.setImageBitmap( bm );
 			}
 			o = character.get( Data.LEVEL );
@@ -128,6 +139,9 @@ public class Characterview extends Activity {
 		}
 	}
 
+	/**
+	 * Details fuellen
+	 */
 	private void fillDetails() {
 		NodeList nl;
 		CustomProgressBar progbar;
@@ -201,7 +215,7 @@ public class Characterview extends Activity {
 	}
 	
 	/**
-	 * 
+	 * xml zu document wandeln
 	 * @param xml
 	 * @return
 	 */

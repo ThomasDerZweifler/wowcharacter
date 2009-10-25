@@ -1,5 +1,6 @@
 package de.stm.android.wowcharacter.data;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -7,7 +8,8 @@ import java.util.Map;
 import android.graphics.Bitmap;
 import android.util.Log;
 import de.stm.android.wowcharacter.data.Character.Data;
-import de.stm.android.wowcharacter.util.*;
+import de.stm.android.wowcharacter.util.Connection;
+import de.stm.android.wowcharacter.util.Persister;
 import de.stm.android.wowcharacter.util.Armory.R;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
 
@@ -49,7 +51,8 @@ public class Model {
 	}
 
 	/**
-	 * @return
+	 * Map aller Character zurueckgeben
+	 * @return	Map (key,character)
 	 */
 	public Map<String, Character> getMapCharacters() {
 		return persister.getMapCharacters();
@@ -80,12 +83,9 @@ public class Model {
 		try {
 			URL url = new URL( server + path + file );
 			Bitmap bm = Connection.getBitmap( url );
-			int[] pixels = new int[bm.getWidth() * bm.getHeight()];
-			bm.getPixels( pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight() );
-			String key = character.getKey();
-			BitmapDb4o bm4o = new BitmapDb4o( key, pixels, bm.getWidth(), bm.getHeight() );
-			character.put( Data.BITMAP, bm4o );
-			
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+			character.put(Data.BITMAP, out.toByteArray());		
 		} catch (IOException ioe) {
 			Log.i( getClass().getName(), "bitmap not loaded" );
 		}
@@ -103,27 +103,32 @@ public class Model {
 	}
 
 	/**
-	 *
+	 * Favoriten loeschen
 	 */
 	public void deleteAllFavoriteCharacters() {
 		persister.deleteAll();
 	}
 
 	/**
-	 * 
+	 * Character laden
 	 */
 	private void loadCharacters() {
 		persister = new Persister( DB4OFILENAME );
 	}
 
 	/**
-	 * 
+	 * Infos zum Character ausgeben
 	 * @param character
 	 */
 	public void getInfos( Character character ) {
 		Log.i( getClass().getName(), "getInfos()" + character );
 	}
 
+	/**
+	 * Aenderungen am Charcter vornehmen
+	 * @param character
+	 * @throws Exception
+	 */
 	public void changeCharacter(Character character) throws Exception {
 		persister.change(character);
 	}
