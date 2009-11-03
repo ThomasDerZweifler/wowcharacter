@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-  	android:layout_width="fill_parent" 
-    android:layout_height="fill_parent"> 
-    <TableRow>
-		<ImageView android:id="@+id/CharImage"
-	    	android:layout_gravity="left" />	
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<TableRow>
+		<ImageView android:id="@+id/CharImage"/>
 		<LinearLayout android:orientation="vertical">
 			<TextView android:id="@+id/CharNameRealm"
-				android:layout_width="wrap_content" 
-	    		android:layout_height="wrap_content"
-	    		android:maxLength="50"
-	    		android:scrollHorizontally="true"
-	    		android:textSize="24px" />
+				android:layout_marginLeft="6dip"
+				android:layout_width="240dip"
+				android:layout_height="fill_parent"
+				android:scrollHorizontally="true"
+				android:singleLine="true"
+				android:ellipsize="marquee"
+				android:textSize="24px" />
 			<TextView android:id="@+id/CharLevelRaceClass"
-				android:layout_width="wrap_content" 
-	    		android:layout_height="wrap_content" 
+				android:layout_marginLeft="6dip"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
 				android:textSize="12px" />
 			<TextView android:id="@+id/CharGuild"
-				android:layout_width="wrap_content" 
-	    		android:layout_height="wrap_content" 
+				android:layout_marginLeft="6dip"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
 				android:textSize="12px" />
 		</LinearLayout>
 	</TableRow>
