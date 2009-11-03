@@ -216,7 +216,10 @@ public class Searchlist extends ListActivity implements ICharactersProvider {
 	private void addFavourite( Character character ) {
 		ContentValues values = character.getContentValues();
 		try {
-			values.put( Column.BITMAP.name(), Model.getInstance().getImage( character ) );
+			byte[] bitmap = Model.getInstance().getImage( character );
+			if(bitmap != null) {
+				values.put( Column.BITMAP.name(), bitmap );				
+			}
 			Uri contentUri = Uri.parse( CONTENT_NAME_FAVOURITES );
 			Uri uri = getContentResolver().insert( contentUri, values );
 		} catch (IOException e) {
