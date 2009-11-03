@@ -33,38 +33,11 @@ public class Model implements ICharactersProvider {
 	}
 
 	/**
-	 * Character ("Platzhalter", weitere Infos noch abzurufen) als Favorit speichern
 	 * 
 	 * @param character
-	 * @throws Exception
+	 * @return
+	 * @throws IOException
 	 */
-	public void xxx_addFavorite( Character character ) throws Exception {
-		String server = R.URL_US;
-		String path = "images/portraits/wow-80/";
-		String file = character.get( Data.GENDERID ) + "-" + character.get( Data.RACEID ) + "-"
-				+ character.get( Data.CLASSID ) + ".gif";
-		if (character.get( Data.REGION ).equals( Region.EU.name() )) {
-			server = R.URL_EU;
-		}
-		int level = (Integer)character.get( Data.LEVEL );
-		if (level < 60) {
-			path = "images/portraits/wow-default/";
-		} else if (level < 70) {
-			path = "images/portraits/wow/";
-		} else if (level < 80) {
-			path = "images/portraits/wow-70/";
-		}
-		try {
-			URL url = new URL( server + path + file );
-			Bitmap bm = Connection.getBitmap( url );
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
-			character.put(Data.BITMAP, out.toByteArray());		
-		} catch (IOException ioe) {
-			Log.i( getClass().getName(), "bitmap not loaded" );
-		}
-	}
-
 	public byte[] getImage(Character character) throws IOException {
 		String server = R.URL_US;
 		String path = "images/portraits/wow-80/";
@@ -83,9 +56,12 @@ public class Model implements ICharactersProvider {
 		}
 		URL url = new URL( server + path + file );
 		Bitmap bm = Connection.getBitmap( url );
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
-		return out.toByteArray();
+		if(bm != null) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+			return out.toByteArray();	
+		}
+		return null;
 	}
 	
 	/**

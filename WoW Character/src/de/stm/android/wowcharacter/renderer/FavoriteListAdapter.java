@@ -39,9 +39,11 @@ public class FavoriteListAdapter extends SimpleCursorAdapter implements ICharact
 		Cursor cursor = getCursor();
 		cursor.moveToPosition( position );
 		byte[] blob = cursor.getBlob( cursor.getColumnIndex( Column.BITMAP.name() ) );
-		Bitmap bitmap = BitmapFactory.decodeByteArray( blob, 0, blob.length );
-		ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
-		charImage.setImageBitmap( bitmap );
+		if(blob != null) {
+			Bitmap bitmap = BitmapFactory.decodeByteArray( blob, 0, blob.length );
+			ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
+			charImage.setImageBitmap( bitmap );			
+		}
 		String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
 		String server = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
 		TextView charNameRealm = (TextView)row.findViewById( R.id.CharNameRealm );
