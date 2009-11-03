@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2009-11-03)
+	+ Changed:	Umstellung der Favoutiten Liste auf Cursor (db4o ersetzt durch SQLite, ContentProvider)
+
 (2009-10-25)
 	+ Changed:	BitmpDb4o ersetzt durch byte[]
 

@@ -1,68 +1,88 @@
 package de.stm.android.wowcharacter.data;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.content.ContentValues;
 
 /**
- * Characterdetails
+ * Characterdetails (REGION+REALM+NAME kann als Schluessel verwendet werden)
  * 
- * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
- * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
- *
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>, <a
+ *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
-public class Character implements
-		Comparable<Character> {
-
-	public static final String ID_WOWCHARACTER = "de.stm.android.wowcharacter.data.WOWCharacter";
-	
+public class Character implements Comparable<Character> {
+	/** key=Data.xxx.name(), value (man kann leider nicht von erben, deshalb als inner object) */
+	private ContentValues contentValues = new ContentValues();
 	public static enum Data {
-		NAME,
-		REALM,
-		FACTIONID,
-		LEVEL,
-		GENDERID,
-		RACE,
-		RACEID,
-		CLASS,
-		CLASSID,
-		GUILD,
-		URL,
-		REGION,
-		BITMAP,
-		XML
+		NAME, REALM, FACTIONID, LEVEL, GENDERID, RACE, RACEID, CLASS, CLASSID, GUILD, URL, REGION, BITMAP, XML
 	}
-	
-	Map<Object,Object> map = new HashMap<Object,Object>();
-	
-	public int compareTo(Character other) {
-		Object o = get(Data.REALM);
-		if (o != null) {
-			return o.toString().compareTo(other.get(Data.REALM).toString());
+
+	/**
+	 * Schluessel und Wert speichern, Wert eines vorhandenen Schluessels ueberschreiben
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void put( Object k, Object value ) {
+		put( k, value, true );
+	}
+
+	/**
+	 * Schluessel und Wert speichern, Wert eines vorhandenen Schluessels (nicht)ueberschreiben
+	 * 
+	 * @param key
+	 * @param value
+	 * @param overwrite
+	 *            Wert eines vorhandenen Schluessels (nicht)ueberschreiben, wenn force = (false)true
+	 */
+	public void put( Object k, Object value, boolean overwrite ) {
+		String key = k.toString();
+		boolean keyExists = contentValues.containsKey( key );
+		if (value instanceof byte[]) {
+			if (!keyExists || overwrite) {
+				contentValues.put( key, (byte[])value );
+			}
+		} else if (value instanceof String) {
+			if (!keyExists || overwrite) {
+				contentValues.put( key, (String)value );
+			}
+		} else if (value instanceof Boolean) {
+			if (!keyExists || overwrite) {
+				contentValues.put( key, (Boolean)value );
+			}
 		}
-		return 0;
+	}
+
+	/**
+	 * @param key
+	 * @return
+	 */
+	public Object get( Object key ) {
+		return contentValues.get( key.toString() );
 	}
 
 	@Override
 	public String toString() {
-		return get(Data.NAME) + " @ " + get(Data.REALM);
+		return get( Data.NAME ) + " @ " + get( Data.REALM );
 	}
-	
-	public Object get(Data key) {
-		return map.get(key.name());
+
+	public ContentValues getContentValues() {
+		return contentValues;
 	}
-	
-	public void put( Data key, Object value ) {
-		map.put(key.name(), value);
+
+	public int compareTo( Character other ) {
+		Object o = get( Data.REALM );
+		if (o != null) {
+			return o.toString().compareTo( other.get( Data.REALM ).toString() );
+		}
+		return 0;
 	}
-	
+
 	/**
-	 * 
 	 * @return
 	 */
 	public String getKey() {
-		String region = get(Data.REGION).toString();
-		String realm = get(Data.REALM).toString();
-		String name = get(Data.NAME).toString();
+		String region = contentValues.getAsString( Data.REGION.name() );
+		String realm = contentValues.getAsString( Data.REALM.name() );
+		String name = contentValues.getAsString( Data.NAME.name() );
 		String key = region + "." + realm + "." + name;
 		return key;
 	}
