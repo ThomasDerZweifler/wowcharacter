@@ -3,10 +3,7 @@ package de.stm.android.wowcharacter.activitiy;
 import java.io.IOException;
 import java.io.StringReader;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -14,20 +11,19 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TabHost;
-import android.widget.TextView;
+import android.widget.*;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
-import de.stm.android.wowcharacter.data.Model;
-import de.stm.android.wowcharacter.data.Character.Data;
+import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
 
 /**
@@ -36,10 +32,11 @@ import de.stm.android.wowcharacter.gui.CustomProgressBar;
  * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>, <a
  *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
-public class Characterview extends Activity {
-	private Character character;
+public class Characterview extends Activity implements ICharactersProvider {
+	// private Character character;
 	private Document doc;
 	private TabHost tabHost;
+	private Cursor cursor;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -56,17 +53,24 @@ public class Characterview extends Activity {
 	 */
 	private void init() {
 		setContentView( R.layout.characterview );
-		
 		Boolean onlineResults = getIntent().getBooleanExtra( "ONLINE", false );
-		
 		String sAppName = getString( R.string.app_name );
 		String sTitle = getString( R.string.charview_title );
-		setTitle( sAppName + " (" + sTitle + ")" + " - " + ( onlineResults ? "online" : "offline" ) );
-		
-		String sCharacter = getIntent().getStringExtra( Character.ID_WOWCHARACTER );
-		character = Model.getInstance().getMapCharacters().get( sCharacter );
-		String xml = character.get( Data.XML ).toString();
-		doc = xmlToDocument( xml );
+		setTitle( sAppName + " (" + sTitle + ")" + " - " + (onlineResults ? "online" : "offline") );
+		String sRegion = getIntent().getStringExtra( Character.Data.REGION.name() );
+		String sRealm = getIntent().getStringExtra( Character.Data.REALM.name() );
+		String sName = getIntent().getStringExtra( Character.Data.NAME.name() );
+		Uri allFavourites = Uri.parse( CONTENT_NAME_FAVOURITES );
+		//      >>"<< statt >>'<<  <-- wichtig, sodass Strings mit >>'<< funktionieren
+		String where = Column.REGION.name() + " = \"" + sRegion + "\" AND " + Column.REALM.name()
+				+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\"";
+		cursor = managedQuery( allFavourites, null, where, null, null );
+		startManagingCursor( cursor );
+		if (cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			String xml = new String( cursor.getBlob( cursor.getColumnIndex( Column.XML.name() ) ) );
+			doc = xmlToDocument( xml );
+		}
 	}
 
 	/**
@@ -105,17 +109,17 @@ public class Characterview extends Activity {
 	 * Kopf fuellen
 	 */
 	private void fillHeader() {
-		if (character != null) {
-			Object o = character.get( Data.BITMAP );
+		if (cursor != null) {
+			Object o = cursor.getBlob( cursor.getColumnIndex( Column.BITMAP.name() ) );
 			if (o instanceof byte[]) {
 				ImageView charImage = (ImageView)findViewById( R.id.CharImage );
 				byte[] blob = (byte[])o;
-				Bitmap bm = BitmapFactory.decodeByteArray(blob, 0, blob.length);
+				Bitmap bm = BitmapFactory.decodeByteArray( blob, 0, blob.length );
 				charImage.setImageBitmap( bm );
 			}
-			o = character.get( Data.LEVEL );
-			Object o1 = character.get( Data.RACE );
-			Object o2 = character.get( Data.CLASS );
+			o = cursor.getString( cursor.getColumnIndex( Column.LEVEL.name() ) );
+			Object o1 = cursor.getString( cursor.getColumnIndex( Column.RACE.name() ) );
+			Object o2 = cursor.getString( cursor.getColumnIndex( Column.CLASS.name() ) );
 			if (o != null && o1 != null && o2 != null) {
 				String level = o.toString();
 				String race = o1.toString();
@@ -125,7 +129,7 @@ public class Characterview extends Activity {
 					charLevelRaceClass.setText( "Level: " + level + " " + race + "-" + _class );
 				}
 			}
-			o = character.get( Data.GUILD );
+			o = cursor.getString( cursor.getColumnIndex( Column.GUILD.name() ) );
 			if (o != null) {
 				String guild = o.toString();
 				if (guild.length() > 0) {
@@ -135,7 +139,9 @@ public class Characterview extends Activity {
 				}
 			}
 			TextView charNameRealm = (TextView)findViewById( R.id.CharNameRealm );
-			charNameRealm.setText( character.toString() );
+			String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
+			String realm = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
+			charNameRealm.setText( name + " @ " + realm );
 		}
 	}
 
@@ -213,9 +219,10 @@ public class Characterview extends Activity {
 
 	private void fillItems() {
 	}
-	
+
 	/**
 	 * xml zu document wandeln
+	 * 
 	 * @param xml
 	 * @return
 	 */

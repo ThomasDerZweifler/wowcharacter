@@ -34,7 +34,7 @@ public class InterpretSearch extends DefaultHandler {
 				sr.put( Character.Data.NAME, attributes.getValue( "name" ) );
 				sr.put( Character.Data.REALM, attributes.getValue( "realm" ) );
 				sr.put( Character.Data.FACTIONID, attributes.getValue( "factionId" ) );
-				sr.put( Character.Data.LEVEL, new Integer( attributes.getValue( "level" ) ) );
+				sr.put( Character.Data.LEVEL, attributes.getValue( "level" ) );
 				sr.put( Character.Data.GENDERID, attributes.getValue( "genderId" ) );
 				sr.put( Character.Data.RACE, attributes.getValue( "race" ) );
 				sr.put( Character.Data.RACEID, attributes.getValue( "raceId" ) );

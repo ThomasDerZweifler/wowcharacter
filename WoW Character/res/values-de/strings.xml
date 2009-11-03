@@ -21,7 +21,7 @@
 	<string name="charlist_menu_sort_name_desc">nach Name, absteigend</string>
 	<string name="charlist_menu_sort_level_asc">nach Level, aufsteigend</string>
 	<string name="charlist_menu_sort_level_desc">nach Level, absteigend</string>
-	<string name="charlist_favorite_deleted_toast">Character \"%1\" aus aus Favoriten entfernt.</string>
+	<string name="charlist_favorite_deleted_toast">Character \&quot;%1\&quot; aus Favoriten entfernt.</string>
 	<string name="charlist_menu_clear">Liste löschen</string>
 	<string name="charlist_contextMenu_removeFromFavorites">aus Favoriten löschen</string>
 	<string name="charlist_deleteAll">Wirklich alle Favoriten löschen?</string>

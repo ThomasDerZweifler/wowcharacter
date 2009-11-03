@@ -25,6 +25,7 @@
     			<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-	</application>
-<uses-sdk android:minSdkVersion="3"></uses-sdk>
+	<provider android:name=".data.CharactersProvider" android:authorities="net.wowcharacter.provider"></provider>
+</application>
+<uses-sdk android:minSdkVersion="3" android:maxSdkVersion="5" android:targetSdkVersion="4"></uses-sdk>
 </manifest> 

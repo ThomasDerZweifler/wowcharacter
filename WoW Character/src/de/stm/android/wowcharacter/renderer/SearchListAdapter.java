@@ -13,11 +13,10 @@ import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.Character.Data;
 
 /**
- * Charakterzeilenrenderer für Suchliste
+ * Charakterzeilenrenderer fuer Suchliste (Items sind Character)
  * 
- * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
- * <a href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
- * 
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>, <a
+ *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
 @SuppressWarnings("unchecked")
 public class SearchListAdapter extends ArrayAdapter {
@@ -44,18 +43,7 @@ public class SearchListAdapter extends ArrayAdapter {
 		}
 		Character character = item.get( position );
 		if (character != null) {
-			Object o = character.get( Data.BITMAP );
-//			if (o instanceof BitmapDb4o) {
-//				ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
-//				BitmapDb4o bmDb4o = (BitmapDb4o)o;
-//				int[] pixels = bmDb4o.getPixels();
-//				int width = bmDb4o.getWidth();
-//				int height = bmDb4o.getHeight();
-//				Bitmap bm = Bitmap.createBitmap( pixels, 0, width, width, height,
-//						Bitmap.Config.ARGB_8888 );// TODO Modus noch abspeichern
-//				charImage.setImageBitmap( bm );
-//			}
-			o = character.get( Data.LEVEL );
+			Object o = character.get( Data.LEVEL );
 			Object o1 = character.get( Data.RACE );
 			Object o2 = character.get( Data.CLASS );
 			if (o != null && o1 != null && o2 != null) {
