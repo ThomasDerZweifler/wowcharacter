@@ -62,9 +62,20 @@ public class Favoritelist extends ListActivity implements ICharactersProvider {
 	};
 
 	@Override
+	protected void onSaveInstanceState( Bundle outState ) {
+		//bei erneutem onCreate ist dann ein Bundle vorhanden, was bedeutet, dass die Applikation schon laeuft
+		outState.putBoolean( "APP_INITIALIZED", true );
+		super.onSaveInstanceState( outState );
+	}
+	
+	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
-		init();
+		if(savedInstanceState==null) {
+			init();
+		} else {
+			setFullscreen();
+		}
 	}
 
 	@Override
