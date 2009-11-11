@@ -1,37 +1,21 @@
 package de.stm.android.wowcharacter.activitiy;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
+import java.util.*;
 
 import android.app.ListActivity;
 import android.content.ContentValues;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.*;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+import android.widget.*;
 import de.stm.android.wowcharacter.R;
+import de.stm.android.wowcharacter.data.*;
 import de.stm.android.wowcharacter.data.Character;
-import de.stm.android.wowcharacter.data.ICharactersProvider;
-import de.stm.android.wowcharacter.data.Model;
 import de.stm.android.wowcharacter.renderer.SearchListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
@@ -43,7 +27,7 @@ import de.stm.android.wowcharacter.xml.InterpretSearch;
  * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>, <a
  *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
-public class Searchlist extends ListActivity implements ICharactersProvider {
+public class Searchlist extends ListActivity implements ICharactersProvider, ISearchList {
 	private EditText et;
 	private ImageButton bt;
 	private ToggleButton tb_EU;
@@ -51,6 +35,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider {
 	/** geladene XML Seite */
 	private StringBuilder sbXMLPage;
 	private Model model;
+	private int selectedItemPosition = -1;
 	private Armory armory = new Armory();
 	private Armory.R.Region region;
 	private Thread searchThread;
@@ -82,9 +67,40 @@ public class Searchlist extends ListActivity implements ICharactersProvider {
 					s = s.replace( "%1", Integer.toString( listsize ) );
 				}
 				Toast.makeText( Searchlist.this, s, Toast.LENGTH_SHORT ).show();
+//				new Handler().postDelayed(new Runnable() {
+//		            public void run() {
+//						getListView().setSelection( selectedItemPosition );
+//		            }
+//		        }, 6000);
 			}
 		}
 	};
+
+	@Override
+	protected void onSaveInstanceState( Bundle outState ) {
+
+		String name = et.getText().toString();
+		outState.putString( ConfigData.NAME.name(), name );
+		
+		String realm = tb_US.isSelected() ? "US" : "EU";
+		outState.putString( ConfigData.REALM.name(), realm  );
+		
+		int selectedItemPosition = getListView().getSelectedItemPosition();
+		outState.putInt( ConfigData.SELECTED_ITEM_POSITION.name(), selectedItemPosition );
+
+		super.onSaveInstanceState( outState );
+	}
+
+	protected void onRestoreInstanceState( Bundle state ) {
+		super.onRestoreInstanceState( state );
+		
+		String name = state.getString( ConfigData.NAME.name() );
+		String realm = state.getString( ConfigData.REALM.name() );
+
+		selectedItemPosition = state.getInt( ConfigData.SELECTED_ITEM_POSITION.name() );
+
+		bt.performClick();
+	}
 
 	@Override
 	public void onCreate( Bundle savedInstanceState ) {
@@ -194,6 +210,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider {
 		}
 		/** Kontextmenü registrieren */
 		registerForContextMenu( getListView() );
+		
 	}
 
 	@Override
