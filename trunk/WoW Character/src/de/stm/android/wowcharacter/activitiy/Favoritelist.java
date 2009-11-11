@@ -19,8 +19,8 @@ import android.view.View.OnCreateContextMenuListener;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.data.*;
 import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.renderer.FavoriteListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
@@ -32,15 +32,19 @@ import de.stm.android.wowcharacter.util.Armory;
  * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>, <a
  *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
-public class Favoritelist extends ListActivity implements ICharactersProvider {
+public class Favoritelist extends ListActivity implements ICharactersProvider, IFavoritelist {
 	protected final static int CONTEXTMENU_REMOVE_FAVORITE = 0;
 	/** Bestaetigungsdialog zum Loeschen aller Character */
 	private Builder alertDeleteAll;
 	private ViewFlipper flipper;
+	private boolean optionsMenuOpen = false;
 	/** NachrichtenID zum Beenden des Splash */
 	private static final int STOPSPLASH = 0;
 	/** time in milliseconds */
 	private static final long SPLASHTIME = 5000;
+	
+	private Menu optionsMenu;
+	
 	/** Sortierrichtungen */
 	public static enum SortDirection {
 		ASCEND, DESCEND
@@ -64,31 +68,54 @@ public class Favoritelist extends ListActivity implements ICharactersProvider {
 	@Override
 	protected void onSaveInstanceState( Bundle outState ) {
 		//bei erneutem onCreate ist dann ein Bundle vorhanden, was bedeutet, dass die Applikation schon laeuft
-		outState.putBoolean( "APP_INITIALIZED", true );
+		outState.putBoolean( ConfigData.APP_INITIALIZED.name(), true );
+
+		int selectedItemPosition = getListView().getSelectedItemPosition();
+		outState.putInt( ConfigData.SELECTED_ITEM_POSITION.name(), selectedItemPosition );
+		
+		outState.putBoolean( ConfigData.OPTIONS_MENU_OPEN.name(), optionsMenuOpen );		
+		
 		super.onSaveInstanceState( outState );
+	}
+	
+	@Override
+	protected void onRestoreInstanceState( Bundle state ) {
+		super.onRestoreInstanceState( state );
+		int selectedItemPosition = state.getInt( ConfigData.SELECTED_ITEM_POSITION.name() );
+		getListView().setSelection( selectedItemPosition );
+		optionsMenuOpen = state.getBoolean( ConfigData.OPTIONS_MENU_OPEN.name() );
+		if(optionsMenuOpen) {
+//			openOptionsMenu();
+		}
+		
+		goToCharacterList();
+
 	}
 	
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
-		if(savedInstanceState==null) {
-			init();
-		} else {
-			setFullscreen();
-		}
+		init();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu ) {
 		populateMenu( menu );
+		optionsMenuOpen = true;
 		return super.onCreateOptionsMenu( menu );
 	}
 
 	@Override
+	public void onOptionsMenuClosed( Menu menu ) {
+		super.onOptionsMenuClosed( menu );
+		optionsMenuOpen = false;
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected( MenuItem item ) {
 		return (applyMenuChoice( item ) || super.onOptionsItemSelected( item ));
 	}
-
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -115,11 +142,13 @@ public class Favoritelist extends ListActivity implements ICharactersProvider {
 
 	private void init() {
 		setFullscreen();
+
 		setContentView( R.layout.favoritelist );
 		Message msg = new Message();
 		msg.what = STOPSPLASH;
 		splashHandler.sendMessageDelayed( msg, SPLASHTIME );
 		initSplash();
+		
 		getListView().setOnCreateContextMenuListener( new OnCreateContextMenuListener() {
 			public void onCreateContextMenu( ContextMenu cm, View view, ContextMenuInfo cmi ) {
 				Cursor cursor = (Cursor)getListAdapter().getItem(
@@ -142,6 +171,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider {
 			public void onClick( DialogInterface dialog, int whichButton ) {
 			}
 		} );
+		
 	}
 
 	private void initSplash() {
