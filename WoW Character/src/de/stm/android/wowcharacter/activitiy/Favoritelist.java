@@ -16,8 +16,10 @@ import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
+import android.widget.AdapterView.OnItemSelectedListener;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
@@ -42,7 +44,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 	private static final int STOPSPLASH = 0;
 	/** time in milliseconds */
 	private static final long SPLASHTIME = 5000;
-	
+	private Animation anim = null;
 	private Menu optionsMenu;
 	
 	/** Sortierrichtungen */
@@ -81,21 +83,43 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 	@Override
 	protected void onRestoreInstanceState( Bundle state ) {
 		super.onRestoreInstanceState( state );
+		goToCharacterList();
 		int selectedItemPosition = state.getInt( ConfigData.SELECTED_ITEM_POSITION.name() );
 		getListView().setSelection( selectedItemPosition );
 		optionsMenuOpen = state.getBoolean( ConfigData.OPTIONS_MENU_OPEN.name() );
 		if(optionsMenuOpen) {
-//			openOptionsMenu();
-		}
-		
-		goToCharacterList();
 
+//			Handler mHandler = new Handler();
+//			mHandler.postDelayed( new Runnable() {
+//				public void run() {
+//					openOptionsMenu();
+//				}}, 3000 );
+
+//	        showOptionsMenu();
+	        
+//			ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+//			Activity activity = getActivity(getListView());
+//			if (activity != null) {
+//				getApplicationContext().
+//			}
+		}
+	}
+	
+	private void showOptionsMenu() {
+
+		KeyEvent ku = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MENU);
+		getWindow().openPanel(Window.FEATURE_OPTIONS_PANEL, ku);
+
+	
+//		openOptionsMenu();
+	
 	}
 	
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		init();
+
 	}
 
 	@Override
@@ -115,20 +139,11 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 	public boolean onOptionsItemSelected( MenuItem item ) {
 		return (applyMenuChoice( item ) || super.onOptionsItemSelected( item ));
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
 		sortAndFill( "NAME", SortDirection.ASCEND );
-	}
-
-	/**
-	 * Fullscreen einstellen vor setContentView aufzurufen!
-	 */
-	public void setFullscreen() {
-		requestWindowFeature( Window.FEATURE_NO_TITLE );
-		getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN );
 	}
 
 	/**
@@ -141,9 +156,11 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 	}
 
 	private void init() {
-		setFullscreen();
 
 		setContentView( R.layout.favoritelist );
+				
+		anim = AnimationUtils.loadAnimation( this, R.anim.magnify );
+		
 		Message msg = new Message();
 		msg.what = STOPSPLASH;
 		splashHandler.sendMessageDelayed( msg, SPLASHTIME );
@@ -160,6 +177,13 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 						R.string.charlist_contextMenu_removeFromFavorites );
 			}
 		} );
+		getListView().setOnItemSelectedListener( new OnItemSelectedListener() {
+			public void onItemSelected( AdapterView<?> parent, View view, int position, long id ) {
+				view.startAnimation( anim );
+			}
+			public void onNothingSelected( AdapterView<?> parent ) {
+			}
+		});
 		alertDeleteAll = new AlertDialog.Builder( this ).setTitle( R.string.warn ).setMessage(
 				R.string.charlist_deleteAll ).setPositiveButton( R.string.yes,
 				new DialogInterface.OnClickListener() {
@@ -192,6 +216,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 	@Override
 	protected void onListItemClick( ListView l, View v, int position, long id ) {
 		Cursor c = (Cursor)getListAdapter().getItem( position );
+		v.startAnimation( anim );
 		goToDetails( c );
 	}
 
