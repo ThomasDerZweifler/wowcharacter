@@ -2,11 +2,12 @@ package de.stm.android.wowcharacter.activitiy;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.xml.parsers.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -17,6 +18,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,9 @@ import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
+import de.stm.android.wowcharacter.renderer.SearchListAdapter;
+import de.stm.android.wowcharacter.util.Armory;
+import de.stm.android.wowcharacter.util.Armory.R.Region;
 
 /**
  * Detailansicht eines Charakters
@@ -101,6 +107,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 			}
 		} );
 		specItems.setIndicator( "Items" );
+		
 		tabHost.addTab( specItems );
 		tabHost.setCurrentTab( 0 );
 	}
@@ -215,9 +222,42 @@ public class Characterview extends Activity implements ICharactersProvider {
 			progbar.setProgress( value_progress );
 			progbar.setProcessingText( barname + ": " + value_progress + "/" + value_max );
 		}
+				
 	}
 
+	/**
+	 * Items fuellen
+	 */
 	private void fillItems() {
+		NodeList nl = doc.getElementsByTagName( "item" );
+		int length = nl.getLength();
+
+		ArrayList listModel = new ArrayList();
+
+		//jedes Item betrachten
+		for (int i = 0; i < length; i++) {
+
+			//Icon fuer das Item
+			String iconName = nl.item( i ).getAttributes().getNamedItem("icon" ).getNodeValue();
+
+			//Infos fuer ein Item holen
+			String id = nl.item( i ).getAttributes().getNamedItem("id" ).getNodeValue();
+			StringBuilder sb = Armory.iteminfo( Integer.parseInt( id ), Region.EU );
+
+			listModel.add(id);
+			
+		}
+
+		ArrayAdapter aa = new ArrayAdapter( this, R.layout.characterviewtabitem, listModel );
+		Collections.sort( listModel );
+
+//		LayoutInflater inflater = getLayoutInflater();
+//		ListView v = (ListView)inflater.inflate( R.id.characteritems, null );
+
+//		ListView v = (ListView)findViewById( R.id.characteritems );
+//		v.setAdapter( aa );
+
+		
 	}
 
 	/**

@@ -32,33 +32,8 @@ public class Armory {
 		final static public String ITEMINFOPAGE = "item-info.xml?i=";	
 	}
 	
-	private Locale locale;
+	private static Locale locale = Locale.getDefault();
 	
-	/**
-	 * Standardsprache (Sprache in Android) auslesen
-	 */
-	public Armory() {
-		this.locale = Locale.getDefault();
-	}
-	
-	/**
-	 * Gibt die aktuelle Sprache zurueck
-	 * 
-	 * @return 
-	 */
-	public Locale getLocale() {
-		return this.locale;
-	}
-
-	/**
-	 * Setzt die Sprache in der Armory antworten soll
-	 * 
-	 * @param locale
-	 */
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
-
 	/**
 	 * 
 	 * @param character
@@ -79,7 +54,7 @@ public class Armory {
 
 		String url = server + R.SEARCHPAGE + character + R.SEARCHTYPE_CHAR;
 		
-		StringBuilder sb = Connection.getXML(url, this.locale, true);
+		StringBuilder sb = Connection.getXML(url, locale, true);
 		
 		return sb;
 	}
@@ -98,7 +73,7 @@ public class Armory {
 		return charactersheet(urlquery, region);
 	}
 	
-	public StringBuilder charactersheet(String urlquery, R.Region region) {
+	public static StringBuilder charactersheet(String urlquery, R.Region region) {
 		String server = R.URL_EU;
 		if (region == R.Region.US) {
 			server = R.URL_US;
@@ -106,12 +81,12 @@ public class Armory {
 		
 		String url = server + R.CHARACTERSHEETPAGE + urlquery;
 		
-		StringBuilder sb = Connection.getXML(url, this.locale, true);
+		StringBuilder sb = Connection.getXML(url, locale, true);
 		
 		return sb;
 	}
 	
-	public StringBuilder iteminfo(int id, R.Region region) {
+	public static StringBuilder iteminfo(int id, R.Region region) {
 		String server = R.URL_EU;
 		if (region == R.Region.US) {
 			server = R.URL_US;
@@ -119,7 +94,7 @@ public class Armory {
 		
 		String url = server + R.ITEMINFOPAGE + Integer.toString(id);
 		
-		StringBuilder sb = Connection.getXML(url, this.locale, true);
+		StringBuilder sb = Connection.getXML(url, locale, true);
 		
 		return sb;
 	}
