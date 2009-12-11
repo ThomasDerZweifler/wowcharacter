@@ -2,12 +2,14 @@ package de.stm.android.wowcharacter.activitiy;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.xml.parsers.*;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -18,9 +20,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
@@ -28,8 +27,9 @@ import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
-import de.stm.android.wowcharacter.renderer.SearchListAdapter;
+import de.stm.android.wowcharacter.renderer.ItemListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
+import de.stm.android.wowcharacter.util.Connection;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
 
 /**
@@ -39,10 +39,13 @@ import de.stm.android.wowcharacter.util.Armory.R.Region;
  *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
 public class Characterview extends Activity implements ICharactersProvider {
-	// private Character character;
 	private Document doc;
 	private TabHost tabHost;
 	private Cursor cursor;
+	/** Karteikarte "Details" gefuellt */
+	private boolean initializedTab1 = false;
+	/** Karteikarte "Items" gefuellt */
+	private boolean initializedTab2 = false;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -50,8 +53,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 		init();
 		fillHeader();
 		initTabs();
-		fillDetails();
-		fillItems();
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 		String sRealm = getIntent().getStringExtra( Character.Data.REALM.name() );
 		String sName = getIntent().getStringExtra( Character.Data.NAME.name() );
 		Uri allFavourites = Uri.parse( CONTENT_NAME_FAVOURITES );
-		//      >>"<< statt >>'<<  <-- wichtig, sodass Strings mit >>'<< funktionieren
+		// >>"<< statt >>'<< <-- wichtig, sodass Strings mit >>'<< funktionieren
 		String where = Column.REGION.name() + " = \"" + sRegion + "\" AND " + Column.REALM.name()
 				+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\"";
 		cursor = managedQuery( allFavourites, null, where, null, null );
@@ -87,7 +88,11 @@ public class Characterview extends Activity implements ICharactersProvider {
 		tabHost.setup();
 		tabHost.setOnTabChangedListener( new TabHost.OnTabChangeListener() {
 			public void onTabChanged( String tabId ) {
-				Log.i( "Characterview", tabId );
+				if (tabId.equals( "details" )) {
+					fillDetails();
+				} else if (tabId.equals( "items" )) {
+					fillItems();
+				}
 			}
 		} );
 		TabHost.TabSpec specDetails = tabHost.newTabSpec( "details" );
@@ -107,7 +112,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 			}
 		} );
 		specItems.setIndicator( "Items" );
-		
 		tabHost.addTab( specItems );
 		tabHost.setCurrentTab( 0 );
 	}
@@ -156,6 +160,10 @@ public class Characterview extends Activity implements ICharactersProvider {
 	 * Details fuellen
 	 */
 	private void fillDetails() {
+		// mehrmaliges Fuellen unterbinden
+		if (initializedTab1) {
+			return;
+		}
 		NodeList nl;
 		CustomProgressBar progbar;
 		int value_progress;
@@ -222,42 +230,43 @@ public class Characterview extends Activity implements ICharactersProvider {
 			progbar.setProgress( value_progress );
 			progbar.setProcessingText( barname + ": " + value_progress + "/" + value_max );
 		}
-				
+		initializedTab1 = true;
 	}
 
 	/**
 	 * Items fuellen
 	 */
 	private void fillItems() {
+		// mehrmaliges Fuellen unterbinden
+		if (initializedTab2) {
+			return;
+		}
 		NodeList nl = doc.getElementsByTagName( "item" );
 		int length = nl.getLength();
-
-		ArrayList listModel = new ArrayList();
-
-		//jedes Item betrachten
+		ArrayList<Object[]> listModel = new ArrayList<Object[]>();
+		// jedes Item betrachten
 		for (int i = 0; i < length; i++) {
-
-			//Icon fuer das Item
-			String iconName = nl.item( i ).getAttributes().getNamedItem("icon" ).getNodeValue();
-
-			//Infos fuer ein Item holen
-			String id = nl.item( i ).getAttributes().getNamedItem("id" ).getNodeValue();
+			// Icon fuer das Item
+			Bitmap bitmap = null;
+			try {
+				String iconName = "http://eu.wowarmory.com/wow-icons/_images/51x51/"
+						+ nl.item( i ).getAttributes().getNamedItem( "icon" ).getNodeValue()
+						+ ".jpg";
+				bitmap = Connection.getBitmap( new URL( iconName ) );
+			} catch (MalformedURLException e) {
+			} catch (IOException e) {
+			}
+			// Infos fuer ein Item holen
+			String id = nl.item( i ).getAttributes().getNamedItem( "id" ).getNodeValue();
 			StringBuilder sb = Armory.iteminfo( Integer.parseInt( id ), Region.EU );
-
-			listModel.add(id);
-			
+			listModel.add( new Object[] {
+					bitmap, id, ""
+			} );
 		}
-
-		ArrayAdapter aa = new ArrayAdapter( this, R.layout.characterviewtabitem, listModel );
-		Collections.sort( listModel );
-
-//		LayoutInflater inflater = getLayoutInflater();
-//		ListView v = (ListView)inflater.inflate( R.id.characteritems, null );
-
-//		ListView v = (ListView)findViewById( R.id.characteritems );
-//		v.setAdapter( aa );
-
-		
+		ItemListAdapter aa = new ItemListAdapter( Characterview.this, listModel );
+		ListView v = (ListView)findViewById( R.id.ItemListView );
+		v.setAdapter( aa );
+		initializedTab2 = true;
 	}
 
 	/**
