@@ -46,7 +46,7 @@ public class ItemListAdapter extends ArrayAdapter {
 		TextView name = (TextView)row.findViewById( R.id.ItemName );
 		name.setText( itemValues[1].toString() );
 		TextView level = (TextView)row.findViewById( R.id.ItemLevel );
-		level.setText( "(" + itemValues[2].toString() + ")" );
+		level.setText( "(Level: " + itemValues[2].toString() + ")" );
 
 		return row;
 	}
