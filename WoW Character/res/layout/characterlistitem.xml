@@ -24,7 +24,7 @@
 				android:scrollHorizontally="true"
 				android:maxLines="1"
 				android:ellipsize="marquee"
-				android:textSize="24px" />
+				android:textSize="22px" />
 			<TextView android:id="@+id/CharLevelRaceClass"
 				android:layout_marginLeft="6dip"
 				android:layout_width="fill_parent"
