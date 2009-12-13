@@ -33,18 +33,28 @@ public class Armory {
 	}
 	
 	private static Locale locale = Locale.getDefault();
-	
+
 	/**
-	 * 
+	 * Gibt die URL des Servers zurueck
+	 * @param region
+	 * @return
+	 */
+	private static String getArmoryServerURL(R.Region region) {
+		String server = R.URL_EU;
+		if (region == R.Region.US) {
+			server = R.URL_US;
+		}
+		return server;
+	}
+
+	/**
+	 * Suche nach Charaktern
 	 * @param character
 	 * @param region
 	 * @return
 	 */
 	public StringBuilder search(String character, R.Region region) {
-		String server = R.URL_EU;
-		if (region == R.Region.US) {
-			server = R.URL_US;
-		}
+		String server = getArmoryServerURL(region);
 
 		try {
 			character = URLEncoder.encode(character, "UTF-8");
@@ -59,6 +69,13 @@ public class Armory {
 		return sb;
 	}
 	
+	/**
+	 * Umwandeln und Erzeugen der URL Query
+	 * @param character
+	 * @param server
+	 * @param region
+	 * @return
+	 */
 	public StringBuilder charactersheet(String character, String server, R.Region region) {
 		try {
 			character = URLEncoder.encode(character, "UTF-8");
@@ -73,11 +90,14 @@ public class Armory {
 		return charactersheet(urlquery, region);
 	}
 	
+	/**
+	 * Charcter abrufen
+	 * @param urlquery
+	 * @param region
+	 * @return
+	 */
 	public static StringBuilder charactersheet(String urlquery, R.Region region) {
-		String server = R.URL_EU;
-		if (region == R.Region.US) {
-			server = R.URL_US;
-		}
+		String server = getArmoryServerURL(region);
 		
 		String url = server + R.CHARACTERSHEETPAGE + urlquery;
 		
@@ -86,11 +106,14 @@ public class Armory {
 		return sb;
 	}
 	
+	/**
+	 * Item abrufen
+	 * @param id
+	 * @param region
+	 * @return
+	 */
 	public static StringBuilder iteminfo(int id, R.Region region) {
-		String server = R.URL_EU;
-		if (region == R.Region.US) {
-			server = R.URL_US;
-		}
+		String server = getArmoryServerURL(region);
 		
 		String url = server + R.ITEMINFOPAGE + Integer.toString(id);
 		

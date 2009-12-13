@@ -6,9 +6,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -22,7 +27,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TabHost;
+import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
@@ -259,8 +267,22 @@ public class Characterview extends Activity implements ICharactersProvider {
 			// Infos fuer ein Item holen
 			String id = nl.item( i ).getAttributes().getNamedItem( "id" ).getNodeValue();
 			StringBuilder sb = Armory.iteminfo( Integer.parseInt( id ), Region.EU );
+			Document doc = xmlToDocument( sb.toString() );
+			NodeList nl1 = doc.getElementsByTagName("item");
+			String name = "";
+			String level = "";
+			for (int j = 0; j < nl1.getLength(); j++) {
+				Node n = nl1.item(j);
+				if(n.getAttributes().getNamedItem("id").getNodeValue().equals(id)) {
+					NamedNodeMap nnm = nl1.item( j ).getAttributes(); 
+					name = nnm.getNamedItem( "name" ).getNodeValue();					
+					level = nnm.getNamedItem( "level" ).getNodeValue();					
+					break;
+				}
+				
+			}
 			listModel.add( new Object[] {
-					bitmap, id, ""
+					bitmap, name, level
 			} );
 		}
 		ItemListAdapter aa = new ItemListAdapter( Characterview.this, listModel );

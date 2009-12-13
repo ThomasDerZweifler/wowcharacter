@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2009-12-13)
+	+ New:		Item Infos anzeigen
+
 (2009-11-10)
 	+ Fix:				Ausrichtung der Oberflaeche nach Rotation
 

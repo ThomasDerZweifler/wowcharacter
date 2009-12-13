@@ -44,7 +44,10 @@ public class ItemListAdapter extends ArrayAdapter {
 			itemImage.setImageBitmap(  (Bitmap)o );
 		}
 		TextView name = (TextView)row.findViewById( R.id.ItemName );
-		name.setText( "name: " + itemValues[1].toString() );
+		name.setText( itemValues[1].toString() );
+		TextView level = (TextView)row.findViewById( R.id.ItemLevel );
+		level.setText( "(" + itemValues[2].toString() + ")" );
+
 		return row;
 	}
 }
