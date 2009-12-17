@@ -54,13 +54,16 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private boolean initializedTab1 = false;
 	/** Karteikarte "Items" gefuellt */
 	private boolean initializedTab2 = false;
-
+	
+	private ArrayList<Object[]> items;
+	
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		init();
 		fillHeader();
 		initTabs();
+		items = loadItems();
 	}
 
 	/**
@@ -241,14 +244,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 		initializedTab1 = true;
 	}
 
-	/**
-	 * Items fuellen
-	 */
-	private void fillItems() {
-		// mehrmaliges Fuellen unterbinden
-		if (initializedTab2) {
-			return;
-		}
+	private ArrayList<Object[]> loadItems() {
 		NodeList nl = doc.getElementsByTagName( "item" );
 		int length = nl.getLength();
 		ArrayList<Object[]> listModel = new ArrayList<Object[]>();
@@ -285,7 +281,18 @@ public class Characterview extends Activity implements ICharactersProvider {
 					bitmap, name, level
 			} );
 		}
-		ItemListAdapter aa = new ItemListAdapter( Characterview.this, listModel );
+		return listModel;
+	}
+	
+	/**
+	 * Items fuellen
+	 */
+	private void fillItems() {
+		// mehrmaliges Fuellen unterbinden
+		if (initializedTab2) {
+			return;
+		}
+		ItemListAdapter aa = new ItemListAdapter( Characterview.this, items );
 		ListView v = (ListView)findViewById( R.id.ItemListView );
 		v.setAdapter( aa );
 		initializedTab2 = true;
