@@ -4,17 +4,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -24,13 +17,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TextView;
+import android.os.*;
+import android.view.*;
+import android.widget.*;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
@@ -52,10 +41,113 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private Cursor cursor;
 	/** Karteikarte "Details" gefuellt */
 	private boolean initializedTab1 = false;
-	/** Karteikarte "Items" gefuellt */
-	private boolean initializedTab2 = false;
-	
-	private ArrayList<Object[]> items;
+	/** Karteikarte Details */
+	private TabHost.TabSpec specDetails;
+	/** Karteikarte Items */
+	private TabHost.TabSpec specItems;
+	private ListView listViewItems;
+	private ItemListAdapter itemListAdapter;
+	private View viewItemList;
+
+	/** Nachrichten-Handler dient dem Akoppeln des Threads vom Erneuern der Oberflaeche */
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage( Message msg ) {
+			Bundle bundle = msg.getData();
+			boolean error = bundle.getBoolean( "ERROR" );
+			if(!error) {
+				Bitmap bitmap = bundle.getParcelable( "BITMAP" );					
+				String name = bundle.getString( "NAME" );
+				String level = bundle.getString( "LEVEL" );
+				Object[] o = new Object[] { bitmap, name, level };
+				itemListAdapter.add(o);
+				
+				//TODO (bug?) Setzen der Karteikartenreiter-Beschriftung [ Items (x/count), wenn fertig geladen nur noch Items (count) ]
+//				specItems.setIndicator( "Items (" + (itemNumber+1) + "/" + itemCount + ")" );
+			}
+
+			int itemNumber = bundle.getInt( "ITEM_NUMBER" );
+			int itemCount = bundle.getInt( "ITEM_COUNT" );
+			if(error || (itemNumber == itemCount-1) ) {
+				setProgressBarIndeterminateVisibility( false );				
+//				specItems.setIndicator( "Items (" + itemCount + ")" );
+			}
+		}
+	};
+
+	/**
+	 * Items laden und jedes einzelne dem Handler zum Anzeigen uebergeben
+	 * 
+	 * <br><br>
+	 * korrospondiert mit:
+	 * @see Characterview#handler
+	 */
+	private void readItems() {
+		/** Thread der nebenlaeufig die Items laedt */
+		Thread thread = new Thread( new Runnable() {
+			public void run() {
+				NodeList nl = doc.getElementsByTagName( "item" );
+				int length = nl.getLength();
+				if(length > 0) {
+					setProgressBarIndeterminateVisibility( true );
+				}
+				// jedes Item betrachten
+				for (int i = 0; i < length; i++) {
+					// Infos fuer ein Item holen
+					String id = nl.item( i ).getAttributes().getNamedItem( "id" ).getNodeValue();
+					StringBuilder sb = Armory.iteminfo( Integer.parseInt( id ), Region.EU );//TODO Zeit fuer das Erkennen eines Verbindungsverlustes verringern
+					if(sb != null) {
+						// Icon fuer das Item
+						Bitmap bitmap = null;
+						try {
+							String iconName = "http://eu.wowarmory.com/wow-icons/_images/51x51/"
+									+ nl.item( i ).getAttributes().getNamedItem( "icon" )
+											.getNodeValue() + ".jpg";
+							bitmap = Connection.getBitmap( new URL( iconName ) );
+						} catch (MalformedURLException e) {
+						} catch (IOException e) {
+						}
+
+						Document doc = xmlToDocument( sb.toString() );
+						NodeList nl1 = doc.getElementsByTagName( "item" );
+						String name = "";
+						String level = "";
+						for (int j = 0; j < nl1.getLength(); j++) {
+							Node n = nl1.item( j );
+							if (n.getAttributes().getNamedItem( "id" ).getNodeValue().equals( id )) {
+								NamedNodeMap nnm = nl1.item( j ).getAttributes();
+								name = nnm.getNamedItem( "name" ).getNodeValue();
+								level = nnm.getNamedItem( "level" ).getNodeValue();
+								break;
+							}
+						}
+						
+						//Item kann hier nicht direkt zum Adapter hinzugefuegt werden (wegen Oberflaechen-Erneuerung),
+						// deshalb Abkopplung dieses Thread mittels Nachricht
+						Message msg = new Message();
+						Bundle bundle = new Bundle();
+						bundle.putString( "NAME", name );
+						bundle.putString( "LEVEL", level );
+						bundle.putParcelable( "BITMAP", bitmap );
+						bundle.putInt( "ITEM_COUNT", length );					
+						bundle.putInt( "ITEM_NUMBER", i );
+						msg.setData( bundle );
+						handler.sendMessage( msg );
+					}	
+					
+					else {
+						//konnte ein Item nicht geladen werden (Netzwerkverbindung unterbrochen?), dann ist die Wahrscheinlichkeit hoch, dass
+						//  folgende Items auch nicht geladen werden koennen, deshalb hier abbrechen
+
+						break;
+					} 
+
+				} 
+			}
+		} );
+		thread.start();
+
+	}
 	
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -63,14 +155,23 @@ public class Characterview extends Activity implements ICharactersProvider {
 		init();
 		fillHeader();
 		initTabs();
-		items = loadItems();
+		Boolean onlineResults = getIntent().getBooleanExtra( "ONLINE", false );
+		if(onlineResults) {
+			//nur bei Netzwerkverbindung Items (versuchen zu) laden
+			readItems();
+		}
 	}
 
 	/**
 	 * Initialisierungen
 	 */
 	private void init() {
+		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );// fuer
+		// Fortschrittskreis
+		// in
+		// Titelzeile
 		setContentView( R.layout.characterview );
+		setProgressBarIndeterminateVisibility( false );
 		Boolean onlineResults = getIntent().getBooleanExtra( "ONLINE", false );
 		String sAppName = getString( R.string.app_name );
 		String sTitle = getString( R.string.charview_title );
@@ -102,11 +203,10 @@ public class Characterview extends Activity implements ICharactersProvider {
 				if (tabId.equals( "details" )) {
 					fillDetails();
 				} else if (tabId.equals( "items" )) {
-					fillItems();
 				}
 			}
 		} );
-		TabHost.TabSpec specDetails = tabHost.newTabSpec( "details" );
+		specDetails = tabHost.newTabSpec( "details" );
 		specDetails.setContent( new TabHost.TabContentFactory() {
 			public View createTabContent( String tag ) {
 				LayoutInflater inflater = getLayoutInflater();
@@ -115,11 +215,17 @@ public class Characterview extends Activity implements ICharactersProvider {
 		} );
 		specDetails.setIndicator( "Details" );
 		tabHost.addTab( specDetails );
-		TabHost.TabSpec specItems = tabHost.newTabSpec( "items" );
+		specItems = tabHost.newTabSpec( "items" );
+		
+		itemListAdapter = new ItemListAdapter( Characterview.this );
+		LayoutInflater inflater = getLayoutInflater();
+		viewItemList = inflater.inflate( R.layout.characterviewtabitemlist, null );
+		listViewItems = (ListView)viewItemList.findViewById( R.id.ItemListView );
+		listViewItems.setAdapter( itemListAdapter );//Model an View binden
+		
 		specItems.setContent( new TabHost.TabContentFactory() {
 			public View createTabContent( String tag ) {
-				LayoutInflater inflater = getLayoutInflater();
-				return inflater.inflate( R.layout.characterviewtabitemlist, null );
+				return viewItemList;
 			}
 		} );
 		specItems.setIndicator( "Items" );
@@ -171,6 +277,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 	 * Details fuellen
 	 */
 	private void fillDetails() {
+		if (tabHost.getCurrentTab() != 0) {
+			return;
+		}
 		// mehrmaliges Fuellen unterbinden
 		if (initializedTab1) {
 			return;
@@ -242,60 +351,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 			progbar.setProcessingText( barname + ": " + value_progress + "/" + value_max );
 		}
 		initializedTab1 = true;
-	}
-
-	private ArrayList<Object[]> loadItems() {
-		NodeList nl = doc.getElementsByTagName( "item" );
-		int length = nl.getLength();
-		ArrayList<Object[]> listModel = new ArrayList<Object[]>();
-		// jedes Item betrachten
-		for (int i = 0; i < length; i++) {
-			// Icon fuer das Item
-			Bitmap bitmap = null;
-			try {
-				String iconName = "http://eu.wowarmory.com/wow-icons/_images/51x51/"
-						+ nl.item( i ).getAttributes().getNamedItem( "icon" ).getNodeValue()
-						+ ".jpg";
-				bitmap = Connection.getBitmap( new URL( iconName ) );
-			} catch (MalformedURLException e) {
-			} catch (IOException e) {
-			}
-			// Infos fuer ein Item holen
-			String id = nl.item( i ).getAttributes().getNamedItem( "id" ).getNodeValue();
-			StringBuilder sb = Armory.iteminfo( Integer.parseInt( id ), Region.EU );
-			Document doc = xmlToDocument( sb.toString() );
-			NodeList nl1 = doc.getElementsByTagName("item");
-			String name = "";
-			String level = "";
-			for (int j = 0; j < nl1.getLength(); j++) {
-				Node n = nl1.item(j);
-				if(n.getAttributes().getNamedItem("id").getNodeValue().equals(id)) {
-					NamedNodeMap nnm = nl1.item( j ).getAttributes(); 
-					name = nnm.getNamedItem( "name" ).getNodeValue();					
-					level = nnm.getNamedItem( "level" ).getNodeValue();					
-					break;
-				}
-				
-			}
-			listModel.add( new Object[] {
-					bitmap, name, level
-			} );
-		}
-		return listModel;
-	}
-	
-	/**
-	 * Items fuellen
-	 */
-	private void fillItems() {
-		// mehrmaliges Fuellen unterbinden
-		if (initializedTab2) {
-			return;
-		}
-		ItemListAdapter aa = new ItemListAdapter( Characterview.this, items );
-		ListView v = (ListView)findViewById( R.id.ItemListView );
-		v.setAdapter( aa );
-		initializedTab2 = true;
 	}
 
 	/**
