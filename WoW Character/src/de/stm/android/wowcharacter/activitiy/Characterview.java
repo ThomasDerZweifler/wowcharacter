@@ -5,9 +5,15 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -17,9 +23,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.*;
-import android.view.*;
-import android.widget.*;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TabHost;
+import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
@@ -47,7 +60,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private TabHost.TabSpec specItems;
 	private ListView listViewItems;
 	private ItemListAdapter itemListAdapter;
-	private View viewItemList;
 
 	/** Nachrichten-Handler dient dem Akoppeln des Threads vom Erneuern der Oberflaeche */
 	private Handler handler = new Handler() {
@@ -55,6 +67,8 @@ public class Characterview extends Activity implements ICharactersProvider {
 		public void handleMessage( Message msg ) {
 			Bundle bundle = msg.getData();
 			boolean error = bundle.getBoolean( "ERROR" );
+			int itemNumber = bundle.getInt( "ITEM_NUMBER" );
+			int itemCount = bundle.getInt( "ITEM_COUNT" );
 			if(!error) {
 				Bitmap bitmap = bundle.getParcelable( "BITMAP" );					
 				String name = bundle.getString( "NAME" );
@@ -66,8 +80,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 //				specItems.setIndicator( "Items (" + (itemNumber+1) + "/" + itemCount + ")" );
 			}
 
-			int itemNumber = bundle.getInt( "ITEM_NUMBER" );
-			int itemCount = bundle.getInt( "ITEM_COUNT" );
 			if(error || (itemNumber == itemCount-1) ) {
 				setProgressBarIndeterminateVisibility( false );				
 //				specItems.setIndicator( "Items (" + itemCount + ")" );
@@ -93,12 +105,16 @@ public class Characterview extends Activity implements ICharactersProvider {
 				}
 				// jedes Item betrachten
 				for (int i = 0; i < length; i++) {
+					boolean error = false;
 					// Infos fuer ein Item holen
 					String id = nl.item( i ).getAttributes().getNamedItem( "id" ).getNodeValue();
 					StringBuilder sb = Armory.iteminfo( Integer.parseInt( id ), Region.EU );//TODO Zeit fuer das Erkennen eines Verbindungsverlustes verringern
+					// Icon fuer das Item
+					Bitmap bitmap = null;
+					String name = "";
+					String level = "";
 					if(sb != null) {
-						// Icon fuer das Item
-						Bitmap bitmap = null;
+						//Icon laden
 						try {
 							String iconName = "http://eu.wowarmory.com/wow-icons/_images/51x51/"
 									+ nl.item( i ).getAttributes().getNamedItem( "icon" )
@@ -108,10 +124,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 						} catch (IOException e) {
 						}
 
+						//Infos auswerten
 						Document doc = xmlToDocument( sb.toString() );
 						NodeList nl1 = doc.getElementsByTagName( "item" );
-						String name = "";
-						String level = "";
 						for (int j = 0; j < nl1.getLength(); j++) {
 							Node n = nl1.item( j );
 							if (n.getAttributes().getNamedItem( "id" ).getNodeValue().equals( id )) {
@@ -122,26 +137,32 @@ public class Characterview extends Activity implements ICharactersProvider {
 							}
 						}
 						
-						//Item kann hier nicht direkt zum Adapter hinzugefuegt werden (wegen Oberflaechen-Erneuerung),
-						// deshalb Abkopplung dieses Thread mittels Nachricht
-						Message msg = new Message();
-						Bundle bundle = new Bundle();
+					}	
+					
+					else {
+						error = true;
+					} 
+
+					//Item kann hier nicht direkt zum Adapter hinzugefuegt werden (wegen Oberflaechen-Erneuerung),
+					// deshalb Abkopplung dieses Thread mittels Nachricht
+					Message msg = new Message();
+					Bundle bundle = new Bundle();
+					bundle.putBoolean( "ERROR", error );
+					if(!error) {
 						bundle.putString( "NAME", name );
 						bundle.putString( "LEVEL", level );
 						bundle.putParcelable( "BITMAP", bitmap );
 						bundle.putInt( "ITEM_COUNT", length );					
 						bundle.putInt( "ITEM_NUMBER", i );
-						msg.setData( bundle );
-						handler.sendMessage( msg );
-					}	
-					
-					else {
+					}
+					msg.setData( bundle );
+					handler.sendMessage( msg );
+
+					if(error) {
 						//konnte ein Item nicht geladen werden (Netzwerkverbindung unterbrochen?), dann ist die Wahrscheinlichkeit hoch, dass
 						//  folgende Items auch nicht geladen werden koennen, deshalb hier abbrechen
-
 						break;
-					} 
-
+					}
 				} 
 			}
 		} );
@@ -215,16 +236,18 @@ public class Characterview extends Activity implements ICharactersProvider {
 		} );
 		specDetails.setIndicator( "Details" );
 		tabHost.addTab( specDetails );
+
+		//zweiter Tab
 		specItems = tabHost.newTabSpec( "items" );
 		
 		itemListAdapter = new ItemListAdapter( Characterview.this );
-		LayoutInflater inflater = getLayoutInflater();
-		viewItemList = inflater.inflate( R.layout.characterviewtabitemlist, null );
-		listViewItems = (ListView)viewItemList.findViewById( R.id.ItemListView );
-		listViewItems.setAdapter( itemListAdapter );//Model an View binden
 		
 		specItems.setContent( new TabHost.TabContentFactory() {
 			public View createTabContent( String tag ) {
+				LayoutInflater inflater = getLayoutInflater();
+				View viewItemList = inflater.inflate( R.layout.characterviewtabitemlist, null );
+				listViewItems = (ListView)viewItemList.findViewById( R.id.ItemListView );
+				listViewItems.setAdapter( itemListAdapter );//Model an View binden
 				return viewItemList;
 			}
 		} );
