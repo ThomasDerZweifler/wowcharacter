@@ -34,9 +34,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	private ToggleButton tb_US;
 	/** geladene XML Seite */
 	private StringBuilder sbXMLPage;
-	private Model model;
 	private int selectedItemPosition = -1;
-	private Armory armory = new Armory();
 	private Armory.R.Region region;
 	private Thread searchThread;
 	private InterpretSearch is = new InterpretSearch();
@@ -112,11 +110,8 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	 * Initialisierungen
 	 */
 	private void init() {
-		model = Model.getInstance();
-		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );// fuer
-		// Fortschrittskreis
-		// in
-		// Titelzeile
+		// fuer Fortschrittskreis in Titelzeile
+		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		/** View und Titel setzen */
 		setContentView( R.layout.searchlist );
 		setProgressBarIndeterminateVisibility( false );
@@ -160,7 +155,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				searchThread = new Thread( new Runnable() {
 					public void run() {
 						try {
-							sbXMLPage = armory.search( et.getText().toString(), region );
+							sbXMLPage = Armory.search( et.getText().toString(), region );
 							handler.sendMessage( handler.obtainMessage() );
 						} catch (Throwable t) {
 							// just end the background thread
@@ -194,7 +189,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		} );
 		/**
 		 * - bei Initialisierung gem. der Ländereinstellung bereits einen Togglebutton markieren
-		 * (bei der Auswahl der Sparche wird in Android bei deutsch nur de geliefert (ohne
+		 * (bei der Auswahl der Sparche wird in Android bei deutsch nur 'DE' geliefert (ohne
 		 * Ländercode) daher Fallback von getCountry() auf getLanguage() eingebaut
 		 */
 		String locale = Locale.getDefault().getCountry();
@@ -202,9 +197,11 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 			locale = Locale.getDefault().getLanguage();
 		}
 		if (locale.equalsIgnoreCase( "US" )) {
+			region = Region.US;
 			tb_US.setChecked( true );
 			// tb_EU.setChecked(false);
 		} else {
+			region = Region.EU;
 			tb_EU.setChecked( true );
 			// tb_US.setChecked(false);
 		}
@@ -232,17 +229,13 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	 */
 	private void addFavourite( Character character ) {
 		ContentValues values = character.getContentValues();
-		try {
-			byte[] bitmap = Model.getInstance().getImage( character );
-			if(bitmap != null) {
-				values.put( Column.BITMAP.name(), bitmap );				
-			}
-			Uri contentUri = Uri.parse( CONTENT_NAME_FAVOURITES );
-			Uri uri = getContentResolver().insert( contentUri, values );
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		byte[] bitmap = Armory.getCharIcon( character );
+		if(bitmap != null) {
+			values.put( Column.BITMAP.name(), bitmap );				
 		}
+		Uri contentUri = Uri.parse( CONTENT_NAME_FAVOURITES );
+		Uri uri = getContentResolver().insert( contentUri, values );
 	}
 
 	@Override
@@ -271,7 +264,6 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	@Override
 	protected void onListItemClick( ListView l, View v, int position, long id ) {
 		Character character = (Character)getListAdapter().getItem( position );
-		model.getInfos( character );
 	}
 
 	/**
