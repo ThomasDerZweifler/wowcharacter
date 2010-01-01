@@ -27,6 +27,8 @@
 	<string name="charlist_deleteAll">Wirklich alle Favoriten löschen?</string>
 	
 	<string name="charview_title">Charakterdetails</string>
+	<string name="charview_tab_detail">Details</string>
+	<string name="charview_tab_items">Gegenstände</string>
 	<string name="charview_health">Gesundheit</string>
 	<string name="charview_second_mana">Mana</string>
 	<string name="charview_second_rage">Wut</string>

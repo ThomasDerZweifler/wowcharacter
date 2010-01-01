@@ -1,6 +1,10 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-01)
+	+ New:		Itemcounter im Itemtab hinzugefügt
+	+ Changed:	Lokalisierung der Tabs
+
 (2009-12-29)
 	+ Changed:	Item Infos werden nebenlaeufig geladen, sichtbares Fuellen der Liste
 
