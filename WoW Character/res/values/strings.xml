@@ -27,6 +27,8 @@
 	<string name="charlist_deleteAll">Really delete all favorites?</string>
 	
 	<string name="charview_title">characterdetails</string>
+	<string name="charview_tab_detail">details</string>
+	<string name="charview_tab_items">items</string>
 	<string name="charview_health">health</string>
 	<string name="charview_second_mana">mana</string>
 	<string name="charview_second_rage">rage</string>

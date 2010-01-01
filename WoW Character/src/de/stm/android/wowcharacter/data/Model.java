@@ -2,14 +2,10 @@ package de.stm.android.wowcharacter.data;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import android.graphics.Bitmap;
 import android.util.Log;
-import de.stm.android.wowcharacter.data.Character.Data;
-import de.stm.android.wowcharacter.util.Connection;
-import de.stm.android.wowcharacter.util.Armory.R;
-import de.stm.android.wowcharacter.util.Armory.R.Region;
+import de.stm.android.wowcharacter.util.Armory;
 
 /**
  * Modell (singleton), mit Model.getInstance() anzusprechen
@@ -39,23 +35,7 @@ public class Model implements ICharactersProvider {
 	 * @throws IOException
 	 */
 	public byte[] getImage(Character character) throws IOException {
-		String server = R.URL_US;
-		String path = "images/portraits/wow-80/";
-		String file = character.get( Data.GENDERID ) + "-" + character.get( Data.RACEID ) + "-"
-				+ character.get( Data.CLASSID ) + ".gif";
-		if (character.get( Data.REGION ).equals( Region.EU.name() )) {
-			server = R.URL_EU;
-		}
-		int level = Integer.parseInt( character.get( Data.LEVEL ).toString() );
-		if (level < 60) {
-			path = "images/portraits/wow-default/";
-		} else if (level < 70) {
-			path = "images/portraits/wow/";
-		} else if (level < 80) {
-			path = "images/portraits/wow-70/";
-		}
-		URL url = new URL( server + path + file );
-		Bitmap bm = Connection.getBitmap( url );
+		Bitmap bm = Armory.getCharIcon(character);
 		if(bm != null) {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
@@ -63,7 +43,7 @@ public class Model implements ICharactersProvider {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Infos zum Character ausgeben
 	 * @param character

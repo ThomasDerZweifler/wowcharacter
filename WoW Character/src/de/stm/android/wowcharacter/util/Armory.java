@@ -1,8 +1,17 @@
 package de.stm.android.wowcharacter.util;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
+
+import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.Character.Data;
+import de.stm.android.wowcharacter.util.Armory.R.Region;
+
+import android.graphics.Bitmap;
 
 /**
  * 
@@ -29,7 +38,14 @@ public class Armory {
 
 		final static public String CHARACTERSHEETPAGE = "character-sheet.xml?";	
 
-		final static public String ITEMINFOPAGE = "item-info.xml?i=";	
+		final static public String ITEMINFOPAGE = "item-info.xml?i=";
+		
+		final static public String ITEMICON = "wow-icons/_images/51x51/";
+		
+		final static public String CHARICON = "images/portraits/wow-default/";
+		final static public String CHARICON_60 = "images/portraits/wow/";
+		final static public String CHARICON_70 = "images/portraits/wow-70/";
+		final static public String CHARICON_80 = "images/portraits/wow-80/";
 	}
 	
 	private static Locale locale = Locale.getDefault();
@@ -39,9 +55,9 @@ public class Armory {
 	 * @param region
 	 * @return
 	 */
-	private static String getArmoryServerURL(R.Region region) {
+	private static String getArmoryServerURL(String region) {
 		String server = R.URL_EU;
-		if (region == R.Region.US) {
+		if (region.equals(R.Region.US.name())) {
 			server = R.URL_US;
 		}
 		return server;
@@ -54,7 +70,7 @@ public class Armory {
 	 * @return
 	 */
 	public StringBuilder search(String character, R.Region region) {
-		String server = getArmoryServerURL(region);
+		String server = getArmoryServerURL(region.name());
 
 		try {
 			character = URLEncoder.encode(character, "UTF-8");
@@ -97,7 +113,7 @@ public class Armory {
 	 * @return
 	 */
 	public static StringBuilder charactersheet(String urlquery, R.Region region) {
-		String server = getArmoryServerURL(region);
+		String server = getArmoryServerURL(region.name());
 		
 		String url = server + R.CHARACTERSHEETPAGE + urlquery;
 		
@@ -113,12 +129,53 @@ public class Armory {
 	 * @return
 	 */
 	public static StringBuilder iteminfo(int id, R.Region region) {
-		String server = getArmoryServerURL(region);
+		String server = getArmoryServerURL(region.name());
 		
 		String url = server + R.ITEMINFOPAGE + Integer.toString(id);
 		
 		StringBuilder sb = Connection.getXML(url, locale, true);
 		
 		return sb;
+	}
+
+	/**
+	 * Itemicon abrufen
+	 * @param iconname
+	 * @param region
+	 * @return
+	 */
+	public static Bitmap getItemIcon(String iconname, String region) {
+		String server = getArmoryServerURL(region);	
+		String iconlocation = server + R.ITEMICON + iconname + ".jpg";
+		try {
+			return Connection.getBitmap( new URL( iconlocation ) );
+		} catch (MalformedURLException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+	}
+	
+	public static Bitmap getCharIcon(Character character) {
+		String server = getArmoryServerURL(character.get( Data.REGION ).toString());
+		
+		String path = R.CHARICON_80;
+		String file = character.get( Data.GENDERID ) + "-" + character.get( Data.RACEID ) + "-"
+				+ character.get( Data.CLASSID ) + ".gif";
+		int level = Integer.parseInt( character.get( Data.LEVEL ).toString() );
+		if (level < 60) {
+			path = R.CHARICON;
+		} else if (level < 70) {
+			path = R.CHARICON_60 ;
+		} else if (level < 80) {
+			path = R.CHARICON_70;
+		}
+		try {
+			return  Connection.getBitmap( new URL( server + path + file ) );
+		} catch (MalformedURLException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}		
 	}
 }

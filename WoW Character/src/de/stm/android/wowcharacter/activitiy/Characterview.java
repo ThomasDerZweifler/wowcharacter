@@ -2,8 +2,6 @@ package de.stm.android.wowcharacter.activitiy;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,6 +30,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
@@ -39,7 +38,6 @@ import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
 import de.stm.android.wowcharacter.renderer.ItemListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
-import de.stm.android.wowcharacter.util.Connection;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
 
 /**
@@ -76,13 +74,15 @@ public class Characterview extends Activity implements ICharactersProvider {
 				Object[] o = new Object[] { bitmap, name, level };
 				itemListAdapter.add(o);
 				
-				//TODO (bug?) Setzen der Karteikartenreiter-Beschriftung [ Items (x/count), wenn fertig geladen nur noch Items (count) ]
-//				specItems.setIndicator( "Items (" + (itemNumber+1) + "/" + itemCount + ")" );
+				TextView tv = (TextView)tabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title);
+				tv.setText(getResources().getString(R.string.charview_tab_items) + " (" + (itemNumber+1) + "/" + itemCount + ")");
 			}
 
 			if(error || (itemNumber == itemCount-1) ) {
 				setProgressBarIndeterminateVisibility( false );				
-//				specItems.setIndicator( "Items (" + itemCount + ")" );
+
+				TextView tv = (TextView)tabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title);
+				tv.setText(getResources().getString(R.string.charview_tab_items) + " (" + itemCount + ")");
 			}
 		}
 	};
@@ -114,15 +114,10 @@ public class Characterview extends Activity implements ICharactersProvider {
 					String name = "";
 					String level = "";
 					if(sb != null) {
-						//Icon laden
-						try {
-							String iconName = "http://eu.wowarmory.com/wow-icons/_images/51x51/"
-									+ nl.item( i ).getAttributes().getNamedItem( "icon" )
-											.getNodeValue() + ".jpg";
-							bitmap = Connection.getBitmap( new URL( iconName ) );
-						} catch (MalformedURLException e) {
-						} catch (IOException e) {
-						}
+						//Icon laden, bei Fehler ist bitmap = null
+						String iconName =  nl.item( i ).getAttributes().getNamedItem( "icon" ).getNodeValue();
+						String region = cursor.getString( cursor.getColumnIndex( Column.REGION.name() ) );
+						bitmap = Armory.getItemIcon(iconName, region);
 
 						//Infos auswerten
 						Document doc = xmlToDocument( sb.toString() );
@@ -187,10 +182,8 @@ public class Characterview extends Activity implements ICharactersProvider {
 	 * Initialisierungen
 	 */
 	private void init() {
-		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );// fuer
-		// Fortschrittskreis
-		// in
-		// Titelzeile
+		// fuer Fortschrittskreis in Titelzeile
+		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.characterview );
 		setProgressBarIndeterminateVisibility( false );
 		Boolean onlineResults = getIntent().getBooleanExtra( "ONLINE", false );
@@ -227,6 +220,8 @@ public class Characterview extends Activity implements ICharactersProvider {
 				}
 			}
 		} );
+
+		//erster Tab
 		specDetails = tabHost.newTabSpec( "details" );
 		specDetails.setContent( new TabHost.TabContentFactory() {
 			public View createTabContent( String tag ) {
@@ -234,7 +229,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 				return inflater.inflate( R.layout.characterviewtabstats, null );
 			}
 		} );
-		specDetails.setIndicator( "Details" );
+		specDetails.setIndicator( getResources().getString( R.string.charview_tab_detail ) );
 		tabHost.addTab( specDetails );
 
 		//zweiter Tab
@@ -251,7 +246,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 				return viewItemList;
 			}
 		} );
-		specItems.setIndicator( "Items" );
+		specItems.setIndicator( getResources().getString( R.string.charview_tab_items ) );
 		tabHost.addTab( specItems );
 		tabHost.setCurrentTab( 0 );
 	}
