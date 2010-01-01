@@ -1,5 +1,6 @@
 package de.stm.android.wowcharacter.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -69,7 +70,7 @@ public class Armory {
 	 * @param region
 	 * @return
 	 */
-	public StringBuilder search(String character, R.Region region) {
+	public static StringBuilder search(String character, R.Region region) {
 		String server = getArmoryServerURL(region.name());
 
 		try {
@@ -92,7 +93,7 @@ public class Armory {
 	 * @param region
 	 * @return
 	 */
-	public StringBuilder charactersheet(String character, String server, R.Region region) {
+	public static StringBuilder charactersheet(String character, String server, R.Region region) {
 		try {
 			character = URLEncoder.encode(character, "UTF-8");
 			server = URLEncoder.encode(server, "UTF-8");
@@ -156,7 +157,9 @@ public class Armory {
 		}
 	}
 	
-	public static Bitmap getCharIcon(Character character) {
+	public static byte[] getCharIcon(Character character) {
+		Bitmap bm = null;
+		
 		String server = getArmoryServerURL(character.get( Data.REGION ).toString());
 		
 		String path = R.CHARICON_80;
@@ -171,11 +174,19 @@ public class Armory {
 			path = R.CHARICON_70;
 		}
 		try {
-			return  Connection.getBitmap( new URL( server + path + file ) );
+			bm = Connection.getBitmap( new URL( server + path + file ) );
 		} catch (MalformedURLException e) {
 			return null;
 		} catch (IOException e) {
 			return null;
 		}		
+
+		if(bm != null) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+			return out.toByteArray();	
+		}
+		
+		return null;
 	}
 }

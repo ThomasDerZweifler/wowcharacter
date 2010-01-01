@@ -3,30 +3,31 @@
 
 (2010-01-01)
 	+ New:		Itemcounter im Itemtab hinzugefügt
-	+ Changed:	Lokalisierung der Tabs
+	* Changed:	Lokalisierung der Tabs
+	* Fix:		Variable 'region' wird bei Initialisierung der 'Searchlist' nun direkt gesetzt, da die Funktion 'setChecked' beim Togglebutton keinen Event auslöst
 
 (2009-12-29)
-	+ Changed:	Item Infos werden nebenlaeufig geladen, sichtbares Fuellen der Liste
+	* Changed:	Item Infos werden nebenlaeufig geladen, sichtbares Fuellen der Liste
 
 (2009-12-13)
 	+ New:		Item Infos anzeigen
 
 (2009-11-10)
-	+ Fix:		Ausrichtung der Oberflaeche nach Rotation
+	* Fix:		Ausrichtung der Oberflaeche nach Rotation
 
 (2009-11-04)
 	+ New:		Textrollen in Tabellen (ellipsize)
 	
 (2009-11-03)
-	+ Changed:	Umstellung der Favoutiten Liste auf Cursor (db4o ersetzt durch SQLite, ContentProvider)
 	+ Fix:		fehlende Bitmap
+	* Changed:	Umstellung der Favoutiten Liste auf Cursor (db4o ersetzt durch SQLite, ContentProvider)
 
 (2009-10-25)
 	+ Changed:	BitmpDb4o ersetzt durch byte[]
 
 (2009-06-16)
-	+ Changed:	nach evtl. gescheiterter Onlineabfrage fuer Charakterdetails, Versuch Offline Ergebnis anzuzeigen
 	+ New:		Fullscreen fuer Splash
+	* Changed:	nach evtl. gescheiterter Onlineabfrage fuer Charakterdetails, Versuch Offline Ergebnis anzuzeigen
 
 (2009-04-22)
 	+ Fixed:	Speicherung der HashMap in WOWCharacter.class (cascadeOnUpdate())
@@ -35,43 +36,43 @@
 	+ New:		Fortschrittsbalken mit Text
 
 (2009-03-16)
-	+ Changed:	Keine SD-Karte mehr notwending (jetzt alles in "/data/data/appName/...")
 	+ New:		Persistieren der Icons via int[]
-	+ Fix:		Speichern der Region als Zeichenkette (db4o kann keine Region speichern!?)
+	* Changed:	Keine SD-Karte mehr notwending (jetzt alles in "*data*data*appName*...")
+	* Fix:		Speichern der Region als Zeichenkette (db4o kann keine Region speichern!?)
 	
 (2009-03-12)
 	+ New:		Anzeige des Suchaktivitaet
 	+ New:		Toasts fuer das Loeschen und Hinzufuegen von Favoriten
-	+ New:		absteigendes/aufsteigendes Sortieren im Menue
+	+ New:		absteigendes*aufsteigendes Sortieren im Menue
 
 (2009-03-08)
-	+ Changed:	Search ImageButton
+	* Changed:	Search ImageButton
 
 (2009-03-07)
-	+ Changed:	Renderer fuer Listeneintraege
+	* Changed:	Renderer fuer Listeneintraege
 
 (2009-03-06)
-	+ Fixed:	Sortierrichtung fuer Level
 	+ New:		Ausrichtung mittels Sensor
+	* Fixed:	Sortierrichtung fuer Level
 
 (2009-03-05)
 	+ New:		Favoriten verwalten
 
 (2009-03-04)
 	+ New:		Hintergrund fuer Listeneintraege
-	+ Changed:	Radiobuttons durch Togglebuttons ersetzt
-	+ Fixed:			Ladehemmung beim erneuten Suchen
-	+ Fixed:			Schreibschutzabfrage der SD-Card
+	* Changed:	Radiobuttons durch Togglebuttons ersetzt
+	* Fixed:	Ladehemmung beim erneuten Suchen
+	* Fixed:	Schreibschutzabfrage der SD-Card
 
 (2009-03-02)
 	+ New:		Bild aus dem Web laden
-	+ Fixed:	Singleton Model
+	* Fixed:	Singleton Model
 
 (2009-03-01)
 	+ New:		Laden der Favoriten (Nutzung von db4o)
   
 (2009-02-26)
-	+ Changed:	OnKeyListener durch OnTextChangeListener ersetzt 
+	* Changed:	OnKeyListener durch OnTextChangeListener ersetzt 
   
 (2009-02-20)
   	+ New:		Laden der XML Repaesentation einer Webseite (wenn vorhanden)
@@ -81,15 +82,16 @@
   	+ New:		Laden einer Webseite
   
 (2009-02-18)
-	+ Changed:	Programmicon
 	+ New:		Ausblenden des Splash automatisch nach 5 s
-	+ Fixed:	Forwarding
+	* Changed:	Programmicon
+	* Fixed:	Forwarding
 
 (2009-02-01)
   Start der History
   
   template:
-  	+ Fixed: 
-	+ Changed:
 	+ New:
+	* Changed:
+  	* Fixed: 
+	- Remove:
   
