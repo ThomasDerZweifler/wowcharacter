@@ -30,7 +30,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
@@ -58,7 +57,8 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private TabHost.TabSpec specItems;
 	private ListView listViewItems;
 	private ItemListAdapter itemListAdapter;
-
+	private Thread thread;
+	
 	/** Nachrichten-Handler dient dem Akoppeln des Threads vom Erneuern der Oberflaeche */
 	private Handler handler = new Handler() {
 		@Override
@@ -72,6 +72,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 				String name = bundle.getString( "NAME" );
 				String level = bundle.getString( "LEVEL" );
 				Object[] o = new Object[] { bitmap, name, level };
+				
 				itemListAdapter.add(o);
 				
 				TextView tv = (TextView)tabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title);
@@ -96,7 +97,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 	 */
 	private void readItems() {
 		/** Thread der nebenlaeufig die Items laedt */
-		Thread thread = new Thread( new Runnable() {
+		thread = new Thread( new Runnable() {
 			public void run() {
 				NodeList nl = doc.getElementsByTagName( "item" );
 				int length = nl.getLength();
@@ -105,6 +106,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 				}
 				// jedes Item betrachten
 				for (int i = 0; i < length; i++) {
+					if( Thread.interrupted()) {
+						break;
+					}
 					boolean error = false;
 					// Infos fuer ein Item holen
 					String id = nl.item( i ).getAttributes().getNamedItem( "id" ).getNodeValue();
@@ -164,6 +168,18 @@ public class Characterview extends Activity implements ICharactersProvider {
 		thread.start();
 
 	}
+
+	@Override
+	public void onBackPressed() {
+		thread.interrupt();
+		
+		//TODO noch zu ueberlegen, wenn Thread nicht beendet wird (dann nur Home Taste mgl.)
+		// evtl. Loesung: nur wenn Activity laeuft, Oberflaechenaktivitaeten zulassen
+		while( thread.isAlive() ) {
+			
+		}
+		super.onBackPressed();
+	}
 	
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -193,7 +209,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 		String sRegion = getIntent().getStringExtra( Character.Data.REGION.name() );
 		String sRealm = getIntent().getStringExtra( Character.Data.REALM.name() );
 		String sName = getIntent().getStringExtra( Character.Data.NAME.name() );
-		Uri allFavourites = Uri.parse( CONTENT_NAME_FAVOURITES );
+		Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 		// >>"<< statt >>'<< <-- wichtig, sodass Strings mit >>'<< funktionieren
 		String where = Column.REGION.name() + " = \"" + sRegion + "\" AND " + Column.REALM.name()
 				+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\"";

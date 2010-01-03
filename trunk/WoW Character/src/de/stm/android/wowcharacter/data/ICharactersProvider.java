@@ -2,19 +2,25 @@ package de.stm.android.wowcharacter.data;
 
 /**
  * Schnittstelle fuer CharactersProvider
- * 
- * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>,
  *
+ * @see CharactersProvider
+ * 
+ * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>, <a
+ *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
 public interface ICharactersProvider {
 	
 	public static final String PROVIDER_NAME = "net.wowcharacter.provider";
-	public static final String CONTENT_NAME_FAVOURITES = "content://" + PROVIDER_NAME + "/favourites";
+	public static final String CONTENT_NAME_CHARACTERS = "content://" + PROVIDER_NAME + "/characters";
 	
 	public static final String DATABASE_NAME = "DB_WOWCharacters";
 	public static final int DATABASE_VERSION = 1;
-	
+
+	public static final int TRUE = 1;
+	public static final int FALSE = 0;
+
 	public static enum Column {
+		IS_FAVOURITE,
 		NAME,
 		REALM,
 		FACTIONID,
@@ -31,10 +37,11 @@ public interface ICharactersProvider {
 		XML
 	}
 	
-	public static final String TABLE_FAVOURITES = "FAVOURITES";
+	public static final String TABLE_CHARACTERS = "CHARACTERS";
 
-	public static final String DATABASE_CREATE_TABLE_FAVOURITES = "CREATE TABLE " + TABLE_FAVOURITES
+	public static final String DATABASE_CREATE_TABLE_CHARACTERS = "CREATE TABLE " + TABLE_CHARACTERS
 		+ " (_id integer primary key autoincrement, "
+		+ Column.IS_FAVOURITE.name() + " integer, "
 		+ Column.NAME.name() + " text not null, "
 		+ Column.REALM.name() + " text not null, "
 		+ Column.FACTIONID.name() + " text, "
