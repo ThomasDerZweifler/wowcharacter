@@ -1,10 +1,15 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-03)
+	* Fixed:	Back, wenn Thread noch Items laedt (Abbruch des Threads)
+	* Changed:	geklicker Charakter aus Suchliste wird in Datenbank gespeichert (kein Favorit)
+
 (2010-01-01)
-	+ New:		Itemcounter im Itemtab hinzugefügt
+	+ New:		Itemcounter im Itemtab hinzugefuegt
 	* Changed:	Lokalisierung der Tabs
-	* Fix:		Variable 'region' wird bei Initialisierung der 'Searchlist' nun direkt gesetzt, da die Funktion 'setChecked' beim Togglebutton keinen Event auslöst
+	* Fixed:	Variable 'region' wird bei Initialisierung der 'Searchlist' nun direkt gesetzt,
+					da die Funktion 'setChecked' beim Togglebutton keinen Event ausloest
 
 (2009-12-29)
 	* Changed:	Item Infos werden nebenlaeufig geladen, sichtbares Fuellen der Liste
@@ -13,13 +18,13 @@
 	+ New:		Item Infos anzeigen
 
 (2009-11-10)
-	* Fix:		Ausrichtung der Oberflaeche nach Rotation
+	* Fixed:	Ausrichtung der Oberflaeche nach Rotation
 
 (2009-11-04)
 	+ New:		Textrollen in Tabellen (ellipsize)
 	
 (2009-11-03)
-	+ Fix:		fehlende Bitmap
+	+ Fixed:	fehlende Bitmap
 	* Changed:	Umstellung der Favoutiten Liste auf Cursor (db4o ersetzt durch SQLite, ContentProvider)
 
 (2009-10-25)

@@ -188,7 +188,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 				R.string.charlist_deleteAll ).setPositiveButton( R.string.yes,
 				new DialogInterface.OnClickListener() {
 					public void onClick( DialogInterface dialog, int whichButton ) {
-						Uri allFavourites = Uri.parse( CONTENT_NAME_FAVOURITES );
+						Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 						int i = getContentResolver().delete( allFavourites, null, null );
 					}
 				} ).setNegativeButton( R.string.no, new DialogInterface.OnClickListener() {
@@ -230,7 +230,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 			String sRegion = c.getString( c.getColumnIndex( Column.REGION.name() ) );
 			String sRealm = c.getString( c.getColumnIndex( Column.REALM.name() ) );
 			String sName = c.getString( c.getColumnIndex( Column.NAME.name() ) );
-			Uri allFavourites = Uri.parse( CONTENT_NAME_FAVOURITES );
+			Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 			String where = Column.REGION.name() + " = \"" + sRegion + "\" AND " + Column.REALM.name()
 					+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\"";
 			int i = getContentResolver().delete( allFavourites, where, null );
@@ -289,7 +289,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 	 */
 	private void sortAndFill( final Object attribute, final SortDirection direction ) {
 		try {
-			Uri CONTENT_URI = Uri.parse( CONTENT_NAME_FAVOURITES );
+			Uri CONTENT_URI = Uri.parse( CONTENT_NAME_CHARACTERS );
 			String[] projection = new String[] {
 					Column.BITMAP.name(), Column.REALM.name(), Column.NAME.name()
 			};
@@ -319,7 +319,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 		// Uri allTitles = Uri.parse(
 		// "content://net.wowcharacter.provider.characters/characters" );
 		// Cursor c = managedQuery( allTitles, null, null, null, "name desc" );
-		Uri allTitles = Uri.parse( CONTENT_NAME_FAVOURITES );
+		Uri allTitles = Uri.parse( CONTENT_NAME_CHARACTERS );
 		Cursor c = managedQuery( allTitles, null, null, null, "name desc" );
 		if (c.moveToFirst()) {
 			do {
@@ -342,10 +342,15 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 		String sAppName = getString( R.string.app_name );
 		String sTitle = getString( R.string.charlist_title );
 		setTitle( sAppName + " (" + sTitle + ")" );
-		Uri allFavourites = Uri.parse( CONTENT_NAME_FAVOURITES );
-		Cursor c = managedQuery( allFavourites, null, null, null, null );
-		startManagingCursor( c );
-		if (c.getCount() == 0) {
+		Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
+		Cursor cursor = null;
+		try {
+			cursor = managedQuery( allFavourites, null, null, null, null );
+			startManagingCursor( cursor );
+		} catch(Exception e) {
+			
+		}
+		if (cursor == null || cursor.getCount() == 0) {
 			// keine Favouriten vorhanden, dann zur Suche gehen
 			goToSearch();
 		}
@@ -376,7 +381,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 			try {
 				ContentValues cv = new ContentValues();
 				cv.put( Column.XML.name(), xml );
-				Uri uri = Uri.parse( CONTENT_NAME_FAVOURITES + "/"
+				Uri uri = Uri.parse( CONTENT_NAME_CHARACTERS + "/"
 						+ cursor.getString( cursor.getColumnIndex( "_id" ) ) );
 				getContentResolver().update( uri, cv, null, null );
 				return true;
@@ -384,7 +389,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 				// wenn Persistieren nicht erfolgeich, zur Laufzeit XML auch nicht behalten
 				ContentValues cv = new ContentValues();
 				cv.put( Column.XML.name(), "" );
-				Uri uri = Uri.parse( CONTENT_NAME_FAVOURITES + "/"
+				Uri uri = Uri.parse( CONTENT_NAME_CHARACTERS + "/"
 						+ cursor.getString( cursor.getColumnIndex( "_id" ) ) );
 				getContentResolver().update( uri, cv, null, null );
 				e.printStackTrace();
@@ -416,7 +421,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 			// values.put( Column.URL.name(), character.get( Character.Data.URL ).toString() );
 			// values.put( Column.BITMAP.name(), Model.getInstance().getImage( character ) );
 			// values.put( Column.XML.name(), character.get( Character.Data.XML ).toString() );
-			Uri contentUri = Uri.parse( CONTENT_NAME_FAVOURITES );
+			Uri contentUri = Uri.parse( CONTENT_NAME_CHARACTERS );
 			int r = getContentResolver().update( contentUri, values, null, null );
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

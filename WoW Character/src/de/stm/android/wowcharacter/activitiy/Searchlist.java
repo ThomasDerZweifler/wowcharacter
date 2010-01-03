@@ -1,21 +1,35 @@
 package de.stm.android.wowcharacter.activitiy;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 
 import android.app.ListActivity;
 import android.content.ContentValues;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.KeyEvent;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.data.*;
 import de.stm.android.wowcharacter.data.Character;
+import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.renderer.SearchListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
@@ -220,7 +234,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	}
 
 	/**
-	 * Charcter als Favourite speichern
+	 * Character als Favourite speichern
 	 * 
 	 * @TODO Handy-Speicher ueberpruefen, ggf. SD Card anbieten
 	 * @param name
@@ -234,10 +248,48 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		if(bitmap != null) {
 			values.put( Column.BITMAP.name(), bitmap );				
 		}
-		Uri contentUri = Uri.parse( CONTENT_NAME_FAVOURITES );
+		values.put( Column.IS_FAVOURITE.name(), TRUE );				
+		Uri contentUri = Uri.parse( CONTENT_NAME_CHARACTERS );
 		Uri uri = getContentResolver().insert( contentUri, values );
 	}
 
+	/**
+	 * Character temporaer speichern (IS_FAVOURITE = FALSE)
+	 * 
+	 * @param name
+	 * @param server
+	 * @param bitmap
+	 */
+	private void addCharacterTemporary( Character character ) {
+
+		ContentValues values = character.getContentValues();
+		byte[] bitmap = Armory.getCharIcon( character );
+		if(bitmap != null) {
+			values.put( Column.BITMAP.name(), bitmap );				
+		}
+		values.put( Column.IS_FAVOURITE.name(), FALSE );				
+		String where = "IS_FAVOURITE = " + FALSE;
+
+		Uri contentUri = Uri.parse( CONTENT_NAME_CHARACTERS );
+
+		//Versuch, einen vorhandenen temporaeren Charakter zu ueberschreiben (Wiederverwendung der _id)
+		int count = getContentResolver().update( contentUri, values, where, null );		
+		
+		if(count == 0) {
+			//noch kein temporaerer Charakter vorhanden
+			Uri uri = getContentResolver().insert( contentUri, values );
+		}
+	}
+
+	/**
+	 * Alle Character die keine Favoriten sind loeschen 
+	 */
+	private void removeAllNonFavourites() {
+		Uri contentUri = Uri.parse( CONTENT_NAME_CHARACTERS );
+		String where = "IS_FAVOURITE = " + FALSE;
+		int count = getContentResolver().delete(contentUri, where, null);
+	}
+	
 	@Override
 	public boolean onContextItemSelected( MenuItem item ) {
 		switch (item.getItemId()) {
@@ -264,6 +316,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	@Override
 	protected void onListItemClick( ListView l, View v, int position, long id ) {
 		Character character = (Character)getListAdapter().getItem( position );
+		addCharacterTemporary(character);
 	}
 
 	/**
