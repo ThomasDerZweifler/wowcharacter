@@ -120,11 +120,12 @@ public class Characterview extends Activity implements ICharactersProvider {
 					boolean error = false;
 					// Infos fuer ein Item holen
 					String id = nl.item( i ).getAttributes().getNamedItem( "id" ).getNodeValue();
-					StringBuilder sb = Armory.iteminfo( Integer.parseInt( id ), Region.EU );//TODO Zeit fuer das Erkennen eines Verbindungsverlustes verringern
+					StringBuilder sb = Armory.iteminfo( id , Region.EU );//TODO Zeit fuer das Erkennen eines Verbindungsverlustes verringern
 					// Icon fuer das Item
 					Bitmap bitmap = null;
 					String name = "";
 					String level = "";
+					//FIXME Fehler besser interpretiern, da bei Problemen eine "0" geliefert wird
 					if(sb != null) {
 						//Icon laden, bei Fehler ist bitmap = null
 						String iconName =  nl.item( i ).getAttributes().getNamedItem( "icon" ).getNodeValue();
