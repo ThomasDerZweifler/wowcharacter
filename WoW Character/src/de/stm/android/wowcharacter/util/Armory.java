@@ -123,10 +123,10 @@ public class Armory {
 	 * @param region
 	 * @return
 	 */
-	public static StringBuilder iteminfo(int id, R.Region region) {
+	public static StringBuilder iteminfo(String id, R.Region region) {
 		String server = getArmoryServerURL(region.name());
 		
-		String url = server + R.ITEMINFOPAGE + Integer.toString(id);
+		String url = server + R.ITEMINFOPAGE + id;
 		
 		StringBuilder sb = Connection.getXML(url, locale, true);
 		
