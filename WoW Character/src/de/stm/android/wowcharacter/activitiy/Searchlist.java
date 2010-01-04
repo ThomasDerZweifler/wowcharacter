@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import android.app.ListActivity;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -317,6 +319,21 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	protected void onListItemClick( ListView l, View v, int position, long id ) {
 		Character character = (Character)getListAdapter().getItem( position );
 		addCharacterTemporary(character);
+		
+		Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
+		Cursor cursor = null;
+		try {
+			String where = "IS_FAVOURITE = 0";
+			cursor = managedQuery( allFavourites, null, where, null, null );
+			startManagingCursor( cursor );
+		} catch(Exception e) {
+			
+		}
+		if (cursor != null && cursor.getCount() > 0) {
+			boolean b = cursor.moveToPosition( 0 );
+			goToDetails( cursor );
+		}
+		
 	}
 
 	/**
@@ -330,4 +347,70 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 			bt.setEnabled( true );
 		}
 	}
+	
+	/**
+	 * Details als XML zum Character hinzufuegen
+	 * 
+	 * @param character
+	 * @return
+	 */
+	private boolean setXMLtoCharacter( Cursor cursor ) {
+		String xml = null;
+		Armory armory = new Armory();
+		String url = cursor.getString( cursor.getColumnIndex( Column.URL.name() ) );
+		String region = cursor.getString( cursor.getColumnIndex( Column.REGION.name() ) );
+		StringBuilder sb = armory.charactersheet( url, Armory.R.Region.valueOf( region ) );
+		if (sb != null) {
+			xml = sb.toString();
+			try {
+				ContentValues cv = new ContentValues();
+				cv.put( Column.XML.name(), xml );
+				Uri uri = Uri.parse( CONTENT_NAME_CHARACTERS + "/"
+						+ cursor.getString( cursor.getColumnIndex( "_id" ) ) );
+				getContentResolver().update( uri, cv, null, null );
+				return true;
+			} catch (Exception e) {
+				// wenn Persistieren nicht erfolgeich, zur Laufzeit XML auch nicht behalten
+				ContentValues cv = new ContentValues();
+				cv.put( Column.XML.name(), "" );
+				Uri uri = Uri.parse( CONTENT_NAME_CHARACTERS + "/"
+						+ cursor.getString( cursor.getColumnIndex( "_id" ) ) );
+				getContentResolver().update( uri, cv, null, null );
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Details aufrufen
+	 * 
+	 * @param character
+	 */
+	private void goToDetails( Cursor cursor ) {
+		boolean bOnline = setXMLtoCharacter( cursor );
+		if (!bOnline) {
+			// Online XML nicht verfuegbar
+			String xml = cursor.getString( cursor.getColumnIndex( Column.XML.name() ) );
+			if (xml == null || "".equals( xml )) {
+				// Persitiertes Ergebnis auch nicht verfuegbar, dann keine Anzeige der Details
+				Toast.makeText( this, "Keine Details verfuegbar!", Toast.LENGTH_SHORT )
+						.show();
+				return;
+			}
+		}
+		Intent intent = new Intent( this, de.stm.android.wowcharacter.activitiy.Characterview.class );
+		// Cursor kann leider nicht uebergeben werden, deshalb Schluessel an dieser Stelle
+		String region = cursor.getString( cursor.getColumnIndex( Column.REGION.name() ) );
+		String realm = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
+		String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
+		intent.putExtra( Character.Data.REGION.name(), region );
+		intent.putExtra( Character.Data.REALM.name(), realm );
+		intent.putExtra( Character.Data.NAME.name(), name );
+		intent.putExtra( Character.Data.IS_FAVOURITE.name(), false );
+		intent.putExtra( "ONLINE", bOnline );// gibt an, ob das Ergebnis online ermittelt wurde
+		// (somit aktuell ist)
+		startActivity( intent );
+	}
+
 }

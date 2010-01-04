@@ -12,7 +12,7 @@ public class Character implements Comparable<Character> {
 	/** key=Data.xxx.name(), value (man kann leider nicht von erben, deshalb als inner object) */
 	private ContentValues contentValues = new ContentValues();
 	public static enum Data {
-		NAME, REALM, FACTIONID, LEVEL, GENDERID, RACE, RACEID, CLASS, CLASSID, GUILD, URL, REGION, BITMAP, XML
+		IS_FAVOURITE, NAME, REALM, FACTIONID, LEVEL, GENDERID, RACE, RACEID, CLASS, CLASSID, GUILD, URL, REGION, BITMAP, XML
 	}
 
 	/**

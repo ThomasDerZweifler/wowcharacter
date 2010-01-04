@@ -1,18 +1,12 @@
 package de.stm.android.wowcharacter.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.io.*;
+import java.net.*;
 import java.util.Locale;
 
+import android.graphics.Bitmap;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.Character.Data;
-import de.stm.android.wowcharacter.util.Armory.R.Region;
-
-import android.graphics.Bitmap;
 
 /**
  * 
@@ -189,4 +183,5 @@ public class Armory {
 		
 		return null;
 	}
+
 }

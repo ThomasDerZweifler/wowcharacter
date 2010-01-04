@@ -1,6 +1,10 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-04)
+	+ New:		Details eines Charakters auf Klick in Suchliste anzeigen
+	+ New:		Favoritenstatus eines Charakters in Details aendern
+
 (2010-01-03)
 	* Fixed:	Back, wenn Thread noch Items laedt (Abbruch des Threads)
 	* Changed:	geklicker Charakter aus Suchliste wird in Datenbank gespeichert (kein Favorit)
