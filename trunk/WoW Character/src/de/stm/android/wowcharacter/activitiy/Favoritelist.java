@@ -232,7 +232,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 			String sName = c.getString( c.getColumnIndex( Column.NAME.name() ) );
 			Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 			String where = Column.REGION.name() + " = \"" + sRegion + "\" AND " + Column.REALM.name()
-					+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\"";
+					+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\" AND IS_FAVOURITE =" + TRUE;
 			int i = getContentResolver().delete( allFavourites, where, null );
 			if (i > 0) {
 				String s = getString( R.string.charlist_favorite_deleted_toast );
@@ -293,7 +293,8 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 			String[] projection = new String[] {
 					Column.BITMAP.name(), Column.REALM.name(), Column.NAME.name()
 			};
-			Cursor c = managedQuery( CONTENT_URI, null, null, null, attribute
+			String where = "IS_FAVOURITE = "+ TRUE;
+			Cursor c = managedQuery( CONTENT_URI, null, where, null, attribute
 					+ ((direction == SortDirection.ASCEND) ? " asc" : " desc") );
 			startManagingCursor( c );
 			// __listCharacters();
@@ -345,7 +346,8 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 		Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 		Cursor cursor = null;
 		try {
-			cursor = managedQuery( allFavourites, null, null, null, null );
+			String where = "IS_FAVOURITE = " + TRUE;
+			cursor = managedQuery( allFavourites, null, where, null, null );
 			startManagingCursor( cursor );
 		} catch(Exception e) {
 			
@@ -435,14 +437,13 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 	 * @param character
 	 */
 	private void goToDetails( Cursor cursor ) {
-		// TODO Aktivitaetsanzeige
 		boolean bOnline = setXMLtoCharacter( cursor );
 		if (!bOnline) {
 			// Online XML nicht verfuegbar
 			String xml = cursor.getString( cursor.getColumnIndex( Column.XML.name() ) );
 			if (xml == null || "".equals( xml )) {
 				// Persitiertes Ergebnis auch nicht verfuegbar, dann keine Anzeige der Details
-				Toast.makeText( Favoritelist.this, "Keine Details verfuegbar!", Toast.LENGTH_SHORT )
+				Toast.makeText( this, "Keine Details verfuegbar!", Toast.LENGTH_SHORT )
 						.show();
 				return;
 			}
@@ -455,6 +456,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 		intent.putExtra( Character.Data.REGION.name(), region );
 		intent.putExtra( Character.Data.REALM.name(), realm );
 		intent.putExtra( Character.Data.NAME.name(), name );
+		intent.putExtra( Character.Data.IS_FAVOURITE.name(), true );
 		intent.putExtra( "ONLINE", bOnline );// gibt an, ob das Ergebnis online ermittelt wurde
 		// (somit aktuell ist)
 		startActivity( intent );

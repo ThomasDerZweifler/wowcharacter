@@ -16,6 +16,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,10 +28,14 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
@@ -58,6 +63,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private ListView listViewItems;
 	private ItemListAdapter itemListAdapter;
 	private Thread thread;
+	private CheckBox cbFavourite;
+	private boolean isFavourite;
+	private TextView charNameRealm;
 	
 	/** Nachrichten-Handler dient dem Akoppeln des Threads vom Erneuern der Oberflaeche */
 	private Handler handler = new Handler() {
@@ -125,17 +133,18 @@ public class Characterview extends Activity implements ICharactersProvider {
 
 						//Infos auswerten
 						Document doc = xmlToDocument( sb.toString() );
-						NodeList nl1 = doc.getElementsByTagName( "item" );
-						for (int j = 0; j < nl1.getLength(); j++) {
-							Node n = nl1.item( j );
-							if (n.getAttributes().getNamedItem( "id" ).getNodeValue().equals( id )) {
-								NamedNodeMap nnm = nl1.item( j ).getAttributes();
-								name = nnm.getNamedItem( "name" ).getNodeValue();
-								level = nnm.getNamedItem( "level" ).getNodeValue();
-								break;
+						if(doc!=null) {
+							NodeList nl1 = doc.getElementsByTagName( "item" );
+							for (int j = 0; j < nl1.getLength(); j++) {
+								Node n = nl1.item( j );
+								if (n.getAttributes().getNamedItem( "id" ).getNodeValue().equals( id )) {
+									NamedNodeMap nnm = nl1.item( j ).getAttributes();
+									name = nnm.getNamedItem( "name" ).getNodeValue();
+									level = nnm.getNamedItem( "level" ).getNodeValue();
+									break;
+								}
 							}
 						}
-						
 					}	
 					
 					else {
@@ -184,6 +193,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
+		isFavourite = getIntent().getBooleanExtra( Character.Data.IS_FAVOURITE.name(), true );
 		init();
 		fillHeader();
 		initTabs();
@@ -212,13 +222,16 @@ public class Characterview extends Activity implements ICharactersProvider {
 		Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 		// >>"<< statt >>'<< <-- wichtig, sodass Strings mit >>'<< funktionieren
 		String where = Column.REGION.name() + " = \"" + sRegion + "\" AND " + Column.REALM.name()
-				+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\"";
+				+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\""
+				+ ( isFavourite ? ( " AND IS_FAVOURITE = " + TRUE ) : "" );
 		cursor = managedQuery( allFavourites, null, where, null, null );
-		startManagingCursor( cursor );
-		if (cursor.getCount() > 0) {
-			cursor.moveToFirst();
-			String xml = new String( cursor.getBlob( cursor.getColumnIndex( Column.XML.name() ) ) );
-			doc = xmlToDocument( xml );
+		if(cursor != null) {
+			startManagingCursor( cursor );
+			if (cursor.getCount() > 0) {
+				cursor.moveToFirst();
+				String xml = new String( cursor.getBlob( cursor.getColumnIndex( Column.XML.name() ) ) );
+				doc = xmlToDocument( xml );			
+			}			
 		}
 	}
 
@@ -300,10 +313,44 @@ public class Characterview extends Activity implements ICharactersProvider {
 					charGuild.setText( s + " " + guild );
 				}
 			}
-			TextView charNameRealm = (TextView)findViewById( R.id.CharNameRealm );
+			charNameRealm = (TextView)findViewById( R.id.CharNameRealm );
 			String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
 			String realm = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
 			charNameRealm.setText( name + " @ " + realm );
+
+			cbFavourite = (CheckBox)findViewById( R.id.isFavourite );
+			cbFavourite.setChecked( isFavourite );
+			cbFavourite.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				public void onCheckedChanged(CompoundButton buttonView,
+						boolean isChecked) {
+					changeFavouriteStatus( isChecked );
+				}
+			});
+		}
+	}
+
+	/**
+	 * 
+	 * @param isChecked
+	 */
+	protected void changeFavouriteStatus( boolean isChecked ) {
+		ContentValues cv = new ContentValues();
+		cv.put( Column.IS_FAVOURITE.name(), isChecked );
+		Uri uri = Uri.parse( CONTENT_NAME_CHARACTERS + "/"
+				+ cursor.getString( cursor.getColumnIndex( "_id" ) ) );
+		int count = getContentResolver().update( uri, cv, null, null );
+		if(count > 0) {
+			if(isChecked) {
+				String s = getString( R.string.search_addToFavorites_ok_toast );
+				s = s.replace( "%1", charNameRealm.getText() );
+				Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
+			} else {
+				String s = getString( R.string.charlist_favorite_deleted_toast );
+				s = s.replace( "%1", charNameRealm.getText() );
+				Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();				
+			}
+		} else {
+			cbFavourite.setChecked(!isChecked);
 		}
 	}
 
