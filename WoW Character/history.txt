@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-05)
+	+ New:		Abschnittsanzeige (Schnell-Rollbar) in Suchliste
+	
 (2010-01-04)
 	+ New:		Details eines Charakters auf Klick in Suchliste anzeigen
 	+ New:		Favoritenstatus eines Charakters in Details aendern

@@ -42,4 +42,5 @@
 	<string name="no">Nein</string>
 	<string name="warn">Achtung:</string>
 <string name="favourite">Favorit</string>
+<string name="tooltipSearchlist">Server: %1 ...</string>
 </resources>
