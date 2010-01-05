@@ -2,6 +2,7 @@ package de.stm.android.wowcharacter.activitiy;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -165,7 +166,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 						bundle.putInt( "ITEM_NUMBER", i );
 					}
 					msg.setData( bundle );
-					handler.sendMessage( msg );
+					handler.sendMessage( msg );						
 
 					if(error) {
 						//konnte ein Item nicht geladen werden (Netzwerkverbindung unterbrochen?), dann ist die Wahrscheinlichkeit hoch, dass
