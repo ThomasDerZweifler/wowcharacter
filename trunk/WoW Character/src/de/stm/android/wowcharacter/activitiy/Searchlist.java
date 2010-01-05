@@ -1,37 +1,25 @@
 package de.stm.android.wowcharacter.activitiy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
+import java.util.*;
 
 import android.app.ListActivity;
-import android.content.ContentValues;
-import android.content.Intent;
+import android.content.*;
 import android.database.Cursor;
+import android.graphics.PixelFormat;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.*;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+import android.view.WindowManager.LayoutParams;
+import android.widget.*;
+import android.widget.AbsListView.OnScrollListener;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
+import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.renderer.SearchListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
@@ -48,13 +36,23 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	private ImageButton bt;
 	private ToggleButton tb_EU;
 	private ToggleButton tb_US;
+	private boolean ready;
+    private WindowManager windowManager;
 	/** geladene XML Seite */
 	private StringBuilder sbXMLPage;
 	private int selectedItemPosition = -1;
+	private TextView sectionTooltip;
 	private Armory.R.Region region;
 	private Thread searchThread;
 	private InterpretSearch is = new InterpretSearch();
 	ArrayList<Character> listModel = new ArrayList<Character>();
+    private final class RemoveWindow implements Runnable {
+        public void run() {
+            removeWindow();
+        }
+    }
+
+    private RemoveWindow mRemoveWindow = new RemoveWindow();
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage( Message msg ) {
@@ -81,40 +79,51 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 					s = s.replace( "%1", Integer.toString( listsize ) );
 				}
 				Toast.makeText( Searchlist.this, s, Toast.LENGTH_SHORT ).show();
-//				new Handler().postDelayed(new Runnable() {
-//		            public void run() {
-//						getListView().setSelection( selectedItemPosition );
-//		            }
-//		        }, 6000);
+				ready = true;
+				// new Handler().postDelayed(new Runnable() {
+				// public void run() {
+				// getListView().setSelection( selectedItemPosition );
+				// }
+				// }, 6000);
 			}
 		}
 	};
 
+    private void removeWindow() {
+        sectionTooltip.setVisibility(View.INVISIBLE);
+    }
+
 	@Override
 	protected void onSaveInstanceState( Bundle outState ) {
-
 		String name = et.getText().toString();
 		outState.putString( ConfigData.NAME.name(), name );
-		
 		String realm = tb_US.isSelected() ? "US" : "EU";
-		outState.putString( ConfigData.REALM.name(), realm  );
-		
+		outState.putString( ConfigData.REALM.name(), realm );
 		int selectedItemPosition = getListView().getSelectedItemPosition();
 		outState.putInt( ConfigData.SELECTED_ITEM_POSITION.name(), selectedItemPosition );
-
 		super.onSaveInstanceState( outState );
 	}
 
 	protected void onRestoreInstanceState( Bundle state ) {
 		super.onRestoreInstanceState( state );
-		
 		String name = state.getString( ConfigData.NAME.name() );
 		String realm = state.getString( ConfigData.REALM.name() );
-
 		selectedItemPosition = state.getInt( ConfigData.SELECTED_ITEM_POSITION.name() );
-
 		bt.performClick();
 	}
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        removeWindow();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        windowManager.removeView(sectionTooltip);
+        ready = false;
+    }
 
 	@Override
 	public void onCreate( Bundle savedInstanceState ) {
@@ -130,6 +139,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		/** View und Titel setzen */
 		setContentView( R.layout.searchlist );
+        windowManager = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
 		setProgressBarIndeterminateVisibility( false );
 		String sAppName = getString( R.string.app_name );
 		String sTitle = getString( R.string.search_title );
@@ -223,7 +233,44 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		}
 		/** Kontextmenü registrieren */
 		registerForContextMenu( getListView() );
-		
+		getListView().setFastScrollEnabled( true );
+		// getListView().addFooterView( buildFooter() );//TODO funktioniert nicht
+		sectionTooltip = (TextView)getLayoutInflater().inflate( R.layout.list_position, null );
+		sectionTooltip.setVisibility( View.INVISIBLE );
+		getListView().setOnScrollListener( new OnScrollListener() {
+			public void onScroll( AbsListView view, int firstVisibleItem, int visibleItemCount,
+					int totalItemCount ) {
+				if (ready) {//TODO Abfrage, ob Scroll-Marker eingeblendet ist, oder gleich an diesen einen Listener registrieren...
+					int indexOfMiddleItem = firstVisibleItem + visibleItemCount/2;
+					if(indexOfMiddleItem < listModel.size()) {
+						Character character = listModel.get( firstVisibleItem + visibleItemCount/2 );
+						String realm = character.get( Data.REALM ).toString();
+						String text = getString(R.string.tooltipSearchlist );
+						text = text.replaceAll( "%1",  String.valueOf( realm.charAt( 0 ) ) );
+						sectionTooltip.setText( text );
+						sectionTooltip.setVisibility( View.VISIBLE );
+			            handler.removeCallbacks(mRemoveWindow);
+			            handler.postDelayed(mRemoveWindow, 1500);//1.5s ist die Zeit, die auch der Scroll-Marker zum Ausblenden benoetigt
+					}
+				}
+			}
+
+			public void onScrollStateChanged( AbsListView view, int scrollState ) {
+			}
+		} );
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+        windowManager.addView(sectionTooltip, lp);
+	}
+
+	private View buildFooter() {
+		TextView txt = new TextView( this );
+		txt.setText( "xxxxxxxxxxxxxxxxxxxx" );
+		return (txt);
 	}
 
 	@Override
@@ -245,12 +292,11 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	 */
 	private void addFavourite( Character character ) {
 		ContentValues values = character.getContentValues();
-
 		byte[] bitmap = Armory.getCharIcon( character );
-		if(bitmap != null) {
-			values.put( Column.BITMAP.name(), bitmap );				
+		if (bitmap != null) {
+			values.put( Column.BITMAP.name(), bitmap );
 		}
-		values.put( Column.IS_FAVOURITE.name(), TRUE );				
+		values.put( Column.IS_FAVOURITE.name(), TRUE );
 		Uri contentUri = Uri.parse( CONTENT_NAME_CHARACTERS );
 		Uri uri = getContentResolver().insert( contentUri, values );
 	}
@@ -263,35 +309,32 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	 * @param bitmap
 	 */
 	private void addCharacterTemporary( Character character ) {
-
 		ContentValues values = character.getContentValues();
 		byte[] bitmap = Armory.getCharIcon( character );
-		if(bitmap != null) {
-			values.put( Column.BITMAP.name(), bitmap );				
+		if (bitmap != null) {
+			values.put( Column.BITMAP.name(), bitmap );
 		}
-		values.put( Column.IS_FAVOURITE.name(), FALSE );				
+		values.put( Column.IS_FAVOURITE.name(), FALSE );
 		String where = "IS_FAVOURITE = " + FALSE;
-
 		Uri contentUri = Uri.parse( CONTENT_NAME_CHARACTERS );
-
-		//Versuch, einen vorhandenen temporaeren Charakter zu ueberschreiben (Wiederverwendung der _id)
-		int count = getContentResolver().update( contentUri, values, where, null );		
-		
-		if(count == 0) {
-			//noch kein temporaerer Charakter vorhanden
+		// Versuch, einen vorhandenen temporaeren Charakter zu ueberschreiben (Wiederverwendung der
+		// _id)
+		int count = getContentResolver().update( contentUri, values, where, null );
+		if (count == 0) {
+			// noch kein temporaerer Charakter vorhanden
 			Uri uri = getContentResolver().insert( contentUri, values );
 		}
 	}
 
 	/**
-	 * Alle Character die keine Favoriten sind loeschen 
+	 * Alle Character die keine Favoriten sind loeschen
 	 */
 	private void removeAllNonFavourites() {
 		Uri contentUri = Uri.parse( CONTENT_NAME_CHARACTERS );
 		String where = "IS_FAVOURITE = " + FALSE;
-		int count = getContentResolver().delete(contentUri, where, null);
+		int count = getContentResolver().delete( contentUri, where, null );
 	}
-	
+
 	@Override
 	public boolean onContextItemSelected( MenuItem item ) {
 		switch (item.getItemId()) {
@@ -318,22 +361,19 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	@Override
 	protected void onListItemClick( ListView l, View v, int position, long id ) {
 		Character character = (Character)getListAdapter().getItem( position );
-		addCharacterTemporary(character);
-		
+		addCharacterTemporary( character );
 		Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 		Cursor cursor = null;
 		try {
 			String where = "IS_FAVOURITE = 0";
 			cursor = managedQuery( allFavourites, null, where, null, null );
 			startManagingCursor( cursor );
-		} catch(Exception e) {
-			
+		} catch (Exception e) {
 		}
 		if (cursor != null && cursor.getCount() > 0) {
 			boolean b = cursor.moveToPosition( 0 );
 			goToDetails( cursor );
 		}
-		
 	}
 
 	/**
@@ -347,7 +387,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 			bt.setEnabled( true );
 		}
 	}
-	
+
 	/**
 	 * Details als XML zum Character hinzufuegen
 	 * 
@@ -394,8 +434,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 			String xml = cursor.getString( cursor.getColumnIndex( Column.XML.name() ) );
 			if (xml == null || "".equals( xml )) {
 				// Persitiertes Ergebnis auch nicht verfuegbar, dann keine Anzeige der Details
-				Toast.makeText( this, "Keine Details verfuegbar!", Toast.LENGTH_SHORT )
-						.show();
+				Toast.makeText( this, "Keine Details verfuegbar!", Toast.LENGTH_SHORT ).show();
 				return;
 			}
 		}
@@ -412,5 +451,4 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		// (somit aktuell ist)
 		startActivity( intent );
 	}
-
 }
