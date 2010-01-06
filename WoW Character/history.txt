@@ -2,6 +2,7 @@
   -----------------------------
 
 (2010-01-06)
+	* Changed:	Favorit speichern in den Details
 	- Removed:	Lupeneffekt fuer Eintraege der Favoritenliste
 
 (2010-01-05)

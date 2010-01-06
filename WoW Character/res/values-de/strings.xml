@@ -41,6 +41,6 @@
 	<string name="yes">Ja</string>
 	<string name="no">Nein</string>
 	<string name="warn">Achtung:</string>
-<string name="favourite">Favorit</string>
+<string name="favourite">Als Favorit speichern</string>
 <string name="tooltipSearchlist">Server: %1 ...</string>
 </resources>
