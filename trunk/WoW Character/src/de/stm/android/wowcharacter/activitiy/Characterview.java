@@ -209,6 +209,20 @@ public class Characterview extends Activity implements ICharactersProvider {
 	}
 
 	@Override
+	protected void onPause() {
+		//notwendig fuer Version 1.6 (weil onBackPressed nicht unterstuetzt wird)
+		thread.interrupt();
+
+		// TODO noch zu ueberlegen, wenn Thread nicht beendet wird (dann nur
+		// Home Taste mgl.)
+		// evtl. Loesung: nur wenn Activity laeuft, Oberflaechenaktivitaeten
+		// zulassen
+		while (thread.isAlive()) {
+
+		}
+		super.onPause();
+	}
+	
 	public void onBackPressed() {
 		thread.interrupt();
 
@@ -219,7 +233,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 		while (thread.isAlive()) {
 
 		}
-		super.onBackPressed();
 	}
 
 	@Override
