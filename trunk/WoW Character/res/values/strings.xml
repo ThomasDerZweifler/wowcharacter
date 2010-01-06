@@ -41,6 +41,6 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="warn">Attention:</string>
-<string name="favourite">Favourite</string>
+<string name="favourite">Save as favourite</string>
 <string name="tooltipSearchlist">Realm: %1 ...</string>
 </resources>

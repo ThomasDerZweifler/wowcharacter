@@ -310,9 +310,9 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	 */
 	private void addCharacterTemporary( Character character ) {
 		ContentValues values = character.getContentValues();
-		byte[] bitmap = Armory.getCharIcon( character );
+		Object bitmap = Armory.getCharIcon( character );
 		if (bitmap != null) {
-			values.put( Column.BITMAP.name(), bitmap );
+			values.put( Column.BITMAP.name(), (byte[])bitmap );
 		}
 		values.put( Column.IS_FAVOURITE.name(), FALSE );
 		String where = "IS_FAVOURITE = " + FALSE;
@@ -446,7 +446,6 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		intent.putExtra( Character.Data.REGION.name(), region );
 		intent.putExtra( Character.Data.REALM.name(), realm );
 		intent.putExtra( Character.Data.NAME.name(), name );
-		intent.putExtra( Character.Data.IS_FAVOURITE.name(), false );
 		intent.putExtra( "ONLINE", bOnline );// gibt an, ob das Ergebnis online ermittelt wurde
 		// (somit aktuell ist)
 		startActivity( intent );
