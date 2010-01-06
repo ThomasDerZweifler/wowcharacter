@@ -44,7 +44,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 	private static final int STOPSPLASH = 0;
 	/** time in milliseconds */
 	private static final long SPLASHTIME = 5000;
-	private Animation anim = null;
+//	private Animation anim = null;
 	private Menu optionsMenu;
 	
 	/** Sortierrichtungen */
@@ -159,7 +159,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 
 		setContentView( R.layout.favoritelist );
 				
-		anim = AnimationUtils.loadAnimation( this, R.anim.magnify );
+//		anim = AnimationUtils.loadAnimation( this, R.anim.magnify );
 		
 		Message msg = new Message();
 		msg.what = STOPSPLASH;
@@ -177,13 +177,13 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 						R.string.charlist_contextMenu_removeFromFavorites );
 			}
 		} );
-		getListView().setOnItemSelectedListener( new OnItemSelectedListener() {
-			public void onItemSelected( AdapterView<?> parent, View view, int position, long id ) {
-				view.startAnimation( anim );
-			}
-			public void onNothingSelected( AdapterView<?> parent ) {
-			}
-		});
+//		getListView().setOnItemSelectedListener( new OnItemSelectedListener() {
+//			public void onItemSelected( AdapterView<?> parent, View view, int position, long id ) {
+//				view.startAnimation( anim );
+//			}
+//			public void onNothingSelected( AdapterView<?> parent ) {
+//			}
+//		});
 		alertDeleteAll = new AlertDialog.Builder( this ).setTitle( R.string.warn ).setMessage(
 				R.string.charlist_deleteAll ).setPositiveButton( R.string.yes,
 				new DialogInterface.OnClickListener() {
@@ -216,7 +216,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 	@Override
 	protected void onListItemClick( ListView l, View v, int position, long id ) {
 		Cursor c = (Cursor)getListAdapter().getItem( position );
-		v.startAnimation( anim );
+//		v.startAnimation( anim );
 		goToDetails( c );
 	}
 
