@@ -28,5 +28,5 @@
 		</activity>
 	<provider android:name=".data.CharactersProvider" android:authorities="net.wowcharacter.provider"></provider>
 </application>
-<uses-sdk android:maxSdkVersion="6" android:minSdkVersion="3" android:targetSdkVersion="4"></uses-sdk>
+<uses-sdk android:maxSdkVersion="7" android:minSdkVersion="3" android:targetSdkVersion="4"></uses-sdk>
 </manifest> 
