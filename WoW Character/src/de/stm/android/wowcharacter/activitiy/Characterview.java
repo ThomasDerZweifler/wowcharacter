@@ -3,15 +3,9 @@ package de.stm.android.wowcharacter.activitiy;
 import java.io.IOException;
 import java.io.StringReader;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -22,19 +16,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
+import android.os.*;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
@@ -186,6 +171,11 @@ public class Characterview extends Activity implements ICharactersProvider {
 					if (!error) {
 						bundle.putString("NAME", name);
 						bundle.putString("LEVEL", level);
+						
+						if(bitmap == null) {
+					        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.question_mark); 
+						}
+						
 						bundle.putParcelable("BITMAP", bitmap);
 						bundle.putInt("ITEM_COUNT", length);
 						bundle.putInt("ITEM_NUMBER", i);
@@ -210,7 +200,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 
 	@Override
 	protected void onPause() {
-		//notwendig fuer Version 1.6 (weil onBackPressed nicht unterstuetzt wird)
 		thread.interrupt();
 
 		// TODO noch zu ueberlegen, wenn Thread nicht beendet wird (dann nur
@@ -222,18 +211,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 		}
 		super.onPause();
 	}
-	
-//	public void onBackPressed() {
-//		thread.interrupt();
-//
-//		// TODO noch zu ueberlegen, wenn Thread nicht beendet wird (dann nur
-//		// Home Taste mgl.)
-//		// evtl. Loesung: nur wenn Activity laeuft, Oberflaechenaktivitaeten
-//		// zulassen
-//		while (thread.isAlive()) {
-//
-//		}
-//	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
