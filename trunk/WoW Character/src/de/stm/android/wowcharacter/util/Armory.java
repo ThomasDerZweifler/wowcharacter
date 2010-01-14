@@ -37,10 +37,10 @@ public class Armory {
 		
 		final static public String ITEMICON = "wow-icons/_images/51x51/";
 		
-		final static public String CHARICON = "images/portraits/wow-default/";
-		final static public String CHARICON_60 = "images/portraits/wow/";
-		final static public String CHARICON_70 = "images/portraits/wow-70/";
-		final static public String CHARICON_80 = "images/portraits/wow-80/";
+		final static public String CHARICON = "_images/portraits/wow-default/";
+		final static public String CHARICON_60 = "_images/portraits/wow/";
+		final static public String CHARICON_70 = "_images/portraits/wow-70/";
+		final static public String CHARICON_80 = "_images/portraits/wow-80/";
 	}
 	
 	private static Locale locale = Locale.getDefault();

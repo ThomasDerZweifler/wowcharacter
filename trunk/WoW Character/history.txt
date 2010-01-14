@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-14)
+	* Changed:	Anpassung des Character-Pfades 
+
 (2010-01-12)
 	* Changed:	Fragezeichen-Icon wenn Item-Icon fehlt
 	
