@@ -27,11 +27,15 @@
 				android:layout_width="fill_parent" 
 	    		android:layout_height="fill_parent" 
 				android:textSize="12px" />
-			<Button android:id="@+id/setAsFavourite"
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent"
-				android:text="@string/favourite"/>
 		</LinearLayout>
+	</TableRow>
+	<TableRow>
+		<Button android:id="@+id/setAsFavourite"
+			android:text="@string/favourite"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_weight="1"
+			android:layout_span="2" />
 	</TableRow>
 	<TabHost android:id="@+id/CharacterViewTab"
 		android:layout_width="fill_parent"
