@@ -182,7 +182,9 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	private void init() {
 
 		setContentView(R.layout.favoritelist);
-
+		
+		getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
+		
 		// anim = AnimationUtils.loadAnimation( this, R.anim.magnify );
 
 		Message msg = new Message();
@@ -236,6 +238,14 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 							}
 						});
 
+	}
+
+	@Override
+	protected void onDestroy() {
+		// Process beenden (Back-Button in der Favoriten-Liste)
+		android.os.Process.killProcess(android.os.Process.myPid());
+
+		super.onDestroy();
 	}
 
 	private void initSplash() {

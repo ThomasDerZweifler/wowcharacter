@@ -2,6 +2,8 @@
   -----------------------------
 
 (2010-01-18)
+	+ New:		Process wird bei Back-Taste in der Favoriten-Liste beendet (bei HOME bleibt Process erhalten,
+					um per langem Tastendruck auf HOME wieder zu diesem wechseln zu koennen)
 	* Changed:	Fullscreen aufgehoben, somit wird leere Favoritenliste deutlich
 	+ New:		Wenn letzter Favorit geloescht, Aufruf der Suchliste
 	* Fixed:	Auswahl des Characters aus der Suchliste heraus
