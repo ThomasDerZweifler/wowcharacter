@@ -218,6 +218,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 		setContentView( R.layout.characterview );
 		setProgressBarIndeterminateVisibility( false );
 		Boolean onlineResults = getIntent().getBooleanExtra( "ONLINE", false );
+		Boolean temporary = getIntent().getBooleanExtra( "IS_TEMPORARY", true );
 		String sAppName = getString( R.string.app_name );
 		String sTitle = getString( R.string.charview_title );
 		setTitle( sAppName + " (" + sTitle + ")" + " - " + (onlineResults ? "online" : "offline") );
@@ -227,7 +228,8 @@ public class Characterview extends Activity implements ICharactersProvider {
 		Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 		// >>"<< statt >>'<< <-- wichtig, sodass Strings mit >>'<< funktionieren
 		String where = Column.REGION.name() + " = \"" + sRegion + "\" AND " + Column.REALM.name()
-				+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\"";
+				+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\""
+				+ " AND IS_FAVOURITE = " + ( temporary ?  + FALSE : TRUE );
 		cursor = managedQuery( allFavourites, null, where, null, null );
 		if (cursor != null) {
 			startManagingCursor( cursor );

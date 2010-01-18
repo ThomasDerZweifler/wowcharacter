@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-18)
+	* Fixed:	Auswahl des Characters aus der Suchliste heraus
+	
 (2010-01-17)
 	* Changed:	Button "setAsFavourite" über die ganzen Bildschirmbreite geändert
 
