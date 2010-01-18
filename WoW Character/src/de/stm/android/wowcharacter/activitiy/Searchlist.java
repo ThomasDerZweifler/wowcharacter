@@ -446,6 +446,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		intent.putExtra( Character.Data.REGION.name(), region );
 		intent.putExtra( Character.Data.REALM.name(), realm );
 		intent.putExtra( Character.Data.NAME.name(), name );
+		intent.putExtra( "IS_TEMPORARY", true );
 		intent.putExtra( "ONLINE", bOnline );// gibt an, ob das Ergebnis online ermittelt wurde
 		// (somit aktuell ist)
 		startActivity( intent );
