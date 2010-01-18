@@ -2,6 +2,8 @@
   -----------------------------
 
 (2010-01-18)
+	* Changed:	Fullscreen aufgehoben, somit wird leere Favoritenliste deutlich
+	+ New:		Wenn letzter Favorit geloescht, Aufruf der Suchliste
 	* Fixed:	Auswahl des Characters aus der Suchliste heraus
 	
 (2010-01-17)
