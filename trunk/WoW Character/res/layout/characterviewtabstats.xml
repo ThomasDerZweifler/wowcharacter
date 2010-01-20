@@ -60,4 +60,19 @@
 			android:maxHeight="20dip"
 			android:layout_width="fill_parent"/>
 	</TableRow>
+	<TableRow>
+		<ImageView android:src="@drawable/horizontal_line"
+			android:layout_height="wrap_content"
+			android:maxHeight="1px"
+			android:minHeight="1px"
+			android:layout_width="fill_parent"
+			android:layout_margin="5px"/>
+	</TableRow>
+	<TableRow>
+		<TextView 	android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_margin="5px"
+			android:text="@string/charview_talentSpec"/>
+	</TableRow>
+	
 </TableLayout>

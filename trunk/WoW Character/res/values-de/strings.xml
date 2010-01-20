@@ -34,6 +34,7 @@
 	<string name="charview_second_rage">Wut</string>
 	<string name="charview_second_energy">Energie</string>
 	<string name="charview_second_runic">Runenmacht</string>
+	<string name="charview_talentSpec">Talentspezialisierung:</string>
 
 	<string name="region_toggle_US">US</string>
 	<string name="region_toggle_EU">EU</string>
