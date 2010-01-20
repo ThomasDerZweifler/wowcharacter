@@ -34,6 +34,7 @@
 	<string name="charview_second_rage">rage</string>
 	<string name="charview_second_energy">energy</string>
 	<string name="charview_second_runic">runic</string>
+	<string name="charview_talentSpec">Talents:</string>
 
 	<string name="region_toggle_US">US</string>
 	<string name="region_toggle_EU">EU</string>
