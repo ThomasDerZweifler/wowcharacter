@@ -2,6 +2,7 @@ package de.stm.android.wowcharacter.renderer;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.*;
 import android.widget.*;
 import de.stm.android.wowcharacter.R;
@@ -43,13 +44,18 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 		}
 		if (getCount() > position) {
 			Object[] itemValues = getItem( position );
+			String quality = itemValues[3].toString();//fuer Farbe
 			ImageView itemImage = (ImageView)row.findViewById( R.id.ItemImage );
 			Object o = itemValues[0];
 			if (o instanceof Bitmap) {
 				itemImage.setImageBitmap( (Bitmap)o );
+				itemImage.setAlpha(220);
+				itemImage.setFadingEdgeLength(20);
+				itemImage.setBackgroundColor( Color.BLUE );
 			}
 			TextView name = (TextView)row.findViewById( R.id.ItemName );
 			name.setText( itemValues[1].toString() );
+			name.setTextColor( Color.BLUE );
 			TextView level = (TextView)row.findViewById( R.id.ItemLevel );
 			level.setText( "(Level: " + itemValues[2].toString() + ")" );
 		}
