@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/character/sheet.xsl"?><page globalSearch="1" lang="de_de" requestUrl="/character-sheet.xml">
+  <tabInfo subTab="profile" tab="character" tabGroup="character" tabUrl="r=Lothar&amp;cn=Glade&amp;gn=B%C3%BCndnis+des+Zorns"/>
+  <characterInfo>
+    <character battleGroup="Reckoning / Abrechnung" charUrl="r=Lothar&amp;cn=Glade" class="Priesterin" classId="5" classUrl="c=Priesterin" faction="Allianz" factionId="0" gender="Weiblich" genderId="1" guildName="Bündnis des Zorns" guildUrl="r=Lothar&amp;gn=B%C3%BCndnis+des+Zorns" lastModified="18. Januar 2010" level="80" name="Glade" points="1730" prefix="" race="Zwerg" raceId="3" realm="Lothar" suffix="" titleId="0">
+      <modelBasePath value="http://eu.media.battle.net.edgesuite.net/"/>
+    </character>
+    <characterTab>
+      <talentSpecs>
+        <talentSpec active="1" group="2" icon="spell_shadow_shadowwordpain" prim="Schatten" treeOne="14" treeThree="57" treeTwo="0"/>
+        <talentSpec group="1" icon="spell_holy_guardianspirit" prim="Heilig" treeOne="13" treeThree="0" treeTwo="58"/>
+      </talentSpecs>
+      <buffs/>
+      <debuffs/>
+      <pvp>
+        <lifetimehonorablekills value="0"/>
+        <arenacurrency value="0"/>
+      </pvp>
+      <professions>
+        <skill id="773" key="inscription" max="450" name="Inschriftenkunde" value="450"/>
+        <skill id="182" key="herbalism" max="450" name="Kräuterkunde" value="450"/>
+      </professions>
+      <characterBars>
+        <health effective="17140"/>
+        <secondBar casting="182" effective="19813" notCasting="339" type="m"/>
+      </characterBars>
+      <baseStats>
+        <strength attack="48" base="48" block="-1" effective="58"/>
+        <agility armor="114" attack="-1" base="47" critHitPercent="4.27" effective="57"/>
+        <stamina base="70" effective="1036" health="10180" petBonus="-1"/>
+        <intellect base="176" critHitPercent="7.73" effective="1082" mana="15950" petBonus="-1"/>
+        <spirit base="180" effective="569" healthRegen="31" manaRegen="313"/>
+        <armor base="2057" effective="2057" percent="11.90" petBonus="-1"/>
+      </baseStats>
+      <resistances>
+        <arcane petBonus="-1" value="0"/>
+        <fire petBonus="-1" value="0"/>
+        <frost petBonus="-1" value="0"/>
+        <holy petBonus="-1" value="0"/>
+        <nature petBonus="-1" value="0"/>
+        <shadow petBonus="-1" value="0"/>
+      </resistances>
+      <melee>
+        <mainHandDamage dps="126.2" max="296" min="101" percent="0" speed="1.57"/>
+        <offHandDamage dps="0.0" max="0" min="0" percent="0" speed="1.75"/>
+        <mainHandSpeed hastePercent="14.61" hasteRating="479" value="1.57"/>
+        <offHandSpeed hastePercent="14.61" hasteRating="479" value="1.75"/>
+        <power base="96" effective="96" increasedDps="6.0"/>
+        <hitRating increasedHitPercent="13.75" penetration="0" reducedArmorPercent="0.00" value="451"/>
+        <critChance percent="0.39" plusPercent="5.79" rating="266"/>
+        <expertise additional="0" percent="0.00" rating="0" value="0"/>
+      </melee>
+      <ranged>
+        <weaponSkill rating="0" value="0"/>
+        <damage dps="414.1" max="846" min="455" percent="0" speed="1.57"/>
+        <speed hastePercent="14.61" hasteRating="479" value="1.57"/>
+        <power base="47" effective="47" increasedDps="3.0" petAttack="-1.00" petSpell="-1.00"/>
+        <hitRating increasedHitPercent="13.75" penetration="0" reducedArmorPercent="0.00" value="451"/>
+        <critChance percent="7.59" plusPercent="5.79" rating="266"/>
+      </ranged>
+      <spell>
+        <bonusDamage>
+          <arcane value="2506"/>
+          <fire value="2506"/>
+          <frost value="2506"/>
+          <holy value="2506"/>
+          <nature value="2506"/>
+          <shadow value="2506"/>
+          <petBonus attack="-1" damage="-1" fromType=""/>
+        </bonusDamage>
+        <bonusHealing value="2506"/>
+        <hitRating increasedHitPercent="17.19" penetration="0" reducedResist="0" value="451"/>
+        <critChance rating="266">
+          <arcane percent="13.52"/>
+          <fire percent="13.52"/>
+          <frost percent="13.52"/>
+          <holy percent="13.52"/>
+          <nature percent="13.52"/>
+          <shadow percent="13.52"/>
+        </critChance>
+        <penetration value="0"/>
+        <manaRegen casting="182.00" notCasting="339.00"/>
+        <hasteRating hastePercent="14.61" hasteRating="479"/>
+      </spell>
+      <defenses>
+        <armor base="2057" effective="2057" percent="11.90" petBonus="-1"/>
+        <defense decreasePercent="0.00" increasePercent="0.00" plusDefense="0" rating="0" value="400.00"/>
+        <dodge increasePercent="0.00" percent="4.37" rating="0"/>
+        <parry increasePercent="0.00" percent="0.00" rating="0"/>
+        <block increasePercent="0.00" percent="0.00" rating="0"/>
+        <resilience damagePercent="0.00" hitPercent="0.00" value="0.00"/>
+      </defenses>
+      <items>
+        <item displayInfoId="60520" durability="60" gem0Id="41333" gem1Id="39998" gem2Id="0" gemIcon0="inv_jewelcrafting_icediamond_02" gemIcon1="inv_jewelcrafting_gem_28" icon="inv_helmet_133" id="47564" level="219" maxDurability="60" name="Blick des Unbekannten" permanentEnchantIcon="spell_fire_masterofelements" permanentEnchantItemId="50368" permanentenchant="3820" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1526046528" slot="0"/>
+        <item displayInfoId="43085" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_jewelry_necklace_39" id="50211" level="232" maxDurability="0" name="Arkane Ringe des Zorns" permanentenchant="0" pickUp="PickUpRing" putDown="PutDownRing" randomPropertiesId="0" rarity="4" seed="1291183488" slot="1"/>
+        <item displayInfoId="64605" durability="60" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_shoulder_118" id="50193" level="232" maxDurability="60" name="Schulterstücke mit Sahne" permanentEnchantIcon="inv_inscription_tradeskill01" permanentEnchantSpellDesc="Fügt einem Gegenstand, der sich an einem Schulterplatz befindet, dauerhaft 70 Zaubermacht und 15 kritische Trefferwertung hinzu.&#10;&#10;&#10;&#10;Kann nur auf Eure eigenen Rüstungsteile angewandt werden und durch die Anwendung werden sie seelengebunden." permanentEnchantSpellName="Meisterinschrift des Sturms" permanentenchant="3838" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="2108880256" slot="2"/>
+        <item displayInfoId="61722" durability="100" gem0Id="40113" gem1Id="40133" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_37" gemIcon1="inv_jewelcrafting_gem_40" icon="inv_chest_cloth_75" id="48075" level="232" maxDurability="100" name="Velens Gewandung der Eroberung" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="44465" permanentenchant="3832" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="0" slot="4"/>
+        <item displayInfoId="61682" durability="35" gem0Id="40155" gem1Id="40113" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_39" gemIcon1="inv_jewelcrafting_gem_37" icon="inv_belt_52" id="47617" level="232" maxDurability="35" name="Eisheulers Sattelgurt" permanentenchant="0" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1607191808" slot="5"/>
+        <item displayInfoId="58332" durability="75" gem0Id="40049" gem1Id="40047" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_30" gemIcon1="inv_jewelcrafting_gem_30" icon="inv_pants_cloth_05" id="45394" level="219" maxDurability="75" name="Weihehose der Tapferkeit" permanentEnchantIcon="spell_nature_astralrecalgroup" permanentEnchantItemId="41606" permanentenchant="3721" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="0" slot="6"/>
+        <item displayInfoId="54227" durability="50" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_boots_cloth_16" id="39254" level="200" maxDurability="50" name="Saltarelloschuhe" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="38961" permanentenchant="1147" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1308840256" slot="7"/>
+        <item displayInfoId="58987" durability="35" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_bracer_25a" id="45291" level="219" maxDurability="35" name="Zündungsarmschienen" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="44470" permanentenchant="2332" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1493471168" slot="8"/>
+        <item displayInfoId="53836" durability="35" gem0Id="39998" gem1Id="0" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_28" icon="inv_gauntlets_64" id="39192" level="200" maxDurability="35" name="Handschuhe der dunklen Gesten" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="38953" permanentenchant="3234" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1784384384" slot="9"/>
+        <item displayInfoId="63960" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_jewelry_ring_83" id="50377" level="251" maxDurability="0" name="Äschernes Band der Zerstörung" permanentenchant="0" pickUp="PickUpMetalSmall" putDown="PutDownSmallMEtal" randomPropertiesId="0" rarity="4" seed="1721902208" slot="10"/>
+        <item displayInfoId="43095" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_jewelry_ring_54" id="47732" level="245" maxDurability="0" name="Band des Herbeirufers" permanentenchant="0" pickUp="PickUpRing" putDown="PutDownRing" randomPropertiesId="0" rarity="4" seed="0" slot="11"/>
+        <item displayInfoId="35361" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_trinket_naxxramas04" id="39229" level="200" maxDurability="0" name="Umarmung der Spinne" permanentenchant="0" pickUp="PickUpWand" putDown="PutDownWand" randomPropertiesId="0" rarity="4" seed="1787850496" slot="12"/>
+        <item displayInfoId="64256" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_datacrystal09" id="50259" level="232" maxDurability="0" name="Nimmerschmelzender Eiskristall" permanentenchant="0" pickUp="PickUpWand" putDown="PutDownWand" randomPropertiesId="0" rarity="4" seed="1708672000" slot="13"/>
+        <item displayInfoId="61408" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_misc_cape_18" id="47501" level="219" maxDurability="0" name="Kurisus Zaudern" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="39003" permanentenchant="3831" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1008546368" slot="14"/>
+        <item displayInfoId="64766" durability="75" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_weapon_shortblade_100" id="50227" level="232" maxDurability="75" name="Chirurgennadel" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="44467" permanentenchant="3834" pickUp="PickUpMetalSmall" putDown="PutDownSmallMEtal" randomPropertiesId="0" rarity="4" seed="2137988352" slot="15"/>
+        <item displayInfoId="64433" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_misc_bone_elfskull_01" id="50781" level="251" maxDurability="0" name="Baton des Geißelfürsten" permanentenchant="0" pickUp="PickUpWand" putDown="PutDownWand" randomPropertiesId="0" rarity="4" seed="877098240" slot="16"/>
+        <item displayInfoId="60586" durability="75" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_wand_32" id="47658" level="245" maxDurability="75" name="Feuersteinzünder" permanentenchant="0" pickUp="PickUpWand" putDown="PutDownWand" randomPropertiesId="0" rarity="4" seed="0" slot="17"/>
+      </items>
+      <glyphs>
+        <glyph effect="In Schattengestalt erhöhen Eure unregelmäßigen kritischen Zaubertreffer 10 Sek. lang Eure Zaubermacht um 30% Eurer Willenskraft." icon="ui-glyph-rune-13" id="262" name="Glyphe 'Schatten'" type="major"/>
+        <glyph effect="Ihr erhaltet 5% Eures maximalen Manas, wenn Euer Schattengeist durch erlittenen Schaden stirbt." icon="ui-glyph-rune-18" id="463" name="Glyphe 'Schattengeist'" type="minor"/>
+        <glyph effect="Für den Zauber 'Levitieren' werden keine Reagenzien mehr benötigt." icon="ui-glyph-rune-3" id="459" name="Glyphe 'Levitieren'" type="minor"/>
+        <glyph effect="Ziele, deren Gesundheit weniger als 35% beträgt, erleiden zusätzliche 10% Schaden durch 'Schattenwort: Tod'." icon="ui-glyph-rune-15" id="268" name="Glyphe 'Schattenwort: Tod'" type="major"/>
+        <glyph effect="Erhöht den von 'Gedankenschinden' verursachten Schaden um 10%, wenn das Ziel von 'Schattenwort: Schmerz' betroffen ist." icon="ui-glyph-rune-2" id="269" name="Glyphe 'Gedankenschinden'" type="major"/>
+      </glyphs>
+    </characterTab>
+    <summary>
+      <c earned="170" points="1730" total="1054" totalPoints="11635"/>
+      <category id="92" name="Allgemein">
+        <c earned="21" earnedPoints="225" total="54" totalPoints="570"/>
+      </category>
+      <category id="96" name="Quests">
+        <c earned="18" earnedPoints="180" total="49" totalPoints="530"/>
+      </category>
+      <category id="97" name="Erkundung">
+        <c earned="11" earnedPoints="110" total="70" totalPoints="830"/>
+      </category>
+      <category id="95" name="Spieler gegen Spieler">
+        <c earned="4" earnedPoints="40" total="166" totalPoints="1930"/>
+      </category>
+      <category id="168" name="Dungeon &amp; Schlachtzug">
+        <c earned="86" earnedPoints="875" total="454" totalPoints="4915"/>
+      </category>
+      <category id="169" name="Berufe">
+        <c earned="19" earnedPoints="190" total="75" totalPoints="760"/>
+      </category>
+      <category id="201" name="Ruf">
+        <c earned="2" earnedPoints="20" total="45" totalPoints="560"/>
+      </category>
+      <category id="155" name="Weltereignisse">
+        <c earned="9" earnedPoints="90" total="141" totalPoints="1540"/>
+      </category>
+      <category id="81" name="Heldentaten">
+        <c earned="3"/>
+      </category>
+    </summary>
+  </characterInfo>
+</page>

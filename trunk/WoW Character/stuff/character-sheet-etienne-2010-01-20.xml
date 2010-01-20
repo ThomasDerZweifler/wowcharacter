@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/character/sheet.xsl"?><page globalSearch="1" lang="de_de" requestUrl="/character-sheet.xml">
+  <tabInfo subTab="profile" tab="character" tabGroup="character" tabUrl="r=Lothar&amp;cn=Etienne&amp;gn=B%C3%BCndnis+des+Zorns"/>
+  <characterInfo>
+    <character battleGroup="Reckoning / Abrechnung" charUrl="r=Lothar&amp;cn=Etienne" class="Magier" classId="8" classUrl="c=Magier" faction="Allianz" factionId="0" gender="Männlich" genderId="0" guildName="Bündnis des Zorns" guildUrl="r=Lothar&amp;gn=B%C3%BCndnis+des+Zorns" lastModified="19. Januar 2010" level="80" name="Etienne" points="4315" prefix="Meister der Lehren " race="Mensch" raceId="1" realm="Lothar" suffix="" titleId="93">
+      <modelBasePath value="http://eu.media.battle.net.edgesuite.net/"/>
+    </character>
+    <characterTab>
+      <talentSpecs>
+        <talentSpec active="1" group="1" icon="spell_fire_firebolt02" prim="Feuer" treeOne="0" treeThree="18" treeTwo="53"/>
+      </talentSpecs>
+      <buffs/>
+      <debuffs/>
+      <pvp>
+        <lifetimehonorablekills value="1443"/>
+        <arenacurrency value="0"/>
+      </pvp>
+      <professions>
+        <skill id="197" key="tailoring" max="450" name="Schneiderei" value="450"/>
+        <skill id="333" key="enchanting" max="450" name="Verzauberkunst" value="450"/>
+      </professions>
+      <characterBars>
+        <health effective="15923"/>
+        <secondBar casting="137" effective="17163" notCasting="265" type="m"/>
+      </characterBars>
+      <baseStats>
+        <strength attack="36" base="36" block="-1" effective="46"/>
+        <agility armor="106" attack="-1" base="43" critHitPercent="4.49" effective="53"/>
+        <stamina base="59" effective="914" health="8960" petBonus="-1"/>
+        <intellect base="184" critHitPercent="6.58" effective="945" mana="13895" petBonus="-1"/>
+        <spirit base="179" effective="497" healthRegen="24" manaRegen="255"/>
+        <armor base="2032" effective="2032" percent="11.77" petBonus="-1"/>
+      </baseStats>
+      <resistances>
+        <arcane petBonus="-1" value="0"/>
+        <fire petBonus="-1" value="0"/>
+        <frost petBonus="-1" value="0"/>
+        <holy petBonus="-1" value="0"/>
+        <nature petBonus="-1" value="0"/>
+        <shadow petBonus="-1" value="0"/>
+      </resistances>
+      <melee>
+        <mainHandDamage dps="92.5" max="236" min="79" percent="0" speed="1.71"/>
+        <offHandDamage dps="0.0" max="0" min="0" percent="0" speed="1.90"/>
+        <mainHandSpeed hastePercent="5.37" hasteRating="176" value="1.71"/>
+        <offHandSpeed hastePercent="5.37" hasteRating="176" value="1.90"/>
+        <power base="72" effective="72" increasedDps="5.0"/>
+        <hitRating increasedHitPercent="12.50" penetration="0" reducedArmorPercent="0.00" value="410"/>
+        <critChance percent="17.10" plusPercent="13.09" rating="601"/>
+        <expertise additional="0" percent="0.75" rating="0" value="3"/>
+      </melee>
+      <ranged>
+        <weaponSkill rating="0" value="0"/>
+        <damage dps="286.1" max="636" min="341" percent="0" speed="1.71"/>
+        <speed hastePercent="5.37" hasteRating="176" value="1.71"/>
+        <power base="43" effective="43" increasedDps="3.0" petAttack="-1.00" petSpell="-1.00"/>
+        <hitRating increasedHitPercent="12.50" penetration="0" reducedArmorPercent="0.00" value="410"/>
+        <critChance percent="15.90" plusPercent="13.09" rating="601"/>
+      </ranged>
+      <spell>
+        <bonusDamage>
+          <arcane value="1875"/>
+          <fire value="1875"/>
+          <frost value="1875"/>
+          <holy value="1875"/>
+          <nature value="1875"/>
+          <shadow value="1875"/>
+          <petBonus attack="-1" damage="-1" fromType=""/>
+        </bonusDamage>
+        <bonusHealing value="1875"/>
+        <hitRating increasedHitPercent="15.63" penetration="0" reducedResist="0" value="410"/>
+        <critChance rating="601">
+          <arcane percent="22.67"/>
+          <fire percent="28.67"/>
+          <frost percent="22.67"/>
+          <holy percent="22.67"/>
+          <nature percent="22.67"/>
+          <shadow percent="22.67"/>
+        </critChance>
+        <penetration value="0"/>
+        <manaRegen casting="137.00" notCasting="265.00"/>
+        <hasteRating hastePercent="5.37" hasteRating="176"/>
+      </spell>
+      <defenses>
+        <armor base="2032" effective="2032" percent="11.77" petBonus="-1"/>
+        <defense decreasePercent="0.00" increasePercent="0.00" plusDefense="0" rating="0" value="400.00"/>
+        <dodge increasePercent="0.00" percent="4.56" rating="0"/>
+        <parry increasePercent="0.00" percent="0.00" rating="0"/>
+        <block increasePercent="0.00" percent="0.00" rating="0"/>
+        <resilience damagePercent="0.00" hitPercent="0.00" value="0.00"/>
+      </defenses>
+      <items>
+        <item displayInfoId="61162" durability="53" gem0Id="41333" gem1Id="40113" gem2Id="0" gemIcon0="inv_jewelcrafting_icediamond_02" gemIcon1="inv_jewelcrafting_gem_37" icon="inv_helmet_146" id="47748" level="232" maxDurability="60" name="Khadgars Kapuze der Eroberung" permanentEnchantIcon="spell_fire_masterofelements" permanentEnchantItemId="50368" permanentenchant="3820" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="0" slot="0"/>
+        <item displayInfoId="35437" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_jewelry_necklace_30naxxramas" id="39472" level="200" maxDurability="0" name="Kette der latenten Energien" permanentenchant="0" pickUp="PickUpRing" putDown="PutDownRing" randomPropertiesId="0" rarity="4" seed="1025380051" slot="1"/>
+        <item displayInfoId="55325" durability="52" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_shoulder_72" id="40555" level="226" maxDurability="60" name="Mantelung der Dissemination" permanentEnchantIcon="spell_nature_lightningoverload" permanentEnchantItemId="50338" permanentenchant="3810" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1350241088" slot="2"/>
+        <item displayInfoId="13055" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_shirt_black_01" id="4336" level="40" maxDurability="0" name="Schwarzes Schwadroneurshemd" permanentenchant="0" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="1" seed="82673480" slot="3"/>
+        <item displayInfoId="60570" durability="87" gem0Id="40026" gem1Id="40026" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_29" gemIcon1="inv_jewelcrafting_gem_29" icon="inv_chest_cloth_68" id="47527" level="219" maxDurability="100" name="Umarmung des Wahnsinns" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="44465" permanentenchant="3832" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1367846208" slot="4"/>
+        <item displayInfoId="59718" durability="32" gem0Id="40013" gem1Id="0" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_26" icon="inv_belt_44" id="45694" level="219" maxDurability="35" name="Leitfähige Kordel" permanentenchant="0" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1318385984" slot="5"/>
+        <item displayInfoId="54029" durability="65" gem0Id="40049" gem1Id="40049" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_30" gemIcon1="inv_jewelcrafting_gem_30" icon="inv_pants_cloth_15" id="39408" level="200" maxDurability="75" name="Saphirons Gamaschen" permanentEnchantIcon="spell_nature_astralrecalgroup" permanentEnchantItemId="41606" permanentenchant="3721" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="933601948" slot="6"/>
+        <item displayInfoId="60568" durability="42" gem0Id="39998" gem1Id="0" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_28" icon="inv_boots_cloth_22" id="47560" level="219" maxDurability="50" name="Stiefel der knisternden Flammen" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="38986" permanentenchant="3826" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1157763008" slot="7"/>
+        <item displayInfoId="60523" durability="30" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_bracer_33" id="47173" level="200" maxDurability="35" name="Bindungen des Verschlagenen" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="44470" permanentenchant="2332" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1044721792" slot="8"/>
+        <item displayInfoId="57016" durability="32" gem0Id="39998" gem1Id="0" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_28" icon="inv_gauntlets_17" id="39495" level="200" maxDurability="35" name="Heldenhafte Frostfeuerhandschuhe" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="38979" permanentenchant="3246" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="0" slot="9"/>
+        <item displayInfoId="39124" durability="0" gem0Id="39911" gem1Id="0" gem2Id="0" gemIcon0="inv_jewelcrafting_gem_22" icon="inv_jewelry_ring_63" id="42644" level="200" maxDurability="0" name="Titanring des Zauberschocks" permanentEnchantIcon="trade_engraving" permanentEnchantSpellDesc="Einen Ring dauerhaft verzaubern, sodass er die Zaubermacht um 23 erhöht. Nur Ringe des Verzauberers können verzaubert werden und sind danach seelengebunden." permanentEnchantSpellName="Ring - Große Zaubermacht" permanentenchant="3840" pickUp="PickUpRing" putDown="PutDownRing" randomPropertiesId="0" rarity="4" seed="1682011198" slot="10"/>
+        <item displayInfoId="33534" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_jewelry_ring_44" id="47512" level="219" maxDurability="0" name="Geständnis des Sünders" permanentEnchantIcon="trade_engraving" permanentEnchantSpellDesc="Einen Ring dauerhaft verzaubern, sodass er die Zaubermacht um 23 erhöht. Nur Ringe des Verzauberers können verzaubert werden und sind danach seelengebunden." permanentEnchantSpellName="Ring - Große Zaubermacht" permanentenchant="3840" pickUp="PickUpRing" putDown="PutDownRing" randomPropertiesId="0" rarity="4" seed="896203488" slot="11"/>
+        <item displayInfoId="44237" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_jewelry_talisman_13" id="37873" level="200" maxDurability="0" name="Mal des Kriegsgefangenen" permanentenchant="0" pickUp="PickUpRing" putDown="PutDownRing" randomPropertiesId="0" rarity="3" seed="1205314345" slot="12"/>
+        <item displayInfoId="43431" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_misc_pocketwatch_02" id="49076" level="200" maxDurability="0" name="Mithriltaschenuhr" permanentenchant="0" pickUp="PickUpWand" putDown="PutDownWand" randomPropertiesId="0" rarity="4" seed="623268864" slot="13"/>
+        <item displayInfoId="35444" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_misc_cape_naxxramas_03" id="39241" level="200" maxDurability="0" name="Dunkles Geißeltuch" permanentEnchantIcon="inv_misc_thread_01" permanentEnchantSpellDesc="Wird verwendet, um ein zartes Lichtmuster in einen Umhang zu weben. Verleiht Euch beim Wirken eines Zauber eine Chance, Eure Zaubermacht 15 Sek. lang um 295 zu erhöhen.&#10;&#10;&#10;&#10;Ihr könnt nur Euren eigenen Umhang besticken und er wird dadurch seelengebunden werden. Benötigt eine Schneiderfertigkeit von 400." permanentEnchantSpellName="Hell leuchtendes Garn" permanentenchant="3722" pickUp="PickUpCloth_Leather01" putDown="PutDownCloth_Leather01" randomPropertiesId="0" rarity="4" seed="1052464534" slot="14"/>
+        <item displayInfoId="53844" durability="95" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_sword_61" id="39200" level="200" maxDurability="105" name="Trauernde Zauberklinge" permanentEnchantIcon="inv_scroll_03" permanentEnchantItemId="44467" permanentenchant="3834" pickUp="PickUpMetalSmall" putDown="PutDownSmallMEtal" randomPropertiesId="0" rarity="4" seed="1195744719" slot="15"/>
+        <item displayInfoId="54063" durability="0" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_offhand_dalaran_d_01" id="40698" level="200" maxDurability="0" name="Zauberschutz der Violetten Zitadelle" permanentenchant="0" pickUp="PickUpWand" putDown="PutDownWand" randomPropertiesId="0" rarity="4" seed="0" slot="16"/>
+        <item displayInfoId="55710" durability="68" gem0Id="0" gem1Id="0" gem2Id="0" icon="inv_wand_1h_stratholme_d_01" id="39473" level="200" maxDurability="75" name="Verzerrung" permanentenchant="0" pickUp="PickUpWand" putDown="PutDownWand" randomPropertiesId="0" rarity="4" seed="2006870042" slot="17"/>
+      </items>
+      <glyphs>
+        <glyph effect="Erhöht den verursachten Initialschaden von 'Frostfeuerblitz' um 2% und seine kritische Trefferchance um 2%." icon="ui-glyph-rune-5" id="591" name="Glyphe 'Frostfeuer'" type="major"/>
+        <glyph effect="Für den Zauber 'Langsamer Fall' werden keine Reagenzien mehr benötigt." icon="ui-glyph-rune-20" id="451" name="Glyphe 'Langsamer Fall'" type="minor"/>
+        <glyph effect="Verringert die Manakosten Eurer Zauber 'Arkane Intelligenz' und 'Arkane Brillanz' um 50%." icon="ui-glyph-rune1" id="445" name="Glyphe 'Arkane Intelligenz'" type="minor"/>
+        <glyph effect="Euer Zauber 'Glühende Rüstung' gewährt zusätzlich 20% Eurer Willenskraft als kritische Trefferwertung." icon="ui-glyph-rune-17" id="328" name="Glyphe 'Glühende Rüstung'" type="major"/>
+        <glyph effect="Euer Zauber 'Verwandlung: Schaf' verwandelt das Ziel stattdessen in ein Pinguinküken." icon="ui-glyph-rune-16" id="450" name="Glyphe 'Pinguin'" type="minor"/>
+        <glyph effect="Erhöht den Schaden Eures Zaubers 'Versengen' um 20%." icon="ui-glyph-rune-7" id="324" name="Glyphe 'Versengen'" type="major"/>
+      </glyphs>
+    </characterTab>
+    <summary>
+      <c earned="406" points="4315" total="1054" totalPoints="11635"/>
+      <category id="92" name="Allgemein">
+        <c earned="29" earnedPoints="290" total="54" totalPoints="570"/>
+      </category>
+      <category id="96" name="Quests">
+        <c earned="42" earnedPoints="460" total="49" totalPoints="530"/>
+      </category>
+      <category id="97" name="Erkundung">
+        <c earned="66" earnedPoints="760" total="70" totalPoints="830"/>
+      </category>
+      <category id="95" name="Spieler gegen Spieler">
+        <c earned="11" earnedPoints="110" total="166" totalPoints="1930"/>
+      </category>
+      <category id="168" name="Dungeon &amp; Schlachtzug">
+        <c earned="99" earnedPoints="1035" total="454" totalPoints="4915"/>
+      </category>
+      <category id="169" name="Berufe">
+        <c earned="57" earnedPoints="570" total="75" totalPoints="760"/>
+      </category>
+      <category id="201" name="Ruf">
+        <c earned="18" earnedPoints="200" total="45" totalPoints="560"/>
+      </category>
+      <category id="155" name="Weltereignisse">
+        <c earned="84" earnedPoints="890" total="141" totalPoints="1540"/>
+      </category>
+      <category id="81" name="Heldentaten">
+        <c earned="15"/>
+      </category>
+    </summary>
+  </characterInfo>
+</page>
