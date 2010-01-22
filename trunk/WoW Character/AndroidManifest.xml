@@ -29,4 +29,10 @@
 	<provider android:name=".data.CharactersProvider" android:authorities="net.wowcharacter.provider"></provider>
 </application>
 <uses-sdk android:maxSdkVersion="7" android:minSdkVersion="3" android:targetSdkVersion="4"></uses-sdk>
+
+  <supports-screens
+          android:largeScreens="true"
+          android:normalScreens="true"
+          android:anyDensity="true" />
+
 </manifest> 

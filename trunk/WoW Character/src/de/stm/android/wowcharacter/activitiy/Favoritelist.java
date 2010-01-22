@@ -3,38 +3,21 @@ package de.stm.android.wowcharacter.activitiy;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
-import android.content.ContentValues;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.*;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
+import android.widget.*;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
@@ -127,6 +110,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 			// getApplicationContext().
 			// }
 		}
+	
 	}
 
 	private void showOptionsMenu() {
@@ -137,12 +121,11 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		// openOptionsMenu();
 
 	}
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		init();
-
 	}
 
 	@Override
@@ -161,12 +144,6 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		sortAndFill("NAME", SortDirection.ASCEND);
 	}
 
 	/**
@@ -237,17 +214,17 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 									int whichButton) {
 							}
 						});
-
+		sortAndFill("NAME", SortDirection.ASCEND);
 	}
 
 	@Override
-	protected void onDestroy() {
-		// Process beenden (Back-Button in der Favoriten-Liste)
-		android.os.Process.killProcess(android.os.Process.myPid());
-
-		super.onDestroy();
+	public boolean onKeyDown( int keyCode, KeyEvent event ) {
+		if(keyCode == KeyEvent.KEYCODE_BACK) {
+			android.os.Process.killProcess(android.os.Process.myPid());
+		}
+		return super.onKeyDown( keyCode, event );
 	}
-
+	
 	private void initSplash() {
 		((RelativeLayout) findViewById(R.id.splash))
 				.setOnClickListener(new OnClickListener() {

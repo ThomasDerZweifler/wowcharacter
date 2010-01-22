@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="fill_parent"
 	android:layout_width="fill_parent"
@@ -69,10 +70,23 @@
 			android:layout_margin="5px"/>
 	</TableRow>
 	<TableRow>
-		<TextView 	android:layout_height="wrap_content"
+		<TextView android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:layout_margin="5px"
+			android:textSize = "15px"
 			android:text="@string/charview_talentSpec"/>
+	</TableRow>
+	<TableRow>
+		<TextView android:id="@+id/talent1"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:text="k.A."/>
+	</TableRow>
+	<TableRow>
+		<TextView android:id="@+id/talent2"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:text="k.A."/>
 	</TableRow>
 	
 </TableLayout>
