@@ -204,15 +204,20 @@ public class Characterview extends Activity implements ICharactersProvider {
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		init();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 		fillHeader();
 		initTabs();
 		Boolean onlineResults = getIntent().getBooleanExtra( "ONLINE", false );
 		if (onlineResults) {
 			// nur bei Netzwerkverbindung Items (versuchen zu) laden
 			readItems();
-		}
+		}		
 	}
-
+	
 	/**
 	 * Initialisierungen
 	 */
@@ -455,10 +460,20 @@ public class Characterview extends Activity implements ICharactersProvider {
 			progbar.setProcessingText( barname + ": " + value_progress + "/" + value_max );
 		}
 		/* Talente  */
-//		nl = doc.getElementsByTagName( "telentSpec" );
-//		value_progress = Integer.parseInt( nl.item( 0 ).getAttributes().getNamedItem( "value" )
-//				.getNodeValue() );
-
+		int[] ids = new int[]{ R.id.talent1, R.id.talent2 };
+		nl = doc.getElementsByTagName( "talentSpec" );
+		for (int i = 0; i < nl.getLength() && i < 2; i++) {
+			String prim = nl.item( i ).getAttributes().getNamedItem( "prim" ).getNodeValue();
+			String iconName = nl.item( i ).getAttributes().getNamedItem( "icon" ).getNodeValue();
+			int treeOne = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "treeOne" )
+					.getNodeValue() );
+			int treeTwo = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "treeTwo" )
+					.getNodeValue() );
+			int treeThree = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "treeThree" )
+					.getNodeValue() );
+			TextView tf = (TextView)findViewById( ids[i] );
+			tf.setText(prim + " (" + treeOne + "/" + treeTwo + "/" + treeThree + ")" );
+		}
 		initializedTab1 = true;
 	}
 

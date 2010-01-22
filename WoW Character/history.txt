@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-22)
+	* Fixed:	Umschalten auf Landscape in Favoriten-Liste
+
 (2010-01-18)
 	+ New:		Process wird bei Back-Taste in der Favoriten-Liste beendet (bei HOME bleibt Process erhalten,
 					um per langem Tastendruck auf HOME wieder zu diesem wechseln zu koennen)
