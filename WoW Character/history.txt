@@ -2,6 +2,7 @@
   -----------------------------
 
 (2010-01-24)
+	* Changed:	Details rollbar
 	* Fixed:	Favoriten-Button unsichtbar schalten per Layout-Modifikation (damit kein leerer Platz)
 	+ New:		Icons fuer Talente
 
