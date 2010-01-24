@@ -1,9 +1,6 @@
-* BUG: Landscape Umschaltung in Favoritenliste
 * Itemname farbig darstellen
-* Talente
 * Basic und andre Specs in expandable List
 * Neuladen der Items beim Umschalten zu landscape verhindern
 
 * Ausgrauen oder Text fuer nicht vorhandene Werte
-* Favoriten aus Menue oder per Button aufrufbar gestalten
 * Scrolling schneller machen (ellipsize nicht aenderbar)
