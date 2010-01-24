@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/tableCharacter"
   	android:layout_width="fill_parent" 
     android:layout_height="fill_parent"> 
     <TableRow
@@ -29,12 +30,11 @@
 				android:textSize="12px" />
 		</LinearLayout>
 	</TableRow>
-	<TableRow>
+	<TableRow android:id="@+id/rowSetAsFavourite">
 		<Button android:id="@+id/setAsFavourite"
 			android:text="@string/favourite"
-			android:layout_height="wrap_content"
+			android:layout_height="fill_parent"
 			android:layout_width="fill_parent"
-			android:layout_weight="1"
 			android:layout_span="2" />
 	</TableRow>
 	<TabHost android:id="@+id/CharacterViewTab"
