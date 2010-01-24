@@ -300,14 +300,17 @@ public class Characterview extends Activity implements ICharactersProvider {
 	 */
 	private void fillHeader() {
 		if (cursor != null) {
-			Object o = cursor.getBlob( cursor.getColumnIndex( Column.BITMAP.name() ) );
-			if (o instanceof byte[]) {
-				ImageView charImage = (ImageView)findViewById( R.id.CharImage );
-				byte[] blob = (byte[])o;
-				Bitmap bm = BitmapFactory.decodeByteArray( blob, 0, blob.length );
-				charImage.setImageBitmap( bm );
+			int index = cursor.getColumnIndex( Column.BITMAP.name() );
+			if(index >= 0) {
+				Object o = cursor.getBlob( index );
+				if (o instanceof byte[]) {
+					ImageView charImage = (ImageView)findViewById( R.id.CharImage );
+					byte[] blob = (byte[])o;
+					Bitmap bm = BitmapFactory.decodeByteArray( blob, 0, blob.length );
+					charImage.setImageBitmap( bm );
+				}				
 			}
-			o = cursor.getString( cursor.getColumnIndex( Column.LEVEL.name() ) );
+			Object o = cursor.getString( cursor.getColumnIndex( Column.LEVEL.name() ) );
 			Object o1 = cursor.getString( cursor.getColumnIndex( Column.RACE.name() ) );
 			Object o2 = cursor.getString( cursor.getColumnIndex( Column.CLASS.name() ) );
 			if (o != null && o1 != null && o2 != null) {
