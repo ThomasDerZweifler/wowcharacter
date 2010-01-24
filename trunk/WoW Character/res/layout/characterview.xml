@@ -33,9 +33,10 @@
 	<TableRow android:id="@+id/rowSetAsFavourite">
 		<Button android:id="@+id/setAsFavourite"
 			android:text="@string/favourite"
-			android:layout_weight="1"
 			android:layout_height="fill_parent"
-			android:layout_width="fill_parent"/>
+			android:layout_width="fill_parent"
+			android:layout_weight="1"
+			android:layout_span="2" />
 	</TableRow>
 	<TabHost android:id="@+id/CharacterViewTab"
 		android:layout_width="fill_parent"
