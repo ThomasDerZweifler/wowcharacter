@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-24)
+	* Fixed:	Favoriten-Button unsichtbar schalten per Layout-Modifikation (damit kein leerer Platz)
+
 (2010-01-22)
 	* Fixed:	Umschalten auf Landscape in Favoriten-Liste
 

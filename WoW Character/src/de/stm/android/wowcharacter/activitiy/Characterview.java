@@ -20,6 +20,7 @@ import android.os.*;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import android.widget.TableLayout.LayoutParams;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
@@ -331,13 +332,21 @@ public class Characterview extends Activity implements ICharactersProvider {
 			String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
 			String realm = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
 			charNameRealm.setText( name + " @ " + realm );
-			setAsFavourite = (Button)findViewById( R.id.setAsFavourite );
-			setAsFavourite.setVisibility( favouriteExists() ? View.INVISIBLE : View.VISIBLE );
-			setAsFavourite.setOnClickListener( new OnClickListener() {
-				public void onClick( View v ) {
-					setAsFavourite();
-				}
-			} );
+			if( favouriteExists() ) {
+				//Favoriten-Button aus dem Layout entfernen
+				//  (setAsFavoutite.setVisible(View.INVISIBLE) laesst nur freien Platz zurueck)
+				//  addView(tr,index) fuer das dynamische Anzeigen verwenden
+				TableLayout tl = (TableLayout)findViewById( R.id.tableCharacter );
+				TableRow tr = (TableRow)findViewById( R.id.rowSetAsFavourite );
+				tl.removeView(tr);
+			} else {
+				setAsFavourite = (Button)findViewById( R.id.setAsFavourite );
+				setAsFavourite.setOnClickListener( new OnClickListener() {
+					public void onClick( View v ) {
+						setAsFavourite();
+					}
+				} );				
+			}
 		}
 	}
 
@@ -376,9 +385,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 			String s = getString( R.string.search_addToFavorites_ok_toast );
 			s = s.replace( "%1", charNameRealm.getText() );
 			Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
-			setAsFavourite.setVisibility( View.INVISIBLE );
-		} else {
-			setAsFavourite.setVisibility( View.VISIBLE );
+			TableLayout tl = (TableLayout)findViewById( R.id.tableCharacter );
+			TableRow tr = (TableRow)findViewById( R.id.rowSetAsFavourite );
+			tl.removeView(tr);
 		}
 	}
 
