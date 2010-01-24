@@ -3,6 +3,7 @@
 
 (2010-01-24)
 	* Fixed:	Favoriten-Button unsichtbar schalten per Layout-Modifikation (damit kein leerer Platz)
+	+ New:		Icons fuer Talente
 
 (2010-01-22)
 	* Fixed:	Umschalten auf Landscape in Favoriten-Liste

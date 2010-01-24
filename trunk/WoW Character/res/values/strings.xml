@@ -44,4 +44,5 @@
 	<string name="warn">Attention:</string>
 <string name="favourite">Save as favourite</string>
 <string name="tooltipSearchlist">Realm: %1 ...</string>
+<string name="na">n.a.</string>
 </resources>

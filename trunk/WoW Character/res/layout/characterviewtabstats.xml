@@ -8,7 +8,6 @@
 		<de.stm.android.wowcharacter.gui.CustomProgressBar android:id="@+id/progress_health"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px"
-
 			android:indeterminateOnly="false"
 			android:progressDrawable="@drawable/progress_horizontal_life"
 			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
@@ -21,7 +20,6 @@
 		    android:text="Test-Text"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px"
-			
 			android:indeterminateOnly="false"
 			android:progressDrawable="@drawable/progress_horizontal_mana"
 			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
@@ -41,7 +39,6 @@
 		<de.stm.android.wowcharacter.gui.CustomProgressBar android:id="@+id/progress_prof_one"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px"
-
 			android:indeterminateOnly="false"
 			android:progressDrawable="@drawable/progress_horizontal_mana"
 			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
@@ -53,7 +50,6 @@
 		<de.stm.android.wowcharacter.gui.CustomProgressBar android:id="@+id/progress_prof_two"
 			android:layout_height="wrap_content"
 			android:layout_margin="5px"
-
 			android:indeterminateOnly="false"
 			android:progressDrawable="@drawable/progress_horizontal_mana"
 			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
@@ -73,20 +69,34 @@
 		<TextView android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:layout_margin="5px"
-			android:textSize = "15px"
+			android:textSize = "20px"
 			android:text="@string/charview_talentSpec"/>
 	</TableRow>
 	<TableRow>
-		<TextView android:id="@+id/talent1"
+	<LinearLayout android:orientation="horizontal"
+		android:gravity="center_vertical">
+		<ImageView android:id="@+id/ItemImageTalent1"
+			android:layout_margin="10px"
+	    	android:layout_height="43px"
+	    	android:layout_width="43px"/>
+	    <TextView android:id="@+id/talent1"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
-			android:text="k.A."/>
+			android:text="@string/na"/>
+	</LinearLayout>
 	</TableRow>
 	<TableRow>
+	<LinearLayout android:orientation="horizontal"
+		android:gravity="center_vertical">
+		<ImageView android:id="@+id/ItemImageTalent2"
+			android:layout_margin="10px"	
+	    	android:layout_height="43px"
+	    	android:layout_width="43px"/>
 		<TextView android:id="@+id/talent2"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
-			android:text="k.A."/>
+			android:text="@string/na"/>
+	</LinearLayout>
 	</TableRow>
 	
 </TableLayout>

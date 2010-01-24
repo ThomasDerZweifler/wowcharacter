@@ -469,19 +469,40 @@ public class Characterview extends Activity implements ICharactersProvider {
 			progbar.setProcessingText( barname + ": " + value_progress + "/" + value_max );
 		}
 		/* Talente  */
-		int[] ids = new int[]{ R.id.talent1, R.id.talent2 };
+		int[] idsImage = new int[]{ R.id.ItemImageTalent1, R.id.ItemImageTalent2 };
+		int[] idsText = new int[]{ R.id.talent1, R.id.talent2 };		
 		nl = doc.getElementsByTagName( "talentSpec" );
 		for (int i = 0; i < nl.getLength() && i < 2; i++) {
 			String prim = nl.item( i ).getAttributes().getNamedItem( "prim" ).getNodeValue();
+			int group = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "group" )
+					.getNodeValue() );//gibt die Reihenfolge an
 			String iconName = nl.item( i ).getAttributes().getNamedItem( "icon" ).getNodeValue();
+			
+			String region = cursor.getString( cursor.getColumnIndex( Column.REGION
+					.name() ) );
+			Bitmap bitmap = Armory.getItemIcon( iconName, region );
+
+			if( bitmap != null ) {
+				ImageView img = (ImageView)findViewById( idsImage[group-1] );
+				img.setImageBitmap(bitmap);				
+			}
+			
+			String act = "";
+			Node n = nl.item( i ).getAttributes().getNamedItem( "active" );
+			if(n!=null) {
+				int active = Integer.parseInt( n.getNodeValue() );				
+				if(active == 1) {
+					act = "*";//aktives Talent
+				}
+			}
 			int treeOne = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "treeOne" )
 					.getNodeValue() );
 			int treeTwo = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "treeTwo" )
 					.getNodeValue() );
 			int treeThree = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "treeThree" )
 					.getNodeValue() );
-			TextView tf = (TextView)findViewById( ids[i] );
-			tf.setText(prim + " (" + treeOne + "/" + treeTwo + "/" + treeThree + ")" );
+			TextView tf = (TextView)findViewById( idsText[group-1] );
+			tf.setText(prim + act + " (" + treeOne + "/" + treeTwo + "/" + treeThree + ")" );
 		}
 		initializedTab1 = true;
 	}

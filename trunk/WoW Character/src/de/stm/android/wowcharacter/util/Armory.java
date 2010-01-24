@@ -37,6 +37,8 @@ public class Armory {
 		
 		final static public String ITEMICON = "wow-icons/_images/51x51/";
 		
+		final static public String TALENTICON = "wow-icons/_images/43x43/";		
+		
 		final static public String CHARICON = "_images/portraits/wow-default/";
 		final static public String CHARICON_60 = "_images/portraits/wow/";
 		final static public String CHARICON_70 = "_images/portraits/wow-70/";
@@ -150,7 +152,25 @@ public class Armory {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * Talenticon abrufen
+	 * @param iconname
+	 * @param region
+	 * @return
+	 */
+	public static Bitmap getTalentIcon(String iconname, String region) {
+		String server = getArmoryServerURL(region);	
+		String iconlocation = server + R.TALENTICON + iconname + ".png";
+		try {
+			return Connection.getBitmap( new URL( iconlocation ) );
+		} catch (MalformedURLException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
 	public static byte[] getCharIcon(Character character) {
 		Bitmap bm = null;
 		

@@ -44,4 +44,5 @@
 	<string name="warn">Achtung:</string>
 <string name="favourite">Als Favorit speichern</string>
 <string name="tooltipSearchlist">Server: %1 ...</string>
+<string name="na">k.A.</string>
 </resources>
