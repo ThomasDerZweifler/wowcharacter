@@ -2,6 +2,8 @@ package de.stm.android.wowcharacter.activitiy;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.*;
 
@@ -17,15 +19,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.*;
+import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
-import android.widget.TableLayout.LayoutParams;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
 import de.stm.android.wowcharacter.renderer.ItemListAdapter;
+import de.stm.android.wowcharacter.renderer.ValuesListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
 
@@ -45,8 +48,11 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private TabHost.TabSpec specDetails;
 	/** Karteikarte Items */
 	private TabHost.TabSpec specItems;
+	/** Karteikarte Values */
+	private TabHost.TabSpec specValues;
 	private ListView listViewItems;
 	private ItemListAdapter itemListAdapter;
+	private ValuesListAdapter valuesListAdapter;
 	private Thread thread;
 	private Button setAsFavourite;
 	private TextView charNameRealm;
@@ -216,7 +222,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 		if (onlineResults) {
 			// nur bei Netzwerkverbindung Items (versuchen zu) laden
 			readItems();
-		}		
+		}
 	}
 	
 	/**
@@ -264,6 +270,8 @@ public class Characterview extends Activity implements ICharactersProvider {
 				if (tabId.equals( "details" )) {
 					fillDetails();
 				} else if (tabId.equals( "items" )) {
+				} else if (tabId.equals( "values" )) {
+					fillValues();
 				}
 			}
 		} );
@@ -292,6 +300,19 @@ public class Characterview extends Activity implements ICharactersProvider {
 		} );
 		specItems.setIndicator( getResources().getString( R.string.charview_tab_items ) );
 		tabHost.addTab( specItems );
+
+		specValues = tabHost.newTabSpec( "values" );
+		valuesListAdapter = new ValuesListAdapter( Characterview.this );
+		specValues.setContent( new TabHost.TabContentFactory() {
+			public View createTabContent( String tag ) {
+				ExpandableListView el = new ExpandableListView(Characterview.this);
+				el.setAdapter( valuesListAdapter );// Model an View
+				return el;
+			}
+		} );
+		specValues.setIndicator( getResources().getString( R.string.charview_tab_values ) );
+		tabHost.addTab( specValues );
+		
 		tabHost.setCurrentTab( 0 );
 	}
 
@@ -510,6 +531,70 @@ public class Characterview extends Activity implements ICharactersProvider {
 		initializedTab1 = true;
 	}
 
+	private void fillValues() {
+		//"Zauber" = spell, Nahkampf.Schaden   extra auszuwerten
+		
+	    String[] groups = { "Basiswerte", "Distanzwaffen", "Nahkampf", "Verteidigung" };//fuer Reihenfolge
+
+	    HashMap<Integer,ArrayList<String>> map = new HashMap<Integer,ArrayList<String>>();
+		map.put( 0, getChilds( "baseStats" ));
+		map.put( 1, getChilds( "ranged" ));
+		map.put( 2, getChilds( "melee" ));
+		map.put( 3, getChilds( "defenses" ));
+
+		valuesListAdapter.setValues( groups, map );
+	}
+	
+	private ArrayList<String> getChilds(String tag) {
+		ArrayList<String> al = new ArrayList<String>();
+	    
+	    NodeList nl = doc.getElementsByTagName( tag );
+		if(nl!=null) {
+			Node n = nl.item(0);
+			if(n!=null) {
+			    nl= n.getChildNodes();
+				for (int i = 0; i < nl.getLength(); i++) {
+					n = nl.item( i );
+					short type = n.getNodeType();
+					if(type != Node.TEXT_NODE) {
+						String name = n.getNodeName();
+						al.add(name);
+
+						Log.i( "node:","----" + tag + "-------" +name+"------" );
+						NamedNodeMap m = n.getAttributes();
+						for(int k = 0; k<m.getLength();k++) {
+							//effective / value / percent  auswerten
+							Node n1 = m.item( k );
+							String s1 = n1.getNodeName();
+							String value1 = n1.getNodeValue();
+							
+							if(s1.equals( "effective" )) {
+
+								Log.i( "effective-values:", value1 );
+
+								break;
+							} else if(  s1.equals( "value" ) ) {
+
+								Log.i( "value-values:",value1 );
+
+								break;
+							} else if( s1.equals( "percent" )) {
+
+								Log.i( "percent-values:", value1 + "%" );
+
+								break;
+							}
+						}
+						
+					}
+				}				
+			}
+		}
+
+		return al;
+
+	}
+	
 	/**
 	 * xml zu document wandeln
 	 * 
