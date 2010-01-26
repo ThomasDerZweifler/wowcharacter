@@ -1,6 +1,11 @@
 * Basic und andre Specs in expandable List
 * Itemname farbig darstellen
 * Neuladen der Items beim Umschalten zu landscape verhindern
+* Eingabemaske mit Stern markieren, wenn Attribut geaendert wird nach einer Suche
+   (damit soll verdeutlicht werden, dass Ergebnisse nicht mehr zu der Suchanfrage passen)
+* Tree (Werte-Tab) etwas aufhuebschen (kleinere Zeilen)
+* Eingabemaske waehrend der Suche nicht ausgrauen, somit angefangene Suche mit neuer
+   Suchanfrage verwerfbar
 
 * Ausgrauen oder Text fuer nicht vorhandene Werte
 * Scrolling schneller machen (ellipsize nicht aenderbar)
