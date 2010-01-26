@@ -177,7 +177,6 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		bt.setOnClickListener( new Button.OnClickListener() {
 			public void onClick( View v ) {
 				bt.setEnabled( false );
-				search();
 			}
 		} );
 		bt.setEnabled( false );
@@ -191,7 +190,6 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				if (!tb_US.isChecked()) {
 					tb_EU.setChecked( true );
 				}
-				search();
 			}
 		} );
 		tb_US.setOnClickListener( new OnClickListener() {
