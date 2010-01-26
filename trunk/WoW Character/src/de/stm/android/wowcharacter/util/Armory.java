@@ -62,20 +62,20 @@ public class Armory {
 
 	/**
 	 * Suche nach Charaktern
-	 * @param character
+	 * @param name	Name
 	 * @param region
 	 * @return
 	 */
-	public static StringBuilder search(String character, R.Region region) {
-		String server = getArmoryServerURL(region.name());
+	public static StringBuilder search(String name, R.Region region) {
 
 		try {
-			character = URLEncoder.encode(character, "UTF-8");
+			name = URLEncoder.encode(name, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// should never happen
 		}
 
-		String url = server + R.SEARCHPAGE + character + R.SEARCHTYPE_CHAR;
+		String server = getArmoryServerURL(region.name());
+		String url = server + R.SEARCHPAGE + name + R.SEARCHTYPE_CHAR;
 		
 		StringBuilder sb = Connection.getXML(url, locale, true);
 		

@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-26)
+	* Changed:	Deaktivieren der Such-Eingabemaske bei leerem Suchbegriff
+	
 (2010-01-24)
 	* Changed:	Details rollbar
 	* Fixed:	Favoriten-Button unsichtbar schalten per Layout-Modifikation (damit kein leerer Platz)

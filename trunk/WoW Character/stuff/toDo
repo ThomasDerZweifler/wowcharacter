@@ -1,6 +1,5 @@
 * Basic und andre Specs in expandable List
 * Itemname farbig darstellen
-* in Suchliste Suchen mit Begriff beim Umschalten der Locale
 * Neuladen der Items beim Umschalten zu landscape verhindern
 
 * Ausgrauen oder Text fuer nicht vorhandene Werte
