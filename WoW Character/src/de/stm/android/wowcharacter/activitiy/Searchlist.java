@@ -56,8 +56,6 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage( Message msg ) {
-			setProgressBarIndeterminateVisibility( false );
-			bt.setEnabled( true );
 			if (sbXMLPage != null && sbXMLPage.length() > 0) {
 				Region region = Region.EU;
 				if (tb_US.isChecked()) {
@@ -86,6 +84,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				// }
 				// }, 6000);
 			}
+			setInputMaskEnabled( true );
 		}
 	};
 
@@ -165,6 +164,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		} );
 		et.setOnKeyListener( new EditText.OnKeyListener() {
 			public boolean onKey( View v, int keyCode, KeyEvent event ) {
+				verifyInput();
 				if (keyCode == KeyEvent.KEYCODE_ENTER) {
 					bt.dispatchKeyEvent( event );
 					return true;
@@ -177,18 +177,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		bt.setOnClickListener( new Button.OnClickListener() {
 			public void onClick( View v ) {
 				bt.setEnabled( false );
-				setProgressBarIndeterminateVisibility( true );
-				searchThread = new Thread( new Runnable() {
-					public void run() {
-						try {
-							sbXMLPage = Armory.search( et.getText().toString(), region );
-							handler.sendMessage( handler.obtainMessage() );
-						} catch (Throwable t) {
-							// just end the background thread
-						}
-					}
-				}, "WOW-Search" );
-				searchThread.start();
+				search();
 			}
 		} );
 		bt.setEnabled( false );
@@ -202,6 +191,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				if (!tb_US.isChecked()) {
 					tb_EU.setChecked( true );
 				}
+				search();
 			}
 		} );
 		tb_US.setOnClickListener( new OnClickListener() {
@@ -211,6 +201,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				if (!tb_EU.isChecked()) {
 					tb_US.setChecked( true );
 				}
+				search();
 			}
 		} );
 		/**
@@ -231,6 +222,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 			tb_EU.setChecked( true );
 			// tb_US.setChecked(false);
 		}
+		verifyInput();
 		/** Kontextmenü registrieren */
 		registerForContextMenu( getListView() );
 		getListView().setFastScrollEnabled( true );
@@ -267,6 +259,67 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
         windowManager.addView(sectionTooltip, lp);
 	}
 
+	private void search() {
+		
+		if(searchThread != null && searchThread.isAlive() ) {
+			searchThread.interrupt();
+		}
+		
+		while( searchThread!=null && searchThread.isAlive()) {
+			//solange warten, bis ein laufender Suchthread beendet wird
+		}
+		setProgressBarIndeterminateVisibility( false );
+
+		searchThread = new Thread( new Runnable() {
+			public void run() {
+				try {
+					sbXMLPage = Armory.search( et.getText().toString(), region );
+					handler.sendMessage( handler.obtainMessage() );
+				} catch (Throwable t) {
+					// just end the background thread
+				}
+			}
+		}, "WOW-Search" );
+		setInputMaskEnabled( false );
+		searchThread.start();
+	}
+	
+	/**
+	 * Test auf leeren Namen bei der Suche
+	 * @param input
+	 * @return	false = leeres Eingabefeld
+	 */
+	private boolean verifyInput() {
+		boolean result = et.getText().toString().equals( "" );
+		if( result ) {
+			bt.setEnabled( false );
+			tb_EU.setEnabled( false );
+			tb_US.setEnabled( false );
+		} else {
+			bt.setEnabled( true );
+			tb_EU.setEnabled( true );
+			tb_US.setEnabled( true );			
+		}
+		return !result;
+	}
+	
+	/**
+	 * (De)aktivieren der Eingabefelder fuer die Suche
+	 * @param enabled
+	 */
+	private void setInputMaskEnabled( boolean enabled ) {
+		setProgressBarIndeterminateVisibility( !enabled );
+		bt.setEnabled( enabled );
+		et.setEnabled( enabled );
+		tb_EU.setEnabled( enabled );
+		tb_US.setEnabled( enabled );
+		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	private View buildFooter() {
 		TextView txt = new TextView( this );
 		txt.setText( "xxxxxxxxxxxxxxxxxxxx" );
