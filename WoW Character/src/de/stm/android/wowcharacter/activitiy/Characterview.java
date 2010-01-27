@@ -98,7 +98,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 	 * @see Characterview#handler
 	 */
 	private void readItems() {
-		if(doc== null) {
+		if (doc == null) {
 			thread = null;
 			return;
 		}
@@ -130,7 +130,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 					Bitmap bitmap = null;
 					String name = "";
 					String level = "";
-					String quality = "";//fuer Farbe
+					String quality = "";// fuer Farbe
 					// FIXME Fehler besser interpretiern, da bei Problemen eine
 					// "0" geliefert wird
 					if (sb != null) {
@@ -195,7 +195,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 
 	@Override
 	protected void onPause() {
-		if(thread!=null) {
+		if (thread != null) {
 			thread.interrupt();
 			// TODO noch zu ueberlegen, wenn Thread nicht beendet wird (dann nur
 			// Home Taste mgl.)
@@ -224,7 +224,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 			readItems();
 		}
 	}
-	
+
 	/**
 	 * Initialisierungen
 	 */
@@ -245,7 +245,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 		// >>"<< statt >>'<< <-- wichtig, sodass Strings mit >>'<< funktionieren
 		String where = Column.REGION.name() + " = \"" + sRegion + "\" AND " + Column.REALM.name()
 				+ " = \"" + sRealm + "\" AND " + Column.NAME.name() + " = \"" + sName + "\""
-				+ " AND IS_FAVOURITE = " + ( temporary ?  + FALSE : TRUE );
+				+ " AND IS_FAVOURITE = " + (temporary ? +FALSE : TRUE);
 		cursor = managedQuery( allFavourites, null, where, null, null );
 		if (cursor != null) {
 			startManagingCursor( cursor );
@@ -300,19 +300,17 @@ public class Characterview extends Activity implements ICharactersProvider {
 		} );
 		specItems.setIndicator( getResources().getString( R.string.charview_tab_items ) );
 		tabHost.addTab( specItems );
-
 		specValues = tabHost.newTabSpec( "values" );
 		valuesListAdapter = new ValuesListAdapter( Characterview.this );
 		specValues.setContent( new TabHost.TabContentFactory() {
 			public View createTabContent( String tag ) {
-				ExpandableListView el = new ExpandableListView(Characterview.this);
+				ExpandableListView el = new ExpandableListView( Characterview.this );
 				el.setAdapter( valuesListAdapter );// Model an View
 				return el;
 			}
 		} );
 		specValues.setIndicator( getResources().getString( R.string.charview_tab_values ) );
 		tabHost.addTab( specValues );
-		
 		tabHost.setCurrentTab( 0 );
 	}
 
@@ -322,14 +320,14 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private void fillHeader() {
 		if (cursor != null) {
 			int index = cursor.getColumnIndex( Column.BITMAP.name() );
-			if(index >= 0) {
+			if (index >= 0) {
 				Object o = cursor.getBlob( index );
 				if (o instanceof byte[]) {
 					ImageView charImage = (ImageView)findViewById( R.id.CharImage );
 					byte[] blob = (byte[])o;
 					Bitmap bm = BitmapFactory.decodeByteArray( blob, 0, blob.length );
 					charImage.setImageBitmap( bm );
-				}				
+				}
 			}
 			Object o = cursor.getString( cursor.getColumnIndex( Column.LEVEL.name() ) );
 			Object o1 = cursor.getString( cursor.getColumnIndex( Column.RACE.name() ) );
@@ -356,20 +354,20 @@ public class Characterview extends Activity implements ICharactersProvider {
 			String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
 			String realm = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
 			charNameRealm.setText( name + " @ " + realm );
-			if( favouriteExists() ) {
-				//Favoriten-Button aus dem Layout entfernen
-				//  (setAsFavoutite.setVisible(View.INVISIBLE) laesst nur freien Platz zurueck)
-				//  addView(tr,index) fuer das dynamische Anzeigen verwenden
+			if (favouriteExists()) {
+				// Favoriten-Button aus dem Layout entfernen
+				// (setAsFavoutite.setVisible(View.INVISIBLE) laesst nur freien Platz zurueck)
+				// addView(tr,index) fuer das dynamische Anzeigen verwenden
 				TableLayout tl = (TableLayout)findViewById( R.id.tableCharacter );
 				TableRow tr = (TableRow)findViewById( R.id.rowSetAsFavourite );
-				tl.removeView(tr);
+				tl.removeView( tr );
 			} else {
 				setAsFavourite = (Button)findViewById( R.id.setAsFavourite );
 				setAsFavourite.setOnClickListener( new OnClickListener() {
 					public void onClick( View v ) {
 						setAsFavourite();
 					}
-				} );				
+				} );
 			}
 		}
 	}
@@ -411,7 +409,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 			Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
 			TableLayout tl = (TableLayout)findViewById( R.id.tableCharacter );
 			TableRow tr = (TableRow)findViewById( R.id.rowSetAsFavourite );
-			tl.removeView(tr);
+			tl.removeView( tr );
 		}
 	}
 
@@ -419,6 +417,10 @@ public class Characterview extends Activity implements ICharactersProvider {
 	 * Details fuellen
 	 */
 	private void fillDetails() {
+		if (doc == null) {
+			// XML holen fehlgeschlagen
+			return;
+		}
 		if (tabHost.getCurrentTab() != 0) {
 			return;
 		}
@@ -431,10 +433,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 		int value_progress;
 		int value_max;
 		String barname = "";
-		if (doc == null) {
-			// XML holen fehlgeschlagen
-			return;
-		}
 		nl = doc.getElementsByTagName( "characterTab" );
 		if (nl.getLength() == 0) {
 			// keine Charakterdaten vorhanden
@@ -492,109 +490,106 @@ public class Characterview extends Activity implements ICharactersProvider {
 			progbar.setProgress( value_progress );
 			progbar.setProcessingText( barname + ": " + value_progress + "/" + value_max );
 		}
-		/* Talente  */
-		int[] idsImage = new int[]{ R.id.ItemImageTalent1, R.id.ItemImageTalent2 };
-		int[] idsText = new int[]{ R.id.talent1, R.id.talent2 };		
+		/* Talente */
+		int[] idsImage = new int[] {
+				R.id.ItemImageTalent1, R.id.ItemImageTalent2
+		};
+		int[] idsText = new int[] {
+				R.id.talent1, R.id.talent2
+		};
 		nl = doc.getElementsByTagName( "talentSpec" );
 		for (int i = 0; i < nl.getLength() && i < 2; i++) {
 			String prim = nl.item( i ).getAttributes().getNamedItem( "prim" ).getNodeValue();
 			int group = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "group" )
-					.getNodeValue() );//gibt die Reihenfolge an
+					.getNodeValue() );// gibt die Reihenfolge an
 			String iconName = nl.item( i ).getAttributes().getNamedItem( "icon" ).getNodeValue();
-			
-			String region = cursor.getString( cursor.getColumnIndex( Column.REGION
-					.name() ) );
+			String region = cursor.getString( cursor.getColumnIndex( Column.REGION.name() ) );
 			Bitmap bitmap = Armory.getItemIcon( iconName, region );
-
-			if( bitmap != null ) {
-				ImageView img = (ImageView)findViewById( idsImage[group-1] );
-				img.setImageBitmap(bitmap);				
+			if (bitmap != null) {
+				ImageView img = (ImageView)findViewById( idsImage[group - 1] );
+				img.setImageBitmap( bitmap );
 			}
-			
 			String act = "";
 			Node n = nl.item( i ).getAttributes().getNamedItem( "active" );
-			if(n!=null) {
-				int active = Integer.parseInt( n.getNodeValue() );				
-				if(active == 1) {
-					act = "*";//aktives Talent
+			if (n != null) {
+				int active = Integer.parseInt( n.getNodeValue() );
+				if (active == 1) {
+					act = "*";// aktives Talent
 				}
 			}
 			int treeOne = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "treeOne" )
 					.getNodeValue() );
 			int treeTwo = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "treeTwo" )
 					.getNodeValue() );
-			int treeThree = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "treeThree" )
-					.getNodeValue() );
-			TextView tf = (TextView)findViewById( idsText[group-1] );
-			tf.setText(prim + act + " (" + treeOne + "/" + treeTwo + "/" + treeThree + ")" );
+			int treeThree = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem(
+					"treeThree" ).getNodeValue() );
+			TextView tf = (TextView)findViewById( idsText[group - 1] );
+			tf.setText( prim + act + " (" + treeOne + "/" + treeTwo + "/" + treeThree + ")" );
 		}
 		initializedTab1 = true;
 	}
 
+	/**
+	 * 
+	 */
 	private void fillValues() {
-		//"Zauber" = spell, Nahkampf.Schaden   extra auszuwerten
-		
-	    String[] groups = { "Basiswerte", "Distanzwaffen", "Nahkampf", "Verteidigung" };//fuer Reihenfolge
-
-	    HashMap<Integer,ArrayList<String>> map = new HashMap<Integer,ArrayList<String>>();
-		map.put( 0, getChilds( "baseStats" ));
-		map.put( 1, getChilds( "ranged" ));
-		map.put( 2, getChilds( "melee" ));
-		map.put( 3, getChilds( "defenses" ));
-
+		/** @TODO "Zauber" = spell, Nahkampf.Schaden extra auszuwerten*/
+		String[] groups = {
+				"Basiswerte", "Distanzwaffen", "Nahkampf", "Verteidigung"
+		};// fuer Reihenfolge
+		HashMap<Integer, ArrayList<String>> map = new HashMap<Integer, ArrayList<String>>();
+		map.put( 0, getChilds( "baseStats" ) );
+		map.put( 1, getChilds( "ranged" ) );
+		map.put( 2, getChilds( "melee" ) );
+		map.put( 3, getChilds( "defenses" ) );
 		valuesListAdapter.setValues( groups, map );
 	}
-	
-	private ArrayList<String> getChilds(String tag) {
+
+	/**
+	 * 
+	 * @param tag
+	 * @return
+	 */
+	private ArrayList<String> getChilds( String tag ) {
 		ArrayList<String> al = new ArrayList<String>();
-	    
-	    NodeList nl = doc.getElementsByTagName( tag );
-		if(nl!=null) {
-			Node n = nl.item(0);
-			if(n!=null) {
-			    nl= n.getChildNodes();
-				for (int i = 0; i < nl.getLength(); i++) {
-					n = nl.item( i );
-					short type = n.getNodeType();
-					if(type != Node.TEXT_NODE) {
-						String name = n.getNodeName();
-						al.add(name);
-
-						Log.i( "node:","----" + tag + "-------" +name+"------" );
-						NamedNodeMap m = n.getAttributes();
-						for(int k = 0; k<m.getLength();k++) {
-							//effective / value / percent  auswerten
-							Node n1 = m.item( k );
-							String s1 = n1.getNodeName();
-							String value1 = n1.getNodeValue();
-							
-							if(s1.equals( "effective" )) {
-
-								Log.i( "effective-values:", value1 );
-
-								break;
-							} else if(  s1.equals( "value" ) ) {
-
-								Log.i( "value-values:",value1 );
-
-								break;
-							} else if( s1.equals( "percent" )) {
-
-								Log.i( "percent-values:", value1 + "%" );
-
-								break;
+		if (doc != null) {
+			NodeList nl = doc.getElementsByTagName( tag );
+			if (nl != null) {
+				Node n = nl.item( 0 );
+				if (n != null) {
+					nl = n.getChildNodes();
+					for (int i = 0; i < nl.getLength(); i++) {
+						n = nl.item( i );
+						short type = n.getNodeType();
+						if (type != Node.TEXT_NODE) {
+							String name = n.getNodeName();
+							al.add( name );
+							Log.i( "node:", "----" + tag + "-------" + name + "------" );
+							NamedNodeMap m = n.getAttributes();
+							for (int k = 0; k < m.getLength(); k++) {
+								// effective / value / percent auswerten
+								Node n1 = m.item( k );
+								String s1 = n1.getNodeName();
+								String value1 = n1.getNodeValue();
+								if (s1.equals( "effective" )) {
+									Log.i( "effective-values:", value1 );
+									break;
+								} else if (s1.equals( "value" )) {
+									Log.i( "value-values:", value1 );
+									break;
+								} else if (s1.equals( "percent" )) {
+									Log.i( "percent-values:", value1 + "%" );
+									break;
+								}
 							}
 						}
-						
 					}
-				}				
+				}
 			}
 		}
-
 		return al;
-
 	}
-	
+
 	/**
 	 * xml zu document wandeln
 	 * 

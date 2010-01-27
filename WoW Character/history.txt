@@ -1,6 +1,10 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-27)
+	+ New:		Anzeige, dass sich Suchanfrage geaendert hat, somit wahrscheinlich das Suchergebnis
+					nicht mehr aktuell ist
+
 (2010-01-26)
 	* Changed:	Deaktivieren der Such-Eingabemaske bei leerem Suchbegriff
 	
