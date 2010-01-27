@@ -43,9 +43,11 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	private int selectedItemPosition = -1;
 	private TextView sectionTooltip;
 	private Armory.R.Region region;
+	/** Map fuer Such-Werte (um Aenderungen an den Eingabewerten zu erkennen), Schluessel: NAME, REGION */
+	private Map<String,Object> mapValuesForResult;
 	private Thread searchThread;
 	private InterpretSearch is = new InterpretSearch();
-	ArrayList<Character> listModel = new ArrayList<Character>();
+	private ArrayList<Character> listModel = new ArrayList<Character>();
     private final class RemoveWindow implements Runnable {
         public void run() {
             removeWindow();
@@ -85,6 +87,8 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				// }, 6000);
 			}
 			setInputMaskEnabled( true );
+			TextView tf = (TextView)findViewById( R.id.valuesChanged );
+			tf.setText( "" );
 		}
 	};
 
@@ -138,6 +142,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		/** View und Titel setzen */
 		setContentView( R.layout.searchlist );
+		mapValuesForResult = new HashMap<String,Object>();
         windowManager = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
 		setProgressBarIndeterminateVisibility( false );
 		String sAppName = getString( R.string.app_name );
@@ -177,6 +182,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		bt.setOnClickListener( new Button.OnClickListener() {
 			public void onClick( View v ) {
 				bt.setEnabled( false );
+				search();
 			}
 		} );
 		bt.setEnabled( false );
@@ -190,6 +196,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				if (!tb_US.isChecked()) {
 					tb_EU.setChecked( true );
 				}
+				checkValues();
 			}
 		} );
 		tb_US.setOnClickListener( new OnClickListener() {
@@ -199,7 +206,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				if (!tb_EU.isChecked()) {
 					tb_US.setChecked( true );
 				}
-				search();
+				checkValues();
 			}
 		} );
 		/**
@@ -214,11 +221,11 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		if (locale.equalsIgnoreCase( "US" )) {
 			region = Region.US;
 			tb_US.setChecked( true );
-			// tb_EU.setChecked(false);
+//			tb_EU.setChecked(false);
 		} else {
 			region = Region.EU;
 			tb_EU.setChecked( true );
-			// tb_US.setChecked(false);
+//			tb_US.setChecked(false);
 		}
 		verifyInput();
 		/** Kontextmenü registrieren */
@@ -259,6 +266,11 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 
 	private void search() {
 		
+		//Werte speichern
+		String name = et.getText().toString();
+		mapValuesForResult.put( ConfigData.NAME.name(), name );
+		mapValuesForResult.put( ConfigData.REALM.name(), region );
+
 		if(searchThread != null && searchThread.isAlive() ) {
 			searchThread.interrupt();
 		}
@@ -428,6 +440,23 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	}
 
 	/**
+	 * Test auf Aenderungen der Suchanfrage
+	 */
+	private void checkValues() {
+		Object name = mapValuesForResult.get( ConfigData.NAME.name() );
+		Object realm = mapValuesForResult.get( ConfigData.REALM.name() );
+
+		boolean valuesChanged = true;
+		
+		Object nameNew = et.getText().toString();
+		
+		valuesChanged = !nameNew.equals(name) || !region.equals(realm);
+		
+		TextView tf = (TextView)findViewById( R.id.valuesChanged );
+		tf.setText( valuesChanged ? "*" : "" );		
+	}
+	
+	/**
 	 * auf Aenderungen im EditText reagieren
 	 */
 	private void handleTextChanged() {
@@ -437,6 +466,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		} else {
 			bt.setEnabled( true );
 		}
+		checkValues();
 	}
 
 	/**
