@@ -263,6 +263,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 	 * Karteikarten initialisieren
 	 */
 	private void initTabs() {
+		String tabText;
+		Drawable tabIcon;
+		
 		tabHost = (TabHost)findViewById( R.id.CharacterViewTab );
 		tabHost.setup();
 		tabHost.setOnTabChangedListener( new TabHost.OnTabChangeListener() {
@@ -282,8 +285,10 @@ public class Characterview extends Activity implements ICharactersProvider {
 				LayoutInflater inflater = getLayoutInflater();
 				return inflater.inflate( R.layout.characterviewtabstats, null );
 			}
-		} );
-		specDetails.setIndicator( getResources().getString( R.string.charview_tab_detail ) );
+		} );		
+		tabText = getResources().getString( R.string.charview_tab_detail );
+		tabIcon = getResources().getDrawable(android.R.drawable.ic_menu_view);
+		specDetails.setIndicator( tabText , tabIcon );
 		tabHost.addTab( specDetails );
 		// zweiter Tab
 		specItems = tabHost.newTabSpec( "items" );
@@ -298,8 +303,11 @@ public class Characterview extends Activity implements ICharactersProvider {
 				return viewItemList;
 			}
 		} );
-		specItems.setIndicator( getResources().getString( R.string.charview_tab_items ) );
+		tabText = getResources().getString( R.string.charview_tab_items );
+		tabIcon = getResources().getDrawable(android.R.drawable.ic_menu_info_details);
+		specItems.setIndicator( tabText , tabIcon );
 		tabHost.addTab( specItems );
+		// dritter Tab
 		specValues = tabHost.newTabSpec( "values" );
 		valuesListAdapter = new ValuesListAdapter( Characterview.this );
 		specValues.setContent( new TabHost.TabContentFactory() {
@@ -309,7 +317,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 				return el;
 			}
 		} );
-		specValues.setIndicator( getResources().getString( R.string.charview_tab_values ) );
+		tabText = getResources().getString( R.string.charview_tab_values  );
+		tabIcon = getResources().getDrawable(android.R.drawable.ic_menu_help);
+		specValues.setIndicator( tabText , tabIcon );
 		tabHost.addTab( specValues );
 		tabHost.setCurrentTab( 0 );
 	}

@@ -1,9 +1,12 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-01-28)
+	* Changed:	rudimentäre Icons in die Tabs eingefügt
+
 (2010-01-27)
 	+ New:		Anzeige, dass sich Suchanfrage geaendert hat, somit wahrscheinlich das Suchergebnis
-					nicht mehr aktuell ist
+				nicht mehr aktuell ist
 
 (2010-01-26)
 	* Changed:	Deaktivieren der Such-Eingabemaske bei leerem Suchbegriff
@@ -18,7 +21,7 @@
 
 (2010-01-18)
 	+ New:		Process wird bei Back-Taste in der Favoriten-Liste beendet (bei HOME bleibt Process erhalten,
-					um per langem Tastendruck auf HOME wieder zu diesem wechseln zu koennen)
+				um per langem Tastendruck auf HOME wieder zu diesem wechseln zu koennen)
 	* Changed:	Fullscreen aufgehoben, somit wird leere Favoritenliste deutlich
 	+ New:		Wenn letzter Favorit geloescht, Aufruf der Suchliste
 	* Fixed:	Auswahl des Characters aus der Suchliste heraus
@@ -52,7 +55,7 @@
 	+ New:		Itemcounter im Itemtab hinzugefuegt
 	* Changed:	Lokalisierung der Tabs
 	* Fixed:	Variable 'region' wird bei Initialisierung der 'Searchlist' nun direkt gesetzt,
-					da die Funktion 'setChecked' beim Togglebutton keinen Event ausloest
+				da die Funktion 'setChecked' beim Togglebutton keinen Event ausloest
 
 (2009-12-29)
 	* Changed:	Item Infos werden nebenlaeufig geladen, sichtbares Fuellen der Liste
