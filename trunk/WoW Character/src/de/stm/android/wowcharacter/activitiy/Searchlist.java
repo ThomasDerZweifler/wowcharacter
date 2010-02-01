@@ -86,7 +86,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				// }
 				// }, 6000);
 			}
-			setInputMaskEnabled( true );
+			setProgressBarIndeterminateVisibility( false );
 			TextView tf = (TextView)findViewById( R.id.valuesChanged );
 			tf.setText( "" );
 		}
@@ -169,7 +169,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		} );
 		et.setOnKeyListener( new EditText.OnKeyListener() {
 			public boolean onKey( View v, int keyCode, KeyEvent event ) {
-				verifyInput();
+				checkEmpty();
 				if (keyCode == KeyEvent.KEYCODE_ENTER) {
 					bt.dispatchKeyEvent( event );
 					return true;
@@ -181,11 +181,9 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		bt = (ImageButton)findViewById( R.id.buttonSearch );
 		bt.setOnClickListener( new Button.OnClickListener() {
 			public void onClick( View v ) {
-				bt.setEnabled( false );
 				search();
 			}
 		} );
-		bt.setEnabled( false );
 		/** Togglebuttonfunktionalität */
 		tb_EU = (ToggleButton)findViewById( R.id.toggle_EU );
 		tb_US = (ToggleButton)findViewById( R.id.toggle_US );
@@ -227,7 +225,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 			tb_EU.setChecked( true );
 //			tb_US.setChecked(false);
 		}
-		verifyInput();
+		checkEmpty();
 		/** Kontextmenü registrieren */
 		registerForContextMenu( getListView() );
 		getListView().setFastScrollEnabled( true );
@@ -290,7 +288,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				}
 			}
 		}, "WOW-Search" );
-		setInputMaskEnabled( false );
+		setProgressBarIndeterminateVisibility( true );
 		searchThread.start();
 	}
 	
@@ -299,7 +297,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	 * @param input
 	 * @return	false = leeres Eingabefeld
 	 */
-	private boolean verifyInput() {
+	private boolean checkEmpty() {
 		boolean result = et.getText().toString().equals( "" );
 		if( result ) {
 			bt.setEnabled( false );
@@ -311,19 +309,6 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 			tb_US.setEnabled( true );			
 		}
 		return !result;
-	}
-	
-	/**
-	 * (De)aktivieren der Eingabefelder fuer die Suche
-	 * @param enabled
-	 */
-	private void setInputMaskEnabled( boolean enabled ) {
-		setProgressBarIndeterminateVisibility( !enabled );
-		bt.setEnabled( enabled );
-		et.setEnabled( enabled );
-		tb_EU.setEnabled( enabled );
-		tb_US.setEnabled( enabled );
-		
 	}
 	
 	/**

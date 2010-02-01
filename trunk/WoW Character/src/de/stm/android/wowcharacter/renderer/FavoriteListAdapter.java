@@ -36,14 +36,19 @@ public class FavoriteListAdapter extends SimpleCursorAdapter implements ICharact
 			LayoutInflater inflater = context.getLayoutInflater();
 			row = inflater.inflate( res, null );
 		}
+		ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
+		Bitmap bitmap = null;
 		Cursor cursor = getCursor();
 		cursor.moveToPosition( position );
 		byte[] blob = cursor.getBlob( cursor.getColumnIndex( Column.BITMAP.name() ) );
 		if(blob != null) {
-			Bitmap bitmap = BitmapFactory.decodeByteArray( blob, 0, blob.length );
-			ImageView charImage = (ImageView)row.findViewById( R.id.CharImage );
+			bitmap = BitmapFactory.decodeByteArray( blob, 0, blob.length );
 			charImage.setImageBitmap( bitmap );			
+		} else {
+			bitmap = BitmapFactory.decodeResource( convertView.getResources(),
+					R.drawable.question_mark );
 		}
+		charImage.setImageBitmap( bitmap );			
 		String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
 		String server = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
 		TextView charNameRealm = (TextView)row.findViewById( R.id.CharNameRealm );
@@ -51,20 +56,22 @@ public class FavoriteListAdapter extends SimpleCursorAdapter implements ICharact
 		Object o = cursor.getString( cursor.getColumnIndex( Column.LEVEL.name() ) );
 		Object o1 = cursor.getString( cursor.getColumnIndex( Column.RACE.name() ) );
 		Object o2 = cursor.getString( cursor.getColumnIndex( Column.CLASS.name() ) );
+		TextView charLevelRaceClass = (TextView)row.findViewById( R.id.CharLevelRaceClass );
+		charLevelRaceClass.setText( "" );
 		if (o != null && o1 != null && o2 != null) {
 			String level = o.toString();
 			String race = o1.toString();
 			String _class = o2.toString();
 			if (level.length() > 0 || race.length() > 0 || _class.length() > 0) {
-				TextView charLevelRaceClass = (TextView)row.findViewById( R.id.CharLevelRaceClass );
 				charLevelRaceClass.setText( "Level: " + level + " " + race + "-" + _class );
 			}
 		}
 		o = cursor.getString( cursor.getColumnIndex( Column.GUILD.name() ) );
+		TextView charGuild = (TextView)row.findViewById( R.id.CharGuild );
+		charGuild.setText( "" );
 		if (o != null) {
 			String guild = o.toString();
 			if (guild.length() > 0) {
-				TextView charGuild = (TextView)row.findViewById( R.id.CharGuild );
 				String s = context.getString( R.string.searchListAdapter_guild );
 				charGuild.setText( s + " " + guild );
 			}

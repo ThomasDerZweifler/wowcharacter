@@ -3,8 +3,6 @@
 * Itemname farbig darstellen
 * Neuladen der Items beim Umschalten zu landscape verhindern
 * Tree (Werte-Tab) etwas aufhuebschen (kleinere Zeilen)
-* Eingabemaske waehrend der Suche nicht ausgrauen, somit angefangene Suche mit neuer
-   Suchanfrage verwerfbar
 
 * Ausgrauen oder Text fuer nicht vorhandene Werte
 * Scrolling schneller machen (ellipsize nicht aenderbar)

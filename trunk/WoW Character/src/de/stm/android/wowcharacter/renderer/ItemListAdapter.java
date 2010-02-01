@@ -1,8 +1,7 @@
 package de.stm.android.wowcharacter.renderer;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.*;
 import android.view.*;
 import android.widget.*;
 import de.stm.android.wowcharacter.R;
@@ -52,6 +51,10 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 				itemImage.setAlpha(220);
 				itemImage.setFadingEdgeLength(20);
 				itemImage.setBackgroundColor( Color.BLUE );
+			} else {
+				Bitmap bitmap = BitmapFactory.decodeResource( convertView.getResources(),
+						R.drawable.question_mark );
+				itemImage.setImageBitmap( bitmap );
 			}
 			TextView name = (TextView)row.findViewById( R.id.ItemName );
 			name.setText( itemValues[1].toString() );

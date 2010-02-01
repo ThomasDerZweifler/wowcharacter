@@ -1,6 +1,10 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-02-01)
+	* Fixed:		Vorbelegung der Werte in den ListItems
+	* Changed:	Kein Deaktivieren der Eingabemaske waehrend des Suchens
+	
 (2010-01-28)
 	* Changed:	rudimentäre Icons in die Tabs eingefügt
 

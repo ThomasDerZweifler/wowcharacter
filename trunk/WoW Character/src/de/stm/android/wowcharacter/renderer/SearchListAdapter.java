@@ -42,6 +42,8 @@ public class SearchListAdapter extends ArrayAdapter {
 			row = inflater.inflate( res, null );
 		}
 		Character character = item.get( position );
+		TextView charLevelRaceClass = (TextView)row.findViewById( R.id.CharLevelRaceClass );
+		charLevelRaceClass.setText( "" );
 		if (character != null) {
 			Object o = character.get( Data.LEVEL );
 			Object o1 = character.get( Data.RACE );
@@ -51,16 +53,15 @@ public class SearchListAdapter extends ArrayAdapter {
 				String race = o1.toString();
 				String _class = o2.toString();
 				if (level.length() > 0 || race.length() > 0 || _class.length() > 0) {
-					TextView charLevelRaceClass = (TextView)row
-							.findViewById( R.id.CharLevelRaceClass );
 					charLevelRaceClass.setText( "Level: " + level + " " + race + "-" + _class );
 				}
 			}
+			TextView charGuild = (TextView)row.findViewById( R.id.CharGuild );
+			charGuild.setText( "" );					
 			o = character.get( Data.GUILD );
 			if (o != null) {
 				String guild = o.toString();
 				if (guild.length() > 0) {
-					TextView charGuild = (TextView)row.findViewById( R.id.CharGuild );
 					String s = context.getString( R.string.searchListAdapter_guild );
 					charGuild.setText( s + " " + guild );
 				}
