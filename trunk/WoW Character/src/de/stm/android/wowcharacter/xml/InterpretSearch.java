@@ -31,6 +31,7 @@ public class InterpretSearch extends DefaultHandler {
 		if (localName.trim().equals( "character" )) {
 			try {
 				Character sr = new Character();
+				sr.put( Character.Data.RELEVANCE, attributes.getValue( "relevance" ) );
 				sr.put( Character.Data.NAME, attributes.getValue( "name" ) );
 				sr.put( Character.Data.REALM, attributes.getValue( "realm" ) );
 				sr.put( Character.Data.FACTIONID, attributes.getValue( "factionId" ) );
