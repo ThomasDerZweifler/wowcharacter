@@ -136,6 +136,13 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	}
 
 	@Override
+	public boolean onMenuOpened( int featureId, Menu menu ) {
+		MenuItem mi = menu.findItem( R.id.sort );
+		mi.setEnabled( getListView().getCount() > 1 );//Sortierung nur bei mehr als einem Eintrag aktivieren
+		return super.onMenuOpened( featureId, menu );
+	}
+	
+	@Override
 	public void onOptionsMenuClosed(Menu menu) {
 		super.onOptionsMenuClosed(menu);
 		optionsMenuOpen = false;
