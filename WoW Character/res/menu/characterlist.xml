@@ -4,7 +4,8 @@
 		android:icon="@android:drawable/ic_menu_search"
 		android:orderInCategory="1"
 		android:title="@string/charlist_menu_search" />
-	<item android:title="@string/charlist_menu_sort"
+	<item android:id="@+id/sort"
+		android:title="@string/charlist_menu_sort"
 		android:icon="@android:drawable/ic_menu_more"
 		android:orderInCategory="2">
 		<menu>

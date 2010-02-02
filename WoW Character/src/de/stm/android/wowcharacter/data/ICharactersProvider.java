@@ -24,6 +24,7 @@ public interface ICharactersProvider {
 		NAME,
 		REALM,
 		FACTIONID,
+		RELEVANCE,
 		LEVEL,
 		GENDERID,
 		RACE,
@@ -45,6 +46,7 @@ public interface ICharactersProvider {
 		+ Column.NAME.name() + " text not null, "
 		+ Column.REALM.name() + " text not null, "
 		+ Column.FACTIONID.name() + " text, "
+		+ Column.RELEVANCE.name() + " integer, "
 		+ Column.LEVEL.name() + " integer, "
 		+ Column.GENDERID.name() + " text, "
 		+ Column.RACE.name() + " text, "
