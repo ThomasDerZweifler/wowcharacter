@@ -8,6 +8,8 @@
 	<string name="search_addToFavorites_ok_toast">Character \"%1\" added to favorites.</string>
 	<string name="search_addToFavorites_fail_toast">Character \"%1\" cannot add as favorite!</string>
 	<string name="search_contextMenu_addToFavorites">add to Favorites</string>
+	<string name="search_contextMenu_sortByRealm">sort by realm (asc)</string>
+	<string name="search_contextMenu_sortByRelevance">sort by relevance (desc)</string>
 	<string name="search_char_found_none_toast">no character found</string>
 	<string name="search_char_found_one_toast">one character found</string>
 	<string name="search_char_found_more_toast">%1 characters found</string>
@@ -44,6 +46,7 @@
 	<string name="no">No</string>
 	<string name="warn">Attention:</string>
 	<string name="favourite">Save as favourite</string>
-	<string name="tooltipSearchlist">Realm: %1 ...</string>
+	<string name="tooltipSearchlist_Realm">Realm: %1 ...</string>
+	<string name="tooltipSearchlist_Relevance">Relevance: %1</string>
 	<string name="na">n.a.</string>
 </resources>

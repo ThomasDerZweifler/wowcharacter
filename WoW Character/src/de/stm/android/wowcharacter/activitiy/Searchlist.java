@@ -41,6 +41,8 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	/** geladene XML Seite */
 	private StringBuilder sbXMLPage;
 	private int selectedItemPosition = -1;
+	/** Sortierung nach Realm bzw. Relevance */
+	private int sortBy = R.id.searchcontextmenu_sortByRealm;
 	private TextView sectionTooltip;
 	private Armory.R.Region region;
 	/** Map fuer Such-Werte (um Aenderungen an den Eingabewerten zu erkennen), Schluessel: NAME, REGION */
@@ -239,14 +241,20 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 					int indexOfMiddleItem = firstVisibleItem + visibleItemCount/2;
 					if(indexOfMiddleItem < listModel.size()) {
 						Character character = listModel.get( firstVisibleItem + visibleItemCount/2 );
-						String realm = character.get( Data.REALM ).toString();
-						String text = getString(R.string.tooltipSearchlist );
-						text = text.replaceAll( "%1",  String.valueOf( realm.charAt( 0 ) ) );
+						String text = getString(R.string.tooltipSearchlist_Realm );
+						if(sortBy == R.id.searchcontextmenu_sortByRealm) {
+							String realm = character.get( Data.REALM ).toString();
+							text = text.replaceAll( "%1",  String.valueOf( realm.charAt( 0 ) ) );
+						} else if(sortBy == R.id.searchcontextmenu_sortByRelevance) {
+							text = getString(R.string.tooltipSearchlist_Relevance );
+							int relevance = Integer.parseInt( character.get( Data.RELEVANCE ).toString() );
+							text = text.replaceAll( "%1",  "" + relevance );
+						}
 						sectionTooltip.setText( text );
 						sectionTooltip.setVisibility( View.VISIBLE );
 			            handler.removeCallbacks(mRemoveWindow);
 			            handler.postDelayed(mRemoveWindow, 1500);//1.5s ist die Zeit, die auch der Scroll-Marker zum Ausblenden benoetigt
-					}
+					}					
 				}
 			}
 
@@ -386,24 +394,59 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	@Override
 	public boolean onContextItemSelected( MenuItem item ) {
 		switch (item.getItemId()) {
-		case R.id.searchcontextmenu_add_favorite:
-			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo)item
-					.getMenuInfo();
-			Character character = (Character)getListAdapter().getItem( cmi.position );
-			try {
-				addFavourite( character );
-				// Don 't call it Schnitzel;o)
-				String s = getString( R.string.search_addToFavorites_ok_toast );
-				s = s.replace( "%1", character.toString() );
-				Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
-			} catch (Exception e) {
-				String s = getString( R.string.search_addToFavorites_fail_toast );
-				s = s.replace( "%1", character.toString() );
-				Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
+			case R.id.searchcontextmenu_add_favorite:
+				AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo)item
+						.getMenuInfo();
+				Character character = (Character)getListAdapter().getItem( cmi.position );
+				try {
+					addFavourite( character );
+					// Don 't call it Schnitzel;o)
+					String s = getString( R.string.search_addToFavorites_ok_toast );
+					s = s.replace( "%1", character.toString() );
+					Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
+				} catch (Exception e) {
+					String s = getString( R.string.search_addToFavorites_fail_toast );
+					s = s.replace( "%1", character.toString() );
+					Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
+				}
+				break;
+			case R.id.searchcontextmenu_sortByRealm:
+				sortBy = R.id.searchcontextmenu_sortByRealm;
+				sortAndFill(R.id.searchcontextmenu_sortByRealm);
+				break;
+			case R.id.searchcontextmenu_sortByRelevance:
+				sortBy = R.id.searchcontextmenu_sortByRelevance;
+				sortAndFill(R.id.searchcontextmenu_sortByRelevance);
+				break;
 			}
-			return true;
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param sortBy
+	 */
+	private void sortAndFill( int sortBy ) {
+		if(sortBy == R.id.searchcontextmenu_sortByRealm) {
+			Collections.sort( listModel );
+			SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
+			setListAdapter( sla );
+		} else if(sortBy == R.id.searchcontextmenu_sortByRelevance) {
+			Collections.sort( listModel, new Comparator<Character>() {
+				public int compare( Character object1, Character object2 ) {
+					int i1 = Integer.parseInt( object1.get( Data.RELEVANCE ).toString() );
+					int i2 =  Integer.parseInt( object2.get( Data.RELEVANCE ).toString() );			
+					if(  i1 < i2 ) {
+						return 1;
+					} else if( i1 > i2 ) {
+						return -1;
+					}
+					return 0;
+				}
+			});
+			SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
+			setListAdapter( sla );
 		}
-		return false;
 	}
 
 	@Override

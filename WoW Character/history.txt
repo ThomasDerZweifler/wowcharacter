@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-02-03)
+	+New:		Sortierung nach Realm bzw. Relevance in der Suchliste (angepasste Abschnittskennungen)
+
 (2010-02-01)
 	* Fixed:		Vorbelegung der Werte in den ListItems
 	* Changed:	Kein Deaktivieren der Eingabemaske waehrend des Suchens
