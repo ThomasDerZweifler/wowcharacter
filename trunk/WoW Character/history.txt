@@ -8,11 +8,11 @@
 	+ New:		Sortierung nach Realm bzw. Relevance in der Suchliste (angepasste Abschnittskennungen)
 
 (2010-02-01)
-	* Fixed:		Vorbelegung der Werte in den ListItems
+	* Fixed:	Vorbelegung der Werte in den ListItems
 	* Changed:	Kein Deaktivieren der Eingabemaske waehrend des Suchens
 	
 (2010-01-28)
-	* Changed:	rudimentäre Icons in die Tabs eingefügt
+	* Changed:	rudimentaere Icons in die Tabs eingefuegt
 
 (2010-01-27)
 	+ New:		Anzeige, dass sich Suchanfrage geaendert hat, somit wahrscheinlich das Suchergebnis
