@@ -312,9 +312,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 		valuesListAdapter = new ValuesListAdapter( Characterview.this );
 		specValues.setContent( new TabHost.TabContentFactory() {
 			public View createTabContent( String tag ) {
-				ExpandableListView el = new ExpandableListView( Characterview.this );
-				el.setAdapter( valuesListAdapter );// Model an View
-				return el;
+				ExpandableListView listViewValues = new ExpandableListView( Characterview.this );
+				listViewValues.setAdapter( valuesListAdapter );// Model an View
+				return listViewValues;
 			}
 		} );
 		tabText = getResources().getString( R.string.charview_tab_values  );
@@ -573,9 +573,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 						short type = n.getNodeType();
 						if (type != Node.TEXT_NODE) {
 							String name = n.getNodeName();
-							al.add( name );
 							Log.i( "node:", "----" + tag + "-------" + name + "------" );
 							NamedNodeMap m = n.getAttributes();
+							String value = "";
 							for (int k = 0; k < m.getLength(); k++) {
 								// effective / value / percent auswerten
 								Node n1 = m.item( k );
@@ -583,15 +583,19 @@ public class Characterview extends Activity implements ICharactersProvider {
 								String value1 = n1.getNodeValue();
 								if (s1.equals( "effective" )) {
 									Log.i( "effective-values:", value1 );
+									value = value1;
 									break;
 								} else if (s1.equals( "value" )) {
 									Log.i( "value-values:", value1 );
+									value = value1;
 									break;
 								} else if (s1.equals( "percent" )) {
 									Log.i( "percent-values:", value1 + "%" );
+									value = value1 + "%";
 									break;
 								}
 							}
+							al.add( name + ": " + value );
 						}
 					}
 				}
