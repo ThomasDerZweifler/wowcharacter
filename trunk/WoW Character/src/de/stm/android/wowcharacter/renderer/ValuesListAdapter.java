@@ -6,6 +6,7 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.view.*;
 import android.widget.*;
+import de.stm.android.wowcharacter.R;
 
 /**
  * Adapter fuer ExpandableList (Values-Tab)
@@ -14,8 +15,9 @@ import android.widget.*;
  *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
 public class ValuesListAdapter extends BaseExpandableListAdapter {
+	private static final int resParent = R.layout.valueslistparentitem;
+	private static final int resChild = R.layout.valueslistchilditem;	
 	private Activity context;
-	// children[i] contains the children (String[]) for groups[i].
 	private String[] groups;
 	private HashMap<Integer,ArrayList<String>> map;
 
@@ -48,24 +50,16 @@ public class ValuesListAdapter extends BaseExpandableListAdapter {
 		this.map = map;
 	}
 
-	public TextView getGenericView() {
-		// Layout parameters for the ExpandableListView
-		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-				ViewGroup.LayoutParams.FILL_PARENT, 64 );
-		TextView textView = new TextView( context );
-		textView.setLayoutParams( lp );
-		// Center the text vertically
-		textView.setGravity( Gravity.CENTER_VERTICAL | Gravity.LEFT );
-		// Set the text starting position
-		textView.setPadding( 36, 0, 0, 0 );
-		return textView;
-	}
-
 	public View getChildView( int groupPosition, int childPosition, boolean isLastChild,
 			View convertView, ViewGroup parent ) {
-		TextView textView = getGenericView();
-		textView.setText( getChild( groupPosition, childPosition ).toString() );
-		return textView;
+		View view = convertView;
+		if (view == null) {
+			LayoutInflater inflater = context.getLayoutInflater();
+			view = inflater.inflate( resChild, null );
+		}
+		TextView row = (TextView)view.findViewById( R.id.rowChild );
+		row.setText( getChild( groupPosition, childPosition ).toString() );
+		return view;
 	}
 
 	public Object getGroup( int groupPosition ) {
@@ -85,9 +79,14 @@ public class ValuesListAdapter extends BaseExpandableListAdapter {
 
 	public View getGroupView( int groupPosition, boolean isExpanded, View convertView,
 			ViewGroup parent ) {
-		TextView textView = getGenericView();
-		textView.setText( getGroup( groupPosition ).toString() );
-		return textView;
+		View view = convertView;
+		if (view == null) {
+			LayoutInflater inflater = context.getLayoutInflater();
+			view = inflater.inflate( resParent, null );
+		}
+		TextView row = (TextView)view.findViewById( R.id.rowParent );
+		row.setText( getGroup( groupPosition ).toString() );
+		return view;
 	}
 
 	public boolean isChildSelectable( int groupPosition, int childPosition ) {
