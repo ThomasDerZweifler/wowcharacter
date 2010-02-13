@@ -2,6 +2,7 @@
   -----------------------------
 
 (2010-02-13)
+	+ New:		Autorennamen im Splash
 	+ New:		Farbe des Itemnames an die Seltenheit angepasst
 
 (2010-02-12)
