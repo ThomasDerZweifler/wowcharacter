@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-02-13)
+	+ New:		Farbe des Itemnames an die Seltenheit angepasst
+
 (2010-02-12)
 	+ New:		XML-Layout fuer Items der Values
 
