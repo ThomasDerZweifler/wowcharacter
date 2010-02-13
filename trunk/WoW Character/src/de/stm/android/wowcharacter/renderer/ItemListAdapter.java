@@ -48,9 +48,9 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 			Object o = itemValues[0];
 			if (o instanceof Bitmap) {
 				itemImage.setImageBitmap( (Bitmap)o );
-				itemImage.setAlpha(220);
-				itemImage.setFadingEdgeLength(20);
-				itemImage.setBackgroundColor( Color.BLUE );
+//				itemImage.setAlpha(220);
+//				itemImage.setFadingEdgeLength(20);
+//				itemImage.setBackgroundColor( getColor(quality) );
 			} else {
 				Bitmap bitmap = BitmapFactory.decodeResource( convertView.getResources(),
 						R.drawable.question_mark );
@@ -58,10 +58,48 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 			}
 			TextView name = (TextView)row.findViewById( R.id.ItemName );
 			name.setText( itemValues[1].toString() );
-			name.setTextColor( Color.BLUE );
+			name.setTextColor( getColor(quality) );
 			TextView level = (TextView)row.findViewById( R.id.ItemLevel );
 			level.setText( "(Level: " + itemValues[2].toString() + ")" );
 		}
 		return row;
+	}
+	
+	private int getColor ( String rarity ) {
+		return getColor(Integer.parseInt(rarity));
+	}
+	
+	private int getColor ( int rarity ) {
+		int color = 0xffffffff;
+		
+		switch (rarity) {
+		case 0: //Poor (grey)
+			color = 0xffc9c9c9;
+			break;
+		case 1: //Common (white)
+			color = 0xffffffff;
+			break;
+		case 2: //Uncommon (green)
+			color = 0xff00ff00;
+			break;
+		case 3: //Rare (blue) 
+			color = 0xff0070dd;
+			break;
+		case 4: //Epic (purple)
+			color = 0xffa335ee;
+			break;
+		case 5: //Legendary (orange)
+			color = 0xffff8000;
+			break;
+		case 6: //Artifact (red)
+			color = 0xffd80000;
+			break;
+		case 7: //Heirloom (gold)
+			color = 0xff7e7046;
+			break;
+		default:
+			break;
+		}
+		return color;
 	}
 }
