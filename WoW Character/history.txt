@@ -2,6 +2,7 @@
   -----------------------------
 
 (2010-02-13)
+	+ New:		Nach Loeschen aller Favoriten zur Suche gehen
 	+ New:		Autorennamen im Splash
 	+ New:		Farbe des Itemnames an die Seltenheit angepasst
 

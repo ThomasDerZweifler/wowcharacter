@@ -110,7 +110,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 			// getApplicationContext().
 			// }
 		}
-	
+
 	}
 
 	private void showOptionsMenu() {
@@ -121,7 +121,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		// openOptionsMenu();
 
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -136,12 +136,14 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	}
 
 	@Override
-	public boolean onMenuOpened( int featureId, Menu menu ) {
-		MenuItem mi = menu.findItem( R.id.sort );
-		mi.setEnabled( getListView().getCount() > 1 );//Sortierung nur bei mehr als einem Eintrag aktivieren
-		return super.onMenuOpened( featureId, menu );
+	public boolean onMenuOpened(int featureId, Menu menu) {
+		MenuItem mi = menu.findItem(R.id.sort);
+		mi.setEnabled(getListView().getCount() > 1);// Sortierung nur bei mehr
+		// als einem Eintrag
+		// aktivieren
+		return super.onMenuOpened(featureId, menu);
 	}
-	
+
 	@Override
 	public void onOptionsMenuClosed(Menu menu) {
 		super.onOptionsMenuClosed(menu);
@@ -166,9 +168,11 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	private void init() {
 
 		setContentView(R.layout.favoritelist);
-		
-		getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
-		
+
+		getIntent().setFlags(
+				Intent.FLAG_ACTIVITY_CLEAR_TOP
+						| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
 		// anim = AnimationUtils.loadAnimation( this, R.anim.magnify );
 
 		Message msg = new Message();
@@ -214,6 +218,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 										.parse(CONTENT_NAME_CHARACTERS);
 								int i = getContentResolver().delete(
 										allFavourites, null, null);
+								goToSearch();
 							}
 						}).setNegativeButton(R.string.no,
 						new DialogInterface.OnClickListener() {
@@ -225,13 +230,13 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	}
 
 	@Override
-	public boolean onKeyDown( int keyCode, KeyEvent event ) {
-		if(keyCode == KeyEvent.KEYCODE_BACK) {
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			android.os.Process.killProcess(android.os.Process.myPid());
 		}
-		return super.onKeyDown( keyCode, event );
+		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	private void initSplash() {
 		((RelativeLayout) findViewById(R.id.splash))
 				.setOnClickListener(new OnClickListener() {
