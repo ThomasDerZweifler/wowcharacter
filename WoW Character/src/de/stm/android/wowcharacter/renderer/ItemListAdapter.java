@@ -43,7 +43,7 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 		}
 		if (getCount() > position) {
 			Object[] itemValues = getItem( position );
-			String quality = itemValues[3].toString();//fuer Farbe
+			Integer quality = (Integer)itemValues[3];//fuer Farbe
 			ImageView itemImage = (ImageView)row.findViewById( R.id.ItemImage );
 			Object o = itemValues[0];
 			if (o instanceof Bitmap) {
@@ -65,10 +65,11 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 		return row;
 	}
 	
-	private int getColor ( String rarity ) {
-		return getColor(Integer.parseInt(rarity));
-	}
-	
+	/**
+	 * Gibt Farbe entsprechend Qualitaet zurueck
+	 * @param rarity
+	 * @return
+	 */
 	private int getColor ( int rarity ) {
 		int color = 0xffffffff;
 		
@@ -96,9 +97,6 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 			break;
 		case 7: //Heirloom (gold)
 			color = 0xff7e7046;
-			break;
-		default:
-			break;
 		}
 		return color;
 	}

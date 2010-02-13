@@ -70,7 +70,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 				Bitmap bitmap = bundle.getParcelable( "BITMAP" );
 				String name = bundle.getString( "NAME" );
 				String level = bundle.getString( "LEVEL" );
-				String quality = bundle.getString( "QUALITY" );
+				Integer quality = bundle.getInt( "QUALITY" );
 				Object[] o = new Object[] {
 						bitmap, name, level, quality
 				};
@@ -130,7 +130,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 					Bitmap bitmap = null;
 					String name = "";
 					String level = "";
-					String quality = "";// fuer Farbe
+					Integer quality = null;// fuer Farbe
 					// FIXME Fehler besser interpretiern, da bei Problemen eine
 					// "0" geliefert wird
 					if (sb != null) {
@@ -151,7 +151,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 									NamedNodeMap nnm = nl1.item( j ).getAttributes();
 									name = nnm.getNamedItem( "name" ).getNodeValue();
 									level = nnm.getNamedItem( "level" ).getNodeValue();
-									quality = nnm.getNamedItem( "quality" ).getNodeValue();
+									quality = Integer.parseInt(nnm.getNamedItem( "quality" ).getNodeValue());
 									break;
 								}
 							}
@@ -168,7 +168,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 					if (!error) {
 						bundle.putString( "NAME", name );
 						bundle.putString( "LEVEL", level );
-						bundle.putString( "QUALITY", quality );
+						bundle.putInt( "QUALITY", quality );
 						if (bitmap == null) {
 							bitmap = BitmapFactory.decodeResource( getResources(),
 									R.drawable.question_mark );
