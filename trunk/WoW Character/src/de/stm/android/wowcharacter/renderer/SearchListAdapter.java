@@ -48,13 +48,12 @@ public class SearchListAdapter extends ArrayAdapter {
 			Object o = character.get( Data.LEVEL );
 			Object o1 = character.get( Data.RACE );
 			Object o2 = character.get( Data.CLASS );
-			Object o3 = character.get( Data.RELEVANCE );
 			if (o != null && o1 != null && o2 != null) {
 				String level = o.toString();
 				String race = o1.toString();
 				String _class = o2.toString();
 				if (level.length() > 0 || race.length() > 0 || _class.length() > 0) {
-					charLevelRaceClass.setText( "Level: " + level + " " + race + "-" + _class + "__"  + o3 );
+					charLevelRaceClass.setText( "Level: " + level + " " + race + "-" + _class );
 				}
 			}
 			TextView charGuild = (TextView)row.findViewById( R.id.CharGuild );
