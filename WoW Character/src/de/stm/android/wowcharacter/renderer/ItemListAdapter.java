@@ -43,7 +43,7 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 		}
 		if (getCount() > position) {
 			Object[] itemValues = getItem( position );
-			Integer quality = (Integer)itemValues[3];//fuer Farbe
+			Integer rarity = (Integer)itemValues[3];//fuer Farbe
 			ImageView itemImage = (ImageView)row.findViewById( R.id.ItemImage );
 			Object o = itemValues[0];
 			if (o instanceof Bitmap) {
@@ -58,7 +58,7 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 			}
 			TextView name = (TextView)row.findViewById( R.id.ItemName );
 			name.setText( itemValues[1].toString() );
-			name.setTextColor( getColor(quality) );
+			name.setTextColor( getColor(rarity) );
 			TextView level = (TextView)row.findViewById( R.id.ItemLevel );
 			level.setText( "(Level: " + itemValues[2].toString() + ")" );
 		}
@@ -66,7 +66,7 @@ public class ItemListAdapter extends ArrayAdapter<Object[]> {
 	}
 	
 	/**
-	 * Gibt Farbe entsprechend Qualitaet zurueck
+	 * Gibt Farbe entsprechend Seltenheit zurueck
 	 * @param rarity
 	 * @return
 	 */

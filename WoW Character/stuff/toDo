@@ -1,7 +1,6 @@
-* Basic und andre Specs in expandable List
+* Basic und andre Specs in expandable List (noch Zauber und Nahkampf.Schaden), evtl. fuer Character relvanten Knoten schon aufklappen
 * Itemname farbig darstellen
 * Neuladen der Items beim Umschalten zu landscape verhindern
-* Tree (Werte-Tab) etwas aufhuebschen (kleinere Zeilen)
 
 * Ausgrauen oder Text fuer nicht vorhandene Werte
 * Scrolling schneller machen (ellipsize nicht aenderbar)
