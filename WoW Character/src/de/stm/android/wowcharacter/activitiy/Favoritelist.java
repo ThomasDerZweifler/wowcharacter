@@ -307,6 +307,9 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	 */
 	private boolean applyMenuChoice(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.refresh:
+			refresh();
+			return (true);
 		case R.id.search:
 			goToSearch();
 			return (true);
@@ -409,6 +412,31 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		}
 	}
 
+	/**
+	 * Favoriten-Details erneuern
+	 */
+	private void refresh() {
+		
+		int count = getListView().getCount();
+		for(int i = 0; i< count; i++) {
+			Cursor cursor = (Cursor)getListView().getItemAtPosition(i);
+			
+			boolean bOnline = setXMLtoCharacter(cursor);
+//			if (!bOnline) {
+//				// Online XML nicht verfuegbar
+//				String xml = cursor.getString(cursor.getColumnIndex(Column.XML
+//						.name()));
+//				if (xml == null || "".equals(xml)) {
+//					// Persitiertes Ergebnis auch nicht verfuegbar, dann keine
+//					// Anzeige der Details
+//					Toast.makeText(this, "Keine Details verfuegbar!",
+//							Toast.LENGTH_SHORT).show();
+//					return;
+//				}
+//			}
+		}
+	}
+	
 	/**
 	 * 
 	 */
