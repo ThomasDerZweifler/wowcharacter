@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/refresh"
+		android:icon="@drawable/ic_menu_refresh"
+		android:orderInCategory="1"
+		android:title="@string/charlist_menu_refresh" />
 	<item android:id="@+id/search"
 		android:icon="@android:drawable/ic_menu_search"
-		android:orderInCategory="1"
+		android:orderInCategory="2"
 		android:title="@string/charlist_menu_search" />
 	<item android:id="@+id/sort"
 		android:title="@string/charlist_menu_sort"
 		android:icon="@android:drawable/ic_menu_more"
-		android:orderInCategory="2">
+		android:orderInCategory="3">
 		<menu>
 			<item android:id="@+id/sort_name_asc"
 				android:title="@string/charlist_menu_sort_name_asc"
@@ -30,5 +34,5 @@
 	<item android:id="@+id/clear_list"
 		android:title="@string/charlist_menu_clear"
 		android:icon="@android:drawable/ic_menu_close_clear_cancel"
-		android:orderInCategory="3" />
+		android:orderInCategory="4" />
 </menu>

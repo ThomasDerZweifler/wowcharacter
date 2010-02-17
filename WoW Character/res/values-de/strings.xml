@@ -16,6 +16,7 @@
 	
 	<string name="charlist_title">Favoriten</string>
 	<string name="charlist_menu_search">Suchen</string>
+	<string name="charlist_menu_refresh">Aktualisieren</string>
 	<string name="charlist_menu_sort">Sortieren...</string>
 	<string name="charlist_menu_sort_name_asc">nach Name, aufsteigend</string>
 	<string name="charlist_menu_sort_name_desc">nach Name, absteigend</string>
