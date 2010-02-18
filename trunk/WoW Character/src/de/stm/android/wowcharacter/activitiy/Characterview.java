@@ -591,8 +591,6 @@ public class Characterview extends Activity implements ICharactersProvider {
 						short type = n.getNodeType();
 						if (type != Node.TEXT_NODE) {
 							String name = n.getNodeName();
-							Log.i("node:", "----" + tag + "-------" + name
-									+ "------");
 							NamedNodeMap m = n.getAttributes();
 							String value = "";
 							for (int k = 0; k < m.getLength(); k++) {
@@ -601,15 +599,12 @@ public class Characterview extends Activity implements ICharactersProvider {
 								String s1 = n1.getNodeName();
 								String value1 = n1.getNodeValue();
 								if (s1.equals("effective")) {
-									Log.i("effective-values:", value1);
 									value = value1;
 									break;
 								} else if (s1.equals("value")) {
-									Log.i("value-values:", value1);
 									value = value1;
 									break;
 								} else if (s1.equals("percent")) {
-									Log.i("percent-values:", value1 + "%");
 									value = value1 + "%";
 									break;
 								}

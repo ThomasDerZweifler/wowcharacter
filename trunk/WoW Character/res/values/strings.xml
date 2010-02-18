@@ -8,8 +8,9 @@
 	<string name="search_addToFavorites_ok_toast">Character \"%1\" added to favorites.</string>
 	<string name="search_addToFavorites_fail_toast">Character \"%1\" cannot add as favorite!</string>
 	<string name="search_contextMenu_addToFavorites">add to Favorites</string>
-	<string name="search_contextMenu_sortByRealm">sort by realm (asc)</string>
-	<string name="search_contextMenu_sortByRelevance">sort by relevance (desc)</string>
+	<string name="search_menu_sort">Sort...</string>
+	<string name="search_menu_sortByRealm">sort by realm (asc)</string>
+	<string name="search_menu_sortByRelevance">sort by relevance (desc)</string>
 	<string name="search_char_found_none_toast">no character found</string>
 	<string name="search_char_found_one_toast">one character found</string>
 	<string name="search_char_found_more_toast">%1 characters found</string>
@@ -25,6 +26,7 @@
 	<string name="charlist_menu_sort_level_asc">by level, ascendant</string>
 	<string name="charlist_menu_sort_level_desc">by level, descendant</string>
 	<string name="charlist_favorite_deleted_toast">Character \"%1\" from favorites removed.</string>
+	<string name="charlist_favorite_updated_toast">Character \&quot;%1\&quot; refreshed.</string>
 	<string name="charlist_menu_clear">Clear list</string>
 	<string name="charlist_contextMenu_removeFromFavorites">remove from favorites</string>
 	<string name="charlist_deleteAll">Really delete all favorites?</string>

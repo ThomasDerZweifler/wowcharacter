@@ -1,5 +1,8 @@
 package de.stm.android.wowcharacter.activitiy;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
@@ -41,18 +44,23 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	private ViewFlipper flipper;
 	private boolean optionsMenuOpen = false;
 	/** NachrichtenID zum Beenden des Splash */
-	private static final int STOPSPLASH = 0;
+	private static final int STOP_SPLASH = 0;
 	/** time in milliseconds */
 	private static final long SPLASHTIME = 5000;
+	/** NachrichtenID zum Beenden des Refresh */
+	private static final int STOP_REFRESH = 1;
+	/** NachrichtenID zum Updaten */
+	private static final int UPDATE = 2;
 	// private Animation anim = null;
 	private Menu optionsMenu;
+	private Thread refreshThread;
 
 	/** Sortierrichtungen */
 	public static enum SortDirection {
 		ASCEND, DESCEND
 	};
 
-	private Handler splashHandler = new Handler() {
+	private Handler handler = new Handler() {
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -61,8 +69,27 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case STOPSPLASH:
+			case UPDATE:
+				Bundle bundle = msg.getData();
+				String xml = bundle.getString(Column.XML.name());
+				String id = bundle.getString("CURSOR_id");
+				ContentValues cv = new ContentValues();
+				cv.put(Column.XML.name(), xml);
+				boolean success = update(id, cv);
+				if (success) {
+					String realm = bundle.getString(Column.REALM.name());
+					String name = bundle.getString(Column.NAME.name());
+					String s = getString(R.string.charlist_favorite_updated_toast);
+					s = s.replace("%1", realm + " @ " + name);
+					Toast.makeText(getListView().getContext(), s,
+							Toast.LENGTH_SHORT).show();
+				}
+				break;
+			case STOP_SPLASH:
 				goToCharacterList();
+				break;
+			case STOP_REFRESH:
+				setProgressBarIndeterminateVisibility(false);
 				break;
 			}
 			super.handleMessage(msg);
@@ -74,14 +101,11 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		// bei erneutem onCreate ist dann ein Bundle vorhanden, was bedeutet,
 		// dass die Applikation schon laeuft
 		outState.putBoolean(ConfigData.APP_INITIALIZED.name(), true);
-
 		int selectedItemPosition = getListView().getSelectedItemPosition();
 		outState.putInt(ConfigData.SELECTED_ITEM_POSITION.name(),
 				selectedItemPosition);
-
 		outState.putBoolean(ConfigData.OPTIONS_MENU_OPEN.name(),
 				optionsMenuOpen);
-
 		super.onSaveInstanceState(outState);
 	}
 
@@ -94,15 +118,12 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		getListView().setSelection(selectedItemPosition);
 		optionsMenuOpen = state.getBoolean(ConfigData.OPTIONS_MENU_OPEN.name());
 		if (optionsMenuOpen) {
-
 			// Handler mHandler = new Handler();
 			// mHandler.postDelayed( new Runnable() {
 			// public void run() {
 			// openOptionsMenu();
 			// }}, 3000 );
-
 			// showOptionsMenu();
-
 			// ActivityManager am =
 			// (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
 			// Activity activity = getActivity(getListView());
@@ -110,16 +131,12 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 			// getApplicationContext().
 			// }
 		}
-
 	}
 
 	private void showOptionsMenu() {
-
 		KeyEvent ku = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MENU);
 		getWindow().openPanel(Window.FEATURE_OPTIONS_PANEL, ku);
-
 		// openOptionsMenu();
-
 	}
 
 	@Override
@@ -166,20 +183,17 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	}
 
 	private void init() {
-
+		// fuer Fortschrittskreis in Titelzeile
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.favoritelist);
-
 		getIntent().setFlags(
 				Intent.FLAG_ACTIVITY_CLEAR_TOP
 						| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
 		// anim = AnimationUtils.loadAnimation( this, R.anim.magnify );
-
 		Message msg = new Message();
-		msg.what = STOPSPLASH;
-		splashHandler.sendMessageDelayed(msg, SPLASHTIME);
+		msg.what = STOP_SPLASH;
+		handler.sendMessageDelayed(msg, SPLASHTIME);
 		initSplash();
-
 		getListView().setOnCreateContextMenuListener(
 				new OnCreateContextMenuListener() {
 					public void onCreateContextMenu(ContextMenu cm, View view,
@@ -268,6 +282,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo) item
 					.getMenuInfo();
 			Cursor c = (Cursor) getListAdapter().getItem(cmi.position);
+
 			String sRegion = c
 					.getString(c.getColumnIndex(Column.REGION.name()));
 			String sRealm = c.getString(c.getColumnIndex(Column.REALM.name()));
@@ -282,7 +297,6 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 				String s = getString(R.string.charlist_favorite_deleted_toast);
 				s = s.replace("%1", sRealm + " @ " + sName);
 				Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-
 				sortAndFill("NAME", SortDirection.ASCEND);
 				if (getListAdapter().getCount() == 0) {
 					goToSearch();
@@ -302,6 +316,8 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	}
 
 	/**
+	 * Menuepunkt-Auswahl auswerten
+	 * 
 	 * @param item
 	 * @return
 	 */
@@ -386,7 +402,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	}
 
 	private void goToCharacterList() {
-		splashHandler.removeMessages(STOPSPLASH);
+		handler.removeMessages(STOP_SPLASH);
 		// TODO fullscreen aufheben
 		flipper = (ViewFlipper) findViewById(R.id.flipperView);
 		flipper.setInAnimation(AnimationUtils.loadAnimation(this,
@@ -397,6 +413,31 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		String sAppName = getString(R.string.app_name);
 		String sTitle = getString(R.string.charlist_title);
 		setTitle(sAppName + " (" + sTitle + ")");
+		Cursor cursor = getAllFavourites();
+		if (cursor == null || cursor.getCount() == 0) {
+			// keine Favouriten vorhanden, dann zur Suche gehen
+			goToSearch();
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		if (refreshThread != null) {
+			refreshThread.interrupt();
+			while (refreshThread.isAlive()) {
+			}
+			Message msg = new Message();
+			msg.what = STOP_REFRESH;
+			handler.sendMessage(msg);
+		}
+		super.onPause();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private Cursor getAllFavourites() {
 		Uri allFavourites = Uri.parse(CONTENT_NAME_CHARACTERS);
 		Cursor cursor = null;
 		try {
@@ -404,39 +445,57 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 			cursor = managedQuery(allFavourites, null, where, null, null);
 			startManagingCursor(cursor);
 		} catch (Exception e) {
-
 		}
-		if (cursor == null || cursor.getCount() == 0) {
-			// keine Favouriten vorhanden, dann zur Suche gehen
-			goToSearch();
-		}
+		return cursor;
 	}
 
 	/**
 	 * Favoriten-Details erneuern
 	 */
 	private void refresh() {
-		
-		int count = getListView().getCount();
-		for(int i = 0; i< count; i++) {
-			Cursor cursor = (Cursor)getListView().getItemAtPosition(i);
-			
-			boolean bOnline = setXMLtoCharacter(cursor);
-//			if (!bOnline) {
-//				// Online XML nicht verfuegbar
-//				String xml = cursor.getString(cursor.getColumnIndex(Column.XML
-//						.name()));
-//				if (xml == null || "".equals(xml)) {
-//					// Persitiertes Ergebnis auch nicht verfuegbar, dann keine
-//					// Anzeige der Details
-//					Toast.makeText(this, "Keine Details verfuegbar!",
-//							Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//			}
-		}
+		refreshThread = new Thread(new Runnable() {
+			public void run() {
+				try {
+					Cursor cursor = getAllFavourites();
+					int count;
+					if (cursor != null && (count = cursor.getCount()) > 0) {
+						for (int i = 0; i < count; i++) {
+							if (Thread.interrupted()) {
+								break;
+							}
+							cursor.moveToPosition(i);
+							Bundle bundle = new Bundle();
+							StringBuilder sb = getXML(cursor);
+							bundle.putString(Column.XML.name(), sb.toString());
+							String name = cursor.getString(cursor
+									.getColumnIndex(Column.REALM.name()));
+							bundle.putString(Column.REALM.name(), name);
+							String realm = cursor.getString(cursor
+									.getColumnIndex(Column.NAME.name()));
+							bundle.putString(Column.NAME.name(), realm);
+							bundle.putString("CURSOR_id", cursor
+									.getString(cursor.getColumnIndex("_id")));
+							Message msg = new Message();
+							msg.what = UPDATE;
+							msg.setData(bundle);
+							// Ergebnis fuer das Update senden
+							handler.sendMessage(msg);
+						}
+					}
+
+					Message msg = new Message();
+					msg.what = STOP_REFRESH;
+					// Alle Ergebnisse geschickt
+					handler.sendMessage(msg);
+				} catch (Throwable t) {
+					// just end the background thread
+				}
+			}
+		}, "WOW-Refresh");
+		setProgressBarIndeterminateVisibility(true);
+		refreshThread.start();
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -446,6 +505,17 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		startActivity(intent);
 	}
 
+	private StringBuilder getXML(String url, String region) {
+		return Armory.charactersheet(url, Armory.R.Region.valueOf(region));
+	}
+
+	private StringBuilder getXML(Cursor cursor) {
+		String url = cursor.getString(cursor.getColumnIndex(Column.URL.name()));
+		String region = cursor.getString(cursor.getColumnIndex(Column.REGION
+				.name()));
+		return getXML(url, region);
+	}
+
 	/**
 	 * Details als XML zum Character hinzufuegen
 	 * 
@@ -453,34 +523,37 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	 * @return
 	 */
 	private boolean setXMLtoCharacter(Cursor cursor) {
-		String xml = null;
-		Armory armory = new Armory();
-		String url = cursor.getString(cursor.getColumnIndex(Column.URL.name()));
-		String region = cursor.getString(cursor.getColumnIndex(Column.REGION
-				.name()));
-		StringBuilder sb = armory.charactersheet(url, Armory.R.Region
-				.valueOf(region));
+		StringBuilder sb = getXML(cursor);
 		if (sb != null) {
-			xml = sb.toString();
+			String xml = sb.toString();
 			try {
 				ContentValues cv = new ContentValues();
 				cv.put(Column.XML.name(), xml);
-				Uri uri = Uri.parse(CONTENT_NAME_CHARACTERS + "/"
-						+ cursor.getString(cursor.getColumnIndex("_id")));
-				getContentResolver().update(uri, cv, null, null);
+				update(cursor, cv);
 				return true;
 			} catch (Exception e) {
 				// wenn Persistieren nicht erfolgeich, zur Laufzeit XML auch
 				// nicht behalten
 				ContentValues cv = new ContentValues();
 				cv.put(Column.XML.name(), "");
-				Uri uri = Uri.parse(CONTENT_NAME_CHARACTERS + "/"
-						+ cursor.getString(cursor.getColumnIndex("_id")));
-				getContentResolver().update(uri, cv, null, null);
+				update(cursor, cv);
 				e.printStackTrace();
 			}
 		}
 		return false;
+	}
+
+	private boolean update(String id, ContentValues cv) {
+		Uri uri = Uri.parse(CONTENT_NAME_CHARACTERS + "/" + id);
+		int count = getContentResolver().update(uri, cv, null, null);
+		return count > 0;
+	}
+
+	private boolean update(Cursor cursor, ContentValues cv) {
+		Uri uri = Uri.parse(CONTENT_NAME_CHARACTERS + "/"
+				+ cursor.getString(cursor.getColumnIndex("_id")));
+		int count = getContentResolver().update(uri, cv, null, null);
+		return count > 0;
 	}
 
 	private void __characterChanged(ContentValues values, Data[] datas) {

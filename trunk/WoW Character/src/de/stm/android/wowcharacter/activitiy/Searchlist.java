@@ -17,9 +17,11 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import de.stm.android.wowcharacter.R;
+import de.stm.android.wowcharacter.activitiy.Favoritelist.SortDirection;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.data.Character.Data;
+import de.stm.android.wowcharacter.data.ICharactersProvider.Column;
 import de.stm.android.wowcharacter.renderer.SearchListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
@@ -42,9 +44,10 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	private StringBuilder sbXMLPage;
 	private int selectedItemPosition = -1;
 	/** Sortierung nach Realm bzw. Relevance */
-	private int sortBy = R.id.searchcontextmenu_sortByRealm;
+	private int sortBy = R.id.sort_realm_asc;
 	private TextView sectionTooltip;
 	private Armory.R.Region region;
+	private boolean optionsMenuOpen = false;
 	/** Map fuer Such-Werte (um Aenderungen an den Eingabewerten zu erkennen), Schluessel: NAME, REGION */
 	private Map<String,Object> mapValuesForResult;
 	private Thread searchThread;
@@ -242,10 +245,10 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 					if(indexOfMiddleItem < listModel.size()) {
 						Character character = listModel.get( firstVisibleItem + visibleItemCount/2 );
 						String text = getString(R.string.tooltipSearchlist_Realm );
-						if(sortBy == R.id.searchcontextmenu_sortByRealm) {
+						if(sortBy == R.id.sort_realm_asc) {
 							String realm = character.get( Data.REALM ).toString();
 							text = text.replaceAll( "%1",  String.valueOf( realm.charAt( 0 ) ) );
-						} else if(sortBy == R.id.searchcontextmenu_sortByRelevance) {
+						} else if(sortBy == R.id.sort_relevance_desc) {
 							text = getString(R.string.tooltipSearchlist_Relevance );
 							int relevance = Integer.parseInt( character.get( Data.RELEVANCE ).toString() );
 							text = text.replaceAll( "%1",  "" + relevance );
@@ -300,6 +303,50 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		searchThread.start();
 	}
 	
+	/**
+	 * @param menu
+	 */
+	private void populateMenu(Menu menu) {
+		new MenuInflater(getApplication()).inflate(R.menu.searchlist, menu);
+	}
+
+	@Override
+	public void onOptionsMenuClosed(Menu menu) {
+		super.onOptionsMenuClosed(menu);
+		optionsMenuOpen = false;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		populateMenu(menu);
+		optionsMenuOpen = true;
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	/**
+	 * Menuepunkt-Auswahl auswerten
+	 * @param item
+	 * @return
+	 */
+	private boolean applyMenuChoice(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.sort_realm_asc:
+			sortBy = R.id.sort_realm_asc;
+			sortAndFill(R.id.sort_realm_asc);
+			return true;
+		case R.id.sort_relevance_desc:
+			sortBy = R.id.sort_relevance_desc;
+			sortAndFill(R.id.sort_relevance_desc);
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Test auf leeren Namen bei der Suche
 	 * @param input
@@ -409,16 +456,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 					s = s.replace( "%1", character.toString() );
 					Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
 				}
-				break;
-			case R.id.searchcontextmenu_sortByRealm:
-				sortBy = R.id.searchcontextmenu_sortByRealm;
-				sortAndFill(R.id.searchcontextmenu_sortByRealm);
-				break;
-			case R.id.searchcontextmenu_sortByRelevance:
-				sortBy = R.id.searchcontextmenu_sortByRelevance;
-				sortAndFill(R.id.searchcontextmenu_sortByRelevance);
-				break;
-			}
+		}
 		return true;
 	}
 
@@ -427,11 +465,11 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	 * @param sortBy
 	 */
 	private void sortAndFill( int sortBy ) {
-		if(sortBy == R.id.searchcontextmenu_sortByRealm) {
+		if(sortBy == R.id.sort_realm_asc) {
 			Collections.sort( listModel );
 			SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
 			setListAdapter( sla );
-		} else if(sortBy == R.id.searchcontextmenu_sortByRelevance) {
+		} else if(sortBy == R.id.sort_relevance_desc) {
 			Collections.sort( listModel, new Comparator<Character>() {
 				public int compare( Character object1, Character object2 ) {
 					int i1 = Integer.parseInt( object1.get( Data.RELEVANCE ).toString() );

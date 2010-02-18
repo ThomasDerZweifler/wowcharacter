@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 <item android:id="@+id/searchcontextmenu_add_favorite" android:title="@string/search_contextMenu_addToFavorites"></item>
-<item android:id="@+id/searchcontextmenu_sortByRealm" android:title="@string/search_contextMenu_sortByRealm"></item>
-<item android:id="@+id/searchcontextmenu_sortByRelevance" android:title="@string/search_contextMenu_sortByRelevance"></item>
 </menu>
