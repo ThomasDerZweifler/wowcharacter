@@ -1,6 +1,11 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-02-18)
+	+ New:		Erneuern der Daten aller Favoriten
+	+ Change:	Menueeintraege fuer das Sortieren der Suchergebnisliste
+					vom Kontextmenue ins Optionsmenue verschoben
+
 (2010-02-13)
 	+ New:		Nach Loeschen aller Favoriten zur Suche gehen
 	+ New:		Autorennamen im Splash
