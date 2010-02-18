@@ -2,8 +2,9 @@
   -----------------------------
 
 (2010-02-18)
+	* Fixed:	Sortierung der Suchergebnisliste anhand der letzten Einstellung
 	+ New:		Erneuern der Daten aller Favoriten
-	+ Change:	Menueeintraege fuer das Sortieren der Suchergebnisliste
+	* Change:	Menueeintraege fuer das Sortieren der Suchergebnisliste
 					vom Kontextmenue ins Optionsmenue verschoben
 
 (2010-02-13)
