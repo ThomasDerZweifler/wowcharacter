@@ -70,9 +70,10 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				}
 				listModel.clear();
 				is.readXML( sbXMLPage.toString(), region, listModel );
-				SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
-				Collections.sort( listModel );
-				setListAdapter( sla );
+//				SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
+//				Collections.sort( listModel );
+//				setListAdapter( sla );
+				sortAndFill(sortBy);
 				String s;
 				int listsize = listModel.size();
 				if (listsize == 0) {
