@@ -1,6 +1,10 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-02-22)
+	+ New:		RSS-Atom-Feed (extra Tab)
+	* Fixed:	Cursor Initialisierung im Characterview (damit Rueckkehr aus Browser mgl.)
+	
 (2010-02-18)
 	* Fixed:	Sortierung der Suchergebnisliste anhand der letzten Einstellung
 	+ New:		Erneuern der Daten aller Favoriten
