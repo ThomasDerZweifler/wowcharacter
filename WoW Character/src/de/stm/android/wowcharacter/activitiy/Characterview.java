@@ -2,8 +2,12 @@ package de.stm.android.wowcharacter.activitiy;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,7 +31,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -46,6 +49,7 @@ import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.gui.CustomProgressBar;
 import de.stm.android.wowcharacter.renderer.ItemListAdapter;
+import de.stm.android.wowcharacter.renderer.RSSListAdapter;
 import de.stm.android.wowcharacter.renderer.ValuesListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 
@@ -71,6 +75,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private ListView listViewItems;
 	private ItemListAdapter itemListAdapter;
 	private ValuesListAdapter valuesListAdapter;
+	/** Karteikarte RSS */
+	private TabHost.TabSpec specRSS;
+	private RSSListAdapter rssListAdapter;
 	private Thread thread;
 	private Button setAsFavourite;
 	private TextView charNameRealm;
@@ -140,16 +147,14 @@ public class Characterview extends Activity implements ICharactersProvider {
 					NamedNodeMap nnm = nl.item(i).getAttributes();
 					String name = nnm.getNamedItem("name").getNodeValue();
 					String level = nnm.getNamedItem("level").getNodeValue();
-					Integer rarity = Integer.parseInt(nnm.getNamedItem("rarity")
-							.getNodeValue());
-
+					Integer rarity = Integer.parseInt(nnm
+							.getNamedItem("rarity").getNodeValue());
 					// Icon laden, bei Fehler ist bitmap = null
 					String iconName = nnm.getNamedItem("icon").getNodeValue();
 					String region = cursor.getString(cursor
 							.getColumnIndex(Column.REGION.name()));
 					// Icon fuer das Item
 					Bitmap bitmap = Armory.getItemIcon(iconName, region);
-
 					// Item kann hier nicht direkt zum Adapter hinzugefuegt
 					// werden (wegen Oberflaechen-Erneuerung),
 					// deshalb Abkopplung dieses Thread mittels Nachricht
@@ -185,6 +190,20 @@ public class Characterview extends Activity implements ICharactersProvider {
 	}
 
 	@Override
+	protected void onDestroy() {
+		if (thread != null) {
+			thread.interrupt();
+			// TODO noch zu ueberlegen, wenn Thread nicht beendet wird (dann nur
+			// Home Taste mgl.)
+			// evtl. Loesung: nur wenn Activity laeuft, Oberflaechenaktivitaeten
+			// zulassen
+			while (thread.isAlive()) {
+			}
+		}
+		super.onDestroy();
+	}
+	
+	@Override
 	protected void onPause() {
 		if (thread != null) {
 			thread.interrupt();
@@ -207,8 +226,8 @@ public class Characterview extends Activity implements ICharactersProvider {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		getCursor();
 		fillHeader();
-		initTabs();
 		Boolean onlineResults = getIntent().getBooleanExtra("ONLINE", false);
 		if (onlineResults) {
 			// nur bei Netzwerkverbindung Items (versuchen zu) laden
@@ -224,6 +243,11 @@ public class Characterview extends Activity implements ICharactersProvider {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.characterview);
 		setProgressBarIndeterminateVisibility(false);
+		getCursor();
+		initTabs();
+	}
+
+	private void getCursor() {
 		Boolean onlineResults = getIntent().getBooleanExtra("ONLINE", false);
 		Boolean temporary = getIntent().getBooleanExtra("IS_TEMPORARY", true);
 		String sAppName = getString(R.string.app_name);
@@ -253,14 +277,13 @@ public class Characterview extends Activity implements ICharactersProvider {
 			}
 		}
 	}
-
+	
 	/**
 	 * Karteikarten initialisieren
 	 */
 	private void initTabs() {
 		String tabText;
 		Drawable tabIcon;
-
 		tabHost = (TabHost) findViewById(R.id.CharacterViewTab);
 		tabHost.setup();
 		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -270,10 +293,12 @@ public class Characterview extends Activity implements ICharactersProvider {
 				} else if (tabId.equals("items")) {
 				} else if (tabId.equals("values")) {
 					fillValues();
+				} else if (tabId.equals("rss-feed")) {
+					fillRSS();
 				}
 			}
 		});
-		// erster Tab
+		// Details Tab
 		specDetails = tabHost.newTabSpec("details");
 		specDetails.setContent(new TabHost.TabContentFactory() {
 			public View createTabContent(String tag) {
@@ -285,14 +310,14 @@ public class Characterview extends Activity implements ICharactersProvider {
 		tabIcon = getResources().getDrawable(android.R.drawable.ic_menu_view);
 		specDetails.setIndicator(tabText, tabIcon);
 		tabHost.addTab(specDetails);
-		// zweiter Tab
+		// Items Tab
 		specItems = tabHost.newTabSpec("items");
 		itemListAdapter = new ItemListAdapter(Characterview.this);
 		specItems.setContent(new TabHost.TabContentFactory() {
 			public View createTabContent(String tag) {
 				LayoutInflater inflater = getLayoutInflater();
 				View viewItemList = inflater.inflate(
-						R.layout.characterviewtabitemlist, null);
+						R.layout.characterviewtabitemslist, null);
 				listViewItems = (ListView) viewItemList
 						.findViewById(R.id.ItemListView);
 				listViewItems.setAdapter(itemListAdapter);// Model an View
@@ -305,7 +330,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 				android.R.drawable.ic_menu_info_details);
 		specItems.setIndicator(tabText, tabIcon);
 		tabHost.addTab(specItems);
-		// dritter Tab
+		// Values - Tab
 		specValues = tabHost.newTabSpec("values");
 		valuesListAdapter = new ValuesListAdapter(Characterview.this);
 		specValues.setContent(new TabHost.TabContentFactory() {
@@ -320,6 +345,22 @@ public class Characterview extends Activity implements ICharactersProvider {
 		tabIcon = getResources().getDrawable(android.R.drawable.ic_menu_help);
 		specValues.setIndicator(tabText, tabIcon);
 		tabHost.addTab(specValues);
+		// RSS FEED - Tab
+		specRSS = tabHost.newTabSpec("rss-feed");
+		rssListAdapter = new RSSListAdapter(Characterview.this);
+		specRSS.setContent(new TabHost.TabContentFactory() {
+			public View createTabContent(String tag) {
+				ListView listViewRSS = new ListView(Characterview.this);
+				listViewRSS.setFastScrollEnabled(true);
+				listViewRSS.setAdapter(rssListAdapter);// Model an View
+				return listViewRSS;
+			}
+		});
+		tabText = getResources().getString(R.string.charview_tab_rss);
+		tabIcon = getResources().getDrawable(
+				android.R.drawable.ic_menu_info_details);
+		specRSS.setIndicator(tabText, tabIcon);
+		tabHost.addTab(specRSS);
 		tabHost.setCurrentTab(0);
 	}
 
@@ -527,7 +568,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 					.getNodeValue();
 			int group = Integer.parseInt(nl.item(i).getAttributes()
 					.getNamedItem("group").getNodeValue());// gibt die
-															// Reihenfolge an
+			// Reihenfolge an
 			String iconName = nl.item(i).getAttributes().getNamedItem("icon")
 					.getNodeValue();
 			String region = cursor.getString(cursor
@@ -559,10 +600,13 @@ public class Characterview extends Activity implements ICharactersProvider {
 	}
 
 	/**
-	 * 
+	 * Werte fuellen
 	 */
 	private void fillValues() {
-		/** @TODO "Zauber" = spell, Nahkampf.Schaden extra auszuwerten, @TODO Lokalisieren */
+		/**
+		 * @TODO "Zauber" = spell, Nahkampf.Schaden extra auszuwerten, @TODO
+		 *       Lokalisieren
+		 */
 		String[] groups = { "Basiswerte", "Distanzwaffen", "Nahkampf",
 				"Verteidigung" };// fuer Reihenfolge
 		HashMap<Integer, ArrayList<String>> map = new HashMap<Integer, ArrayList<String>>();
@@ -574,7 +618,70 @@ public class Characterview extends Activity implements ICharactersProvider {
 	}
 
 	/**
-	 * 
+	 * RSS Feed fuellen
+	 */
+	private void fillRSS() {
+		rssListAdapter.clear();
+		rssListAdapter.notifyDataSetChanged();
+		String name = cursor.getString(cursor
+				.getColumnIndex(Column.NAME.name()));
+		String region = cursor.getString(cursor.getColumnIndex(Column.REGION
+				.name()));
+		String realm = cursor.getString(cursor.getColumnIndex(Column.REALM
+				.name()));
+		StringBuilder xml = Armory.characterRssFeed(name, region, realm);
+		if (xml != null) {
+			Document doc1 = xmlToDocument(xml.toString());
+			if (doc1 != null) {
+				NodeList nl = doc1.getElementsByTagName("entry");
+				if (nl != null) {
+					for (int k = 0; k < nl.getLength(); k++) {
+						Node nEntry = nl.item(k);
+						NodeList nl1 = nEntry.getChildNodes();
+						ArrayList<Object> al = new ArrayList<Object>();
+						al.add("");
+						al.add("");
+						al.add("");
+						for (int i = 0; i < nl1.getLength(); i++) {
+							Node n = nl1.item(i);
+							short type = n.getNodeType();
+							if (type != Node.TEXT_NODE) {
+								String name1 = n.getNodeName();
+								NodeList nl2 = n.getChildNodes();
+								if (nl2.getLength() > 0) {
+									Object value1 = nl2.item(0).getNodeValue();
+									if (name1.equals("title")) {
+										al.set(0, value1);
+									} else if (name1.equals("updated")) {
+										//2010-02-18T20:51:00+00:00
+										SimpleDateFormat sdfIn = new SimpleDateFormat(
+												"yyyy-MM-dd'T'hh:mm:ss");
+//										sdfIn.setTimeZone(TimeZone
+//												.getTimeZone("UTC"));
+										try {
+											String s = value1.toString();
+											s = s.substring(0, s.indexOf("+"));
+											Date date = sdfIn.parse(s);
+											SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+											al.set(1, sdf.format(date));
+										} catch (ParseException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									} else if (name1.equals("content")) {
+										al.set(2, value1);
+									}
+								}
+							}
+						}
+						rssListAdapter.add(al.toArray(new Object[al.size()]));
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * @param tag
 	 * @return
 	 */

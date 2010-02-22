@@ -33,6 +33,9 @@ public class Armory {
 
 		final static public String CHARACTERSHEETPAGE = "character-sheet.xml?";	
 
+		/** URL_EU/US + CHARACTER_RSS_ATOM_FEED  %1 = Realm %2 = Character */
+		final static public String CHARACTER_RSS_ATOM_FEED = "character-feed.atom?r=%1&cn=%2";
+
 		final static public String ITEMINFOPAGE = "item-info.xml?i=";
 		
 		final static public String ITEMICON = "wow-icons/_images/51x51/";
@@ -102,7 +105,7 @@ public class Armory {
 		
 		return charactersheet(urlquery, region);
 	}
-	
+
 	/**
 	 * Charcter abrufen
 	 * @param urlquery
@@ -134,7 +137,27 @@ public class Armory {
 		
 		return sb;
 	}
-
+	
+	/**
+	 * Charcter RSS Feed
+	 * @param urlquery
+	 * @param region
+	 * @return
+	 */
+	public static StringBuilder characterRssFeed(String name, String region, String realm) {
+		Armory.R.Region r = Armory.R.Region.valueOf(region);
+		String host = getArmoryServerURL(r.name());
+		
+		String url = host + R.CHARACTER_RSS_ATOM_FEED ;
+		
+		url = url.replace("%1",realm);
+		url = url.replace("%2",name);
+		
+		StringBuilder sb = Connection.getXML(url, locale, true);
+		
+		return sb;
+	}
+	
 	/**
 	 * Itemicon abrufen
 	 * @param iconname

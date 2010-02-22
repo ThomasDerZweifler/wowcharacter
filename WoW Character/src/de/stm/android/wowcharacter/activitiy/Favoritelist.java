@@ -1,8 +1,5 @@
 package de.stm.android.wowcharacter.activitiy;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
@@ -505,10 +502,21 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		startActivity(intent);
 	}
 
+	/**
+	 * 
+	 * @param url
+	 * @param region
+	 * @return
+	 */
 	private StringBuilder getXML(String url, String region) {
 		return Armory.charactersheet(url, Armory.R.Region.valueOf(region));
 	}
 
+	/**
+	 * 
+	 * @param cursor
+	 * @return
+	 */
 	private StringBuilder getXML(Cursor cursor) {
 		String url = cursor.getString(cursor.getColumnIndex(Column.URL.name()));
 		String region = cursor.getString(cursor.getColumnIndex(Column.REGION

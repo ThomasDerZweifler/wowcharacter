@@ -35,6 +35,7 @@
 	<string name="charview_tab_detail">details</string>
 	<string name="charview_tab_items">items</string>
 	<string name="charview_tab_values">values</string>
+	<string name="charview_tab_rss">rss feed</string>
 	<string name="charview_health">health</string>
 	<string name="charview_second_mana">mana</string>
 	<string name="charview_second_rage">rage</string>
