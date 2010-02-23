@@ -1,9 +1,13 @@
 package de.stm.android.wowcharacter.renderer;
 
 import android.app.Activity;
-import android.graphics.*;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.*;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import de.stm.android.wowcharacter.R;
 
 /**
@@ -47,7 +51,16 @@ public class RSSListAdapter extends ArrayAdapter<Object[]> {
 			TextView datetimestamp = (TextView)row.findViewById( R.id.rssDatetimestamp );
 			datetimestamp.setText( itemValues[1].toString() );
 			TextView content = (TextView)row.findViewById( R.id.rssContent );
-			content.setText( itemValues[2].toString() );
+			String text = itemValues[2].toString();
+			content.setText( text );
+			// Linkify.addLinks(content,Linkify.WEB_URLS);
+			Spanned s = Html.fromHtml( text );
+			URLSpan[] urlSpans = content.getUrls();
+			for (URLSpan urlSpan : urlSpans) {
+				String url = urlSpan.getURL();
+				Log.i("url:",url);
+			}
+			// content.setText( s );
 		}
 		return row;
 	}
