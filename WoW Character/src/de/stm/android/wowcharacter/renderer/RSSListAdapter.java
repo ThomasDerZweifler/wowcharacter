@@ -1,6 +1,7 @@
 package de.stm.android.wowcharacter.renderer;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.style.URLSpan;
@@ -25,7 +26,9 @@ import de.stm.android.wowcharacter.R;
  */
 public class RSSListAdapter extends ArrayAdapter<Object[]> {
 	private static final int res = R.layout.characterviewtabrss;
+	private static final int resSelected = R.layout.characterviewtabrssselected;
 	private Activity context;
+	private int selectedPos = -1;
 
 	/**
 	 * @param context
@@ -36,14 +39,23 @@ public class RSSListAdapter extends ArrayAdapter<Object[]> {
 		this.context = context;
 	}
 
+	public void setSelectedPosition(int pos){
+		selectedPos = pos;
+		notifyDataSetChanged();
+	}
+
+	public int getSelectedPosition(){
+		return selectedPos;
+	}
+	
 	@Override
 	public View getView( int position, View convertView,
 			@SuppressWarnings("unused") ViewGroup parent ) {
 		View row = convertView;
-		if (row == null) {
-			LayoutInflater inflater = context.getLayoutInflater();
-			row = inflater.inflate( res, null );
-		}
+//		if (row == null) {
+			LayoutInflater inflater = context.getLayoutInflater();			
+			row = inflater.inflate( (selectedPos == position) ? resSelected : res, null );
+//		}
 		if (getCount() > position) {
 			Object[] itemValues = getItem( position );
 			TextView title = (TextView)row.findViewById( R.id.rssTitle );

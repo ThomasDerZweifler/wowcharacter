@@ -23,6 +23,8 @@ import android.os.*;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
@@ -352,6 +354,20 @@ public class Characterview extends Activity implements ICharactersProvider {
 		specRSS.setContent( new TabHost.TabContentFactory() {
 			public View createTabContent( String tag ) {
 				ListView listViewRSS = new ListView( Characterview.this );
+//				listViewRSS.setOnItemClickListener(new OnItemClickListener() {
+//					public void onItemClick( AdapterView<?> arg0, View view, int position, long id ) {
+//						rssListAdapter.setSelectedPosition(position);
+//					}
+//				});
+				listViewRSS.setOnItemSelectedListener(new OnItemSelectedListener() {
+					public void onItemSelected( AdapterView<?> arg0, View view, int position, long id ) {
+						rssListAdapter.setSelectedPosition(position);						
+					}
+					public void onNothingSelected( AdapterView<?> arg0 ) {
+						rssListAdapter.setSelectedPosition(-1);
+					}
+				});
+				
 				listViewRSS.setFastScrollEnabled( true );
 				listViewRSS.setAdapter( rssListAdapter );// Model an View
 				return listViewRSS;
@@ -363,7 +379,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 		tabHost.addTab( specRSS );
 		tabHost.setCurrentTab( 0 );
 	}
-
+	
 	/**
 	 * Kopf fuellen
 	 */
