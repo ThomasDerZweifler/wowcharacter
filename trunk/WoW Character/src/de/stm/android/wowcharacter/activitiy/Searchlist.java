@@ -17,11 +17,9 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import de.stm.android.wowcharacter.R;
-import de.stm.android.wowcharacter.activitiy.Favoritelist.SortDirection;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
 import de.stm.android.wowcharacter.data.Character.Data;
-import de.stm.android.wowcharacter.data.ICharactersProvider.Column;
 import de.stm.android.wowcharacter.renderer.SearchListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 import de.stm.android.wowcharacter.util.Armory.R.Region;
@@ -39,7 +37,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	private ToggleButton tb_EU;
 	private ToggleButton tb_US;
 	private boolean ready;
-    private WindowManager windowManager;
+	private WindowManager windowManager;
 	/** geladene XML Seite */
 	private StringBuilder sbXMLPage;
 	private int selectedItemPosition = -1;
@@ -48,32 +46,34 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	private TextView sectionTooltip;
 	private Armory.R.Region region;
 	private boolean optionsMenuOpen = false;
-	/** Map fuer Such-Werte (um Aenderungen an den Eingabewerten zu erkennen), Schluessel: NAME, REGION */
-	private Map<String,Object> mapValuesForResult;
+	/**
+	 * Map fuer Such-Werte (um Aenderungen an den Eingabewerten zu erkennen), Schluessel: NAME,
+	 * REGION
+	 */
+	private Map<String, Object> mapValuesForResult;
 	private Thread searchThread;
 	private InterpretSearch is = new InterpretSearch();
 	private ArrayList<Character> listModel = new ArrayList<Character>();
-    private final class RemoveWindow implements Runnable {
-        public void run() {
-            removeWindow();
-        }
-    }
-
-    private RemoveWindow mRemoveWindow = new RemoveWindow();
+	private final class RemoveWindow implements Runnable {
+		public void run() {
+			removeWindow();
+		}
+	}
+	private RemoveWindow mRemoveWindow = new RemoveWindow();
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage( Message msg ) {
+			listModel.clear();
 			if (sbXMLPage != null && sbXMLPage.length() > 0) {
 				Region region = Region.EU;
 				if (tb_US.isChecked()) {
 					region = Region.US;
 				}
-				listModel.clear();
 				is.readXML( sbXMLPage.toString(), region, listModel );
-//				SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
-//				Collections.sort( listModel );
-//				setListAdapter( sla );
-				sortAndFill(sortBy);
+				// SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
+				// Collections.sort( listModel );
+				// setListAdapter( sla );
+				// sortAndFill(sortBy);
 				String s;
 				int listsize = listModel.size();
 				if (listsize == 0) {
@@ -91,16 +91,21 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 				// getListView().setSelection( selectedItemPosition );
 				// }
 				// }, 6000);
+			} else {
+				String s = getString( R.string.search_char_found_none_toast );
+				Toast.makeText( Searchlist.this, s, Toast.LENGTH_SHORT ).show();				
 			}
+			
+			sortAndFill( sortBy );
 			setProgressBarIndeterminateVisibility( false );
 			TextView tf = (TextView)findViewById( R.id.valuesChanged );
 			tf.setText( "" );
 		}
 	};
 
-    private void removeWindow() {
-        sectionTooltip.setVisibility(View.INVISIBLE);
-    }
+	private void removeWindow() {
+		sectionTooltip.setVisibility( View.INVISIBLE );
+	}
 
 	@Override
 	protected void onSaveInstanceState( Bundle outState ) {
@@ -121,18 +126,18 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		bt.performClick();
 	}
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        removeWindow();
-    }
+	@Override
+	protected void onPause() {
+		super.onPause();
+		removeWindow();
+	}
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        windowManager.removeView(sectionTooltip);
-        ready = false;
-    }
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		windowManager.removeView( sectionTooltip );
+		ready = false;
+	}
 
 	@Override
 	public void onCreate( Bundle savedInstanceState ) {
@@ -148,8 +153,8 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		/** View und Titel setzen */
 		setContentView( R.layout.searchlist );
-		mapValuesForResult = new HashMap<String,Object>();
-        windowManager = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+		mapValuesForResult = new HashMap<String, Object>();
+		windowManager = (WindowManager)getSystemService( Context.WINDOW_SERVICE );
 		setProgressBarIndeterminateVisibility( false );
 		String sAppName = getString( R.string.app_name );
 		String sTitle = getString( R.string.search_title );
@@ -225,11 +230,11 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		if (locale.equalsIgnoreCase( "US" )) {
 			region = Region.US;
 			tb_US.setChecked( true );
-//			tb_EU.setChecked(false);
+			// tb_EU.setChecked(false);
 		} else {
 			region = Region.EU;
 			tb_EU.setChecked( true );
-//			tb_US.setChecked(false);
+			// tb_US.setChecked(false);
 		}
 		checkEmpty();
 		/** Kontextmenü registrieren */
@@ -241,55 +246,54 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		getListView().setOnScrollListener( new OnScrollListener() {
 			public void onScroll( AbsListView view, int firstVisibleItem, int visibleItemCount,
 					int totalItemCount ) {
-				if (ready) {//TODO Abfrage, ob Scroll-Marker eingeblendet ist, oder gleich an diesen einen Listener registrieren...
-					int indexOfMiddleItem = firstVisibleItem + visibleItemCount/2;
-					if(indexOfMiddleItem < listModel.size()) {
-						Character character = listModel.get( firstVisibleItem + visibleItemCount/2 );
-						String text = getString(R.string.tooltipSearchlist_Realm );
-						if(sortBy == R.id.sort_realm_asc) {
+				if (ready) {// TODO Abfrage, ob Scroll-Marker eingeblendet ist, oder gleich an
+							// diesen einen Listener registrieren...
+					int indexOfMiddleItem = firstVisibleItem + visibleItemCount / 2;
+					if (indexOfMiddleItem < listModel.size()) {
+						Character character = listModel.get( firstVisibleItem + visibleItemCount
+								/ 2 );
+						String text = getString( R.string.tooltipSearchlist_Realm );
+						if (sortBy == R.id.sort_realm_asc) {
 							String realm = character.get( Data.REALM ).toString();
-							text = text.replaceAll( "%1",  String.valueOf( realm.charAt( 0 ) ) );
-						} else if(sortBy == R.id.sort_relevance_desc) {
-							text = getString(R.string.tooltipSearchlist_Relevance );
-							int relevance = Integer.parseInt( character.get( Data.RELEVANCE ).toString() );
-							text = text.replaceAll( "%1",  "" + relevance );
+							text = text.replaceAll( "%1", String.valueOf( realm.charAt( 0 ) ) );
+						} else if (sortBy == R.id.sort_relevance_desc) {
+							text = getString( R.string.tooltipSearchlist_Relevance );
+							int relevance = Integer.parseInt( character.get( Data.RELEVANCE )
+									.toString() );
+							text = text.replaceAll( "%1", "" + relevance );
 						}
 						sectionTooltip.setText( text );
 						sectionTooltip.setVisibility( View.VISIBLE );
-			            handler.removeCallbacks(mRemoveWindow);
-			            handler.postDelayed(mRemoveWindow, 1500);//1.5s ist die Zeit, die auch der Scroll-Marker zum Ausblenden benoetigt
-					}					
+						handler.removeCallbacks( mRemoveWindow );
+						handler.postDelayed( mRemoveWindow, 1500 );// 1.5s ist die Zeit, die auch
+																	// der Scroll-Marker zum
+																	// Ausblenden benoetigt
+					}
 				}
 			}
 
 			public void onScrollStateChanged( AbsListView view, int scrollState ) {
 			}
 		} );
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        windowManager.addView(sectionTooltip, lp);
+		WindowManager.LayoutParams lp = new WindowManager.LayoutParams( LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_APPLICATION,
+				WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+						| WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT );
+		windowManager.addView( sectionTooltip, lp );
 	}
 
 	private void search() {
-		
-		//Werte speichern
+		// Werte speichern
 		String name = et.getText().toString();
 		mapValuesForResult.put( ConfigData.NAME.name(), name );
 		mapValuesForResult.put( ConfigData.REALM.name(), region );
-
-		if(searchThread != null && searchThread.isAlive() ) {
+		if (searchThread != null && searchThread.isAlive()) {
 			searchThread.interrupt();
 		}
-		
-		while( searchThread!=null && searchThread.isAlive()) {
-			//solange warten, bis ein laufender Suchthread beendet wird
+		while (searchThread != null && searchThread.isAlive()) {
+			// solange warten, bis ein laufender Suchthread beendet wird
 		}
 		setProgressBarIndeterminateVisibility( false );
-
 		searchThread = new Thread( new Runnable() {
 			public void run() {
 				try {
@@ -303,46 +307,47 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		setProgressBarIndeterminateVisibility( true );
 		searchThread.start();
 	}
-	
+
 	/**
 	 * @param menu
 	 */
-	private void populateMenu(Menu menu) {
-		new MenuInflater(getApplication()).inflate(R.menu.searchlist, menu);
+	private void populateMenu( Menu menu ) {
+		new MenuInflater( getApplication() ).inflate( R.menu.searchlist, menu );
 	}
 
 	@Override
-	public void onOptionsMenuClosed(Menu menu) {
-		super.onOptionsMenuClosed(menu);
+	public void onOptionsMenuClosed( Menu menu ) {
+		super.onOptionsMenuClosed( menu );
 		optionsMenuOpen = false;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
+	public boolean onOptionsItemSelected( MenuItem item ) {
+		return (applyMenuChoice( item ) || super.onOptionsItemSelected( item ));
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		populateMenu(menu);
+	public boolean onCreateOptionsMenu( Menu menu ) {
+		populateMenu( menu );
 		optionsMenuOpen = true;
-		return super.onCreateOptionsMenu(menu);
+		return super.onCreateOptionsMenu( menu );
 	}
 
 	/**
 	 * Menuepunkt-Auswahl auswerten
+	 * 
 	 * @param item
 	 * @return
 	 */
-	private boolean applyMenuChoice(MenuItem item) {
+	private boolean applyMenuChoice( MenuItem item ) {
 		switch (item.getItemId()) {
 		case R.id.sort_realm_asc:
 			sortBy = R.id.sort_realm_asc;
-			sortAndFill(R.id.sort_realm_asc);
+			sortAndFill( R.id.sort_realm_asc );
 			return true;
 		case R.id.sort_relevance_desc:
 			sortBy = R.id.sort_relevance_desc;
-			sortAndFill(R.id.sort_relevance_desc);
+			sortAndFill( R.id.sort_relevance_desc );
 			return true;
 		}
 		return false;
@@ -350,25 +355,25 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 
 	/**
 	 * Test auf leeren Namen bei der Suche
+	 * 
 	 * @param input
-	 * @return	false = leeres Eingabefeld
+	 * @return false = leeres Eingabefeld
 	 */
 	private boolean checkEmpty() {
 		boolean result = et.getText().toString().equals( "" );
-		if( result ) {
+		if (result) {
 			bt.setEnabled( false );
 			tb_EU.setEnabled( false );
 			tb_US.setEnabled( false );
 		} else {
 			bt.setEnabled( true );
 			tb_EU.setEnabled( true );
-			tb_US.setEnabled( true );			
+			tb_US.setEnabled( true );
 		}
 		return !result;
 	}
-	
+
 	/**
-	 * 
 	 * @return
 	 */
 	private View buildFooter() {
@@ -442,47 +447,46 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	@Override
 	public boolean onContextItemSelected( MenuItem item ) {
 		switch (item.getItemId()) {
-			case R.id.searchcontextmenu_add_favorite:
-				AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo)item
-						.getMenuInfo();
-				Character character = (Character)getListAdapter().getItem( cmi.position );
-				try {
-					addFavourite( character );
-					// Don 't call it Schnitzel;o)
-					String s = getString( R.string.search_addToFavorites_ok_toast );
-					s = s.replace( "%1", character.toString() );
-					Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
-				} catch (Exception e) {
-					String s = getString( R.string.search_addToFavorites_fail_toast );
-					s = s.replace( "%1", character.toString() );
-					Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
-				}
+		case R.id.searchcontextmenu_add_favorite:
+			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo)item
+					.getMenuInfo();
+			Character character = (Character)getListAdapter().getItem( cmi.position );
+			try {
+				addFavourite( character );
+				// Don 't call it Schnitzel;o)
+				String s = getString( R.string.search_addToFavorites_ok_toast );
+				s = s.replace( "%1", character.toString() );
+				Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
+			} catch (Exception e) {
+				String s = getString( R.string.search_addToFavorites_fail_toast );
+				s = s.replace( "%1", character.toString() );
+				Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
+			}
 		}
 		return true;
 	}
 
 	/**
-	 * 
 	 * @param sortBy
 	 */
 	private void sortAndFill( int sortBy ) {
-		if(sortBy == R.id.sort_realm_asc) {
+		if (sortBy == R.id.sort_realm_asc) {
 			Collections.sort( listModel );
 			SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
 			setListAdapter( sla );
-		} else if(sortBy == R.id.sort_relevance_desc) {
+		} else if (sortBy == R.id.sort_relevance_desc) {
 			Collections.sort( listModel, new Comparator<Character>() {
 				public int compare( Character object1, Character object2 ) {
 					int i1 = Integer.parseInt( object1.get( Data.RELEVANCE ).toString() );
-					int i2 =  Integer.parseInt( object2.get( Data.RELEVANCE ).toString() );			
-					if(  i1 < i2 ) {
+					int i2 = Integer.parseInt( object2.get( Data.RELEVANCE ).toString() );
+					if (i1 < i2) {
 						return 1;
-					} else if( i1 > i2 ) {
+					} else if (i1 > i2) {
 						return -1;
 					}
 					return 0;
 				}
-			});
+			} );
 			SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
 			setListAdapter( sla );
 		}
@@ -512,17 +516,13 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	private void checkValues() {
 		Object name = mapValuesForResult.get( ConfigData.NAME.name() );
 		Object realm = mapValuesForResult.get( ConfigData.REALM.name() );
-
 		boolean valuesChanged = true;
-		
 		Object nameNew = et.getText().toString();
-		
-		valuesChanged = !nameNew.equals(name) || !region.equals(realm);
-		
+		valuesChanged = !nameNew.equals( name ) || !region.equals( realm );
 		TextView tf = (TextView)findViewById( R.id.valuesChanged );
-		tf.setText( valuesChanged ? "*" : "" );		
+		tf.setText( valuesChanged ? "*" : "" );
 	}
-	
+
 	/**
 	 * auf Aenderungen im EditText reagieren
 	 */
