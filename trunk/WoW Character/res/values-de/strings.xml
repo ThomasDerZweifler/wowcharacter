@@ -3,7 +3,7 @@
  	<string name="app_name">WoW Character</string>
 	
 	<string name="search_title">Suchen</string>
-	<string name="search_name">Name:</string>
+	<string name="search_name">Name</string>
 	<string name="search_region">Region:</string>
 	<string name="search_addToFavorites_ok_toast">Character \"%1\" wurde zu Favoriten hinzugefügt.</string>
 	<string name="search_addToFavorites_fail_toast">Character \"%1\" konnte nicht zu Favoriten hinzugefügt werden!</string>

@@ -401,6 +401,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	private void goToCharacterList() {
 		handler.removeMessages(STOP_SPLASH);
 		// TODO fullscreen aufheben
+		
 		flipper = (ViewFlipper) findViewById(R.id.flipperView);
 		flipper.setInAnimation(AnimationUtils.loadAnimation(this,
 				R.anim.fade_in));
