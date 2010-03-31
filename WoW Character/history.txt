@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-03-31)
+	* Changed:	Darstellung und Klickmoeglichkeit von Links im RSS Feed
+
 (2010-03-24)
 	* Changed:	keine Titelbar fuer Splash und Favoriten
 	* Changed:	Label fuer Name in Suchmaske durch hint ersetzt

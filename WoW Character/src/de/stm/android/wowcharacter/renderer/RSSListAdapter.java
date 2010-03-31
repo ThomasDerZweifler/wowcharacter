@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.*;
@@ -64,15 +65,9 @@ public class RSSListAdapter extends ArrayAdapter<Object[]> {
 			datetimestamp.setText( itemValues[1].toString() );
 			TextView content = (TextView)row.findViewById( R.id.rssContent );
 			String text = itemValues[2].toString();
-			content.setText( text );
-			// Linkify.addLinks(content,Linkify.WEB_URLS);
 			Spanned s = Html.fromHtml( text );
-			URLSpan[] urlSpans = content.getUrls();
-			for (URLSpan urlSpan : urlSpans) {
-				String url = urlSpan.getURL();
-				Log.i("url:",url);
-			}
-			// content.setText( s );
+			content.setText( s );
+			content.setMovementMethod( LinkMovementMethod.getInstance() );
 		}
 		return row;
 	}
