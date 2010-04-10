@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-04-11)
+	* Changed:	Suchbutton entfernt, dafuer Lupen-Icon im Textfeld und Tastatur mit Suchbotton
+
 (2010-03-31)
 	* Changed:	Darstellung und Klickmoeglichkeit von Links im RSS Feed
 

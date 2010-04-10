@@ -33,7 +33,6 @@ import de.stm.android.wowcharacter.xml.InterpretSearch;
  */
 public class Searchlist extends ListActivity implements ICharactersProvider, ISearchList {
 	private EditText et;
-	private ImageButton bt;
 	private ToggleButton tb_EU;
 	private ToggleButton tb_US;
 	private boolean ready;
@@ -123,7 +122,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		String name = state.getString( ConfigData.NAME.name() );
 		String realm = state.getString( ConfigData.REALM.name() );
 		selectedItemPosition = state.getInt( ConfigData.SELECTED_ITEM_POSITION.name() );
-		bt.performClick();
+		search();
 	}
 
 	@Override
@@ -182,17 +181,10 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 			public boolean onKey( View v, int keyCode, KeyEvent event ) {
 				checkEmpty();
 				if (keyCode == KeyEvent.KEYCODE_ENTER) {
-					bt.dispatchKeyEvent( event );
+					search();
 					return true;
 				}
 				return false;
-			}
-		} );
-		/** OnClickListener für Suchenbutton setzen */
-		bt = (ImageButton)findViewById( R.id.buttonSearch );
-		bt.setOnClickListener( new Button.OnClickListener() {
-			public void onClick( View v ) {
-				search();
 			}
 		} );
 		/** Togglebuttonfunktionalität */
@@ -362,11 +354,9 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	private boolean checkEmpty() {
 		boolean result = et.getText().toString().equals( "" );
 		if (result) {
-			bt.setEnabled( false );
 			tb_EU.setEnabled( false );
 			tb_US.setEnabled( false );
 		} else {
-			bt.setEnabled( true );
 			tb_EU.setEnabled( true );
 			tb_US.setEnabled( true );
 		}
@@ -527,12 +517,6 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	 * auf Aenderungen im EditText reagieren
 	 */
 	private void handleTextChanged() {
-		// Suchbutton de-/aktivieren
-		if (et.getText().toString().length() == 0) {
-			bt.setEnabled( false );
-		} else {
-			bt.setEnabled( true );
-		}
 		checkValues();
 	}
 
@@ -544,10 +528,9 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	 */
 	private boolean setXMLtoCharacter( Cursor cursor ) {
 		String xml = null;
-		Armory armory = new Armory();
 		String url = cursor.getString( cursor.getColumnIndex( Column.URL.name() ) );
 		String region = cursor.getString( cursor.getColumnIndex( Column.REGION.name() ) );
-		StringBuilder sb = armory.charactersheet( url, Armory.R.Region.valueOf( region ) );
+		StringBuilder sb = Armory.charactersheet( url, Armory.R.Region.valueOf( region ) );
 		if (sb != null) {
 			xml = sb.toString();
 			try {

@@ -15,15 +15,11 @@
 			<EditText android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 				android:id="@+id/editTextName"
+				android:imeOptions="actionSearch"
+				android:drawableRight="@drawable/ic_btn_search"
 				android:hint ="@string/search_name"
 				android:scrollHorizontally="true"/>
 	    </LinearLayout>
-	    <ImageButton android:id="@+id/buttonSearch"
-		    	android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content"
-				android:layout_marginLeft="5px"
-				android:layout_marginTop="5px"
-		    	android:src="@drawable/ic_btn_search"/>
 	</TableRow>
 	<TableRow>
 		<TextView android:layout_width="fill_parent"
