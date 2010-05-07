@@ -21,20 +21,17 @@ import android.widget.*;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
 import de.stm.android.wowcharacter.data.ICharactersProvider;
-import de.stm.android.wowcharacter.data.Character.Data;
 import de.stm.android.wowcharacter.renderer.FavoriteListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 
 /**
- * Einstiegspunkt für Splash gefolgt von der Favoritenliste. Wenn Favoritenliste
- * leer, dann wird in die Suche verzweigt
+ * Einstiegspunkt für Splash gefolgt von der Favoritenliste. Wenn Favoritenliste leer, dann wird in
+ * die Suche verzweigt
  * 
  * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>, <a
- *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan
- *         Moldenhauer</a>
+ *         href="mailto:stefan.moldenhauer@googlemail.com">Stefan Moldenhauer</a>
  */
-public class Favoritelist extends ListActivity implements ICharactersProvider,
-		IFavoritelist {
+public class Favoritelist extends ListActivity implements ICharactersProvider, IFavoritelist {
 	protected final static int CONTEXTMENU_REMOVE_FAVORITE = 0;
 	/** Bestaetigungsdialog zum Loeschen aller Character */
 	private Builder alertDeleteAll;
@@ -44,76 +41,47 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	private static final int STOP_SPLASH = 0;
 	/** time in milliseconds */
 	private static final long SPLASHTIME = 5000;
-	/** NachrichtenID zum Beenden des Refresh */
-	private static final int STOP_REFRESH = 1;
-	/** NachrichtenID zum Updaten */
-	private static final int UPDATE = 2;
 	// private Animation anim = null;
 	private Menu optionsMenu;
 	private Thread refreshThread;
-
 	/** Sortierrichtungen */
 	public static enum SortDirection {
 		ASCEND, DESCEND
 	};
-
 	private Handler handler = new Handler() {
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see android.os.Handler#handleMessage(android.os.Message)
 		 */
 		@Override
-		public void handleMessage(Message msg) {
+		public void handleMessage( Message msg ) {
 			switch (msg.what) {
-			case UPDATE:
-				Bundle bundle = msg.getData();
-				String xml = bundle.getString(Column.XML.name());
-				String id = bundle.getString("CURSOR_id");
-				ContentValues cv = new ContentValues();
-				cv.put(Column.XML.name(), xml);
-				boolean success = update(id, cv);
-				if (success) {
-					String realm = bundle.getString(Column.REALM.name());
-					String name = bundle.getString(Column.NAME.name());
-					String s = getString(R.string.charlist_favorite_updated_toast);
-					s = s.replace("%1", realm + " @ " + name);
-					Toast.makeText(getListView().getContext(), s,
-							Toast.LENGTH_SHORT).show();
-				}
-				break;
 			case STOP_SPLASH:
 				goToCharacterList();
 				break;
-			case STOP_REFRESH:
-				setProgressBarIndeterminateVisibility(false);
-				break;
 			}
-			super.handleMessage(msg);
+			super.handleMessage( msg );
 		}
 	};
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState( Bundle outState ) {
 		// bei erneutem onCreate ist dann ein Bundle vorhanden, was bedeutet,
 		// dass die Applikation schon laeuft
-		outState.putBoolean(ConfigData.APP_INITIALIZED.name(), true);
+		outState.putBoolean( ConfigData.APP_INITIALIZED.name(), true );
 		int selectedItemPosition = getListView().getSelectedItemPosition();
-		outState.putInt(ConfigData.SELECTED_ITEM_POSITION.name(),
-				selectedItemPosition);
-		outState.putBoolean(ConfigData.OPTIONS_MENU_OPEN.name(),
-				optionsMenuOpen);
-		super.onSaveInstanceState(outState);
+		outState.putInt( ConfigData.SELECTED_ITEM_POSITION.name(), selectedItemPosition );
+		outState.putBoolean( ConfigData.OPTIONS_MENU_OPEN.name(), optionsMenuOpen );
+		super.onSaveInstanceState( outState );
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle state) {
-		super.onRestoreInstanceState(state);
+	protected void onRestoreInstanceState( Bundle state ) {
+		super.onRestoreInstanceState( state );
 		goToCharacterList();
-		int selectedItemPosition = state
-				.getInt(ConfigData.SELECTED_ITEM_POSITION.name());
-		getListView().setSelection(selectedItemPosition);
-		optionsMenuOpen = state.getBoolean(ConfigData.OPTIONS_MENU_OPEN.name());
+		int selectedItemPosition = state.getInt( ConfigData.SELECTED_ITEM_POSITION.name() );
+		getListView().setSelection( selectedItemPosition );
+		optionsMenuOpen = state.getBoolean( ConfigData.OPTIONS_MENU_OPEN.name() );
 		if (optionsMenuOpen) {
 			// Handler mHandler = new Handler();
 			// mHandler.postDelayed( new Runnable() {
@@ -131,86 +99,74 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	}
 
 	private void showOptionsMenu() {
-		KeyEvent ku = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MENU);
-		getWindow().openPanel(Window.FEATURE_OPTIONS_PANEL, ku);
+		KeyEvent ku = new KeyEvent( KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MENU );
+		getWindow().openPanel( Window.FEATURE_OPTIONS_PANEL, ku );
 		// openOptionsMenu();
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate( Bundle savedInstanceState ) {
+		super.onCreate( savedInstanceState );
 		init();
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		populateMenu(menu);
+	public boolean onCreateOptionsMenu( Menu menu ) {
+		populateMenu( menu );
 		optionsMenuOpen = true;
-		return super.onCreateOptionsMenu(menu);
+		return super.onCreateOptionsMenu( menu );
 	}
 
 	@Override
-	public boolean onMenuOpened(int featureId, Menu menu) {
-		MenuItem mi = menu.findItem(R.id.sort);
-		mi.setEnabled(getListView().getCount() > 1);// Sortierung nur bei mehr
+	public boolean onMenuOpened( int featureId, Menu menu ) {
+		MenuItem mi = menu.findItem( R.id.sort );
+		mi.setEnabled( getListView().getCount() > 1 );// Sortierung nur bei mehr
 		// als einem Eintrag
 		// aktivieren
-		return super.onMenuOpened(featureId, menu);
+		return super.onMenuOpened( featureId, menu );
 	}
 
 	@Override
-	public void onOptionsMenuClosed(Menu menu) {
-		super.onOptionsMenuClosed(menu);
+	public void onOptionsMenuClosed( Menu menu ) {
+		super.onOptionsMenuClosed( menu );
 		optionsMenuOpen = false;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return (applyMenuChoice(item) || super.onOptionsItemSelected(item));
+	public boolean onOptionsItemSelected( MenuItem item ) {
+		return (applyMenuChoice( item ) || super.onOptionsItemSelected( item ));
 	}
 
 	/**
 	 * Fullscreen aufheben vor setContentView aufzurufen!
 	 */
 	public void setWindowDecorations() {
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		getWindow().setFlags(
-				WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
+		getWindow().setFlags( WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN );
 	}
 
 	private void init() {
 		// fuer Fortschrittskreis in Titelzeile
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.favoritelist);
-		getIntent().setFlags(
-				Intent.FLAG_ACTIVITY_CLEAR_TOP
-						| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
+		setContentView( R.layout.favoritelist );
+		getIntent().setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
 		// anim = AnimationUtils.loadAnimation( this, R.anim.magnify );
 		Message msg = new Message();
 		msg.what = STOP_SPLASH;
-		handler.sendMessageDelayed(msg, SPLASHTIME);
+		handler.sendMessageDelayed( msg, SPLASHTIME );
 		initSplash();
-		getListView().setOnCreateContextMenuListener(
-				new OnCreateContextMenuListener() {
-					public void onCreateContextMenu(ContextMenu cm, View view,
-							ContextMenuInfo cmi) {
-						Cursor cursor = (Cursor) getListAdapter()
-								.getItem(
-										((AdapterView.AdapterContextMenuInfo) cmi).position);
-						String realm = cursor.getString(cursor
-								.getColumnIndex(Column.REALM.name()));
-						String name = cursor.getString(cursor
-								.getColumnIndex(Column.NAME.name()));
-						cm.setHeaderTitle(realm + " @ " + name);
-						cm
-								.add(
-										0,
-										CONTEXTMENU_REMOVE_FAVORITE,
-										0,
-										R.string.charlist_contextMenu_removeFromFavorites);
-					}
-				});
+		getListView().setOnCreateContextMenuListener( new OnCreateContextMenuListener() {
+			public void onCreateContextMenu( ContextMenu cm, View view, ContextMenuInfo cmi ) {
+				Cursor cursor = (Cursor)getListAdapter().getItem(
+						((AdapterView.AdapterContextMenuInfo)cmi).position );
+				String realm = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
+				String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
+				cm.setHeaderTitle( realm + " @ " + name );
+				cm.add( 0, CONTEXTMENU_REMOVE_FAVORITE, 0,
+						R.string.charlist_contextMenu_removeFromFavorites );
+			}
+		} );
 		// getListView().setOnItemSelectedListener( new OnItemSelectedListener()
 		// {
 		// public void onItemSelected( AdapterView<?> parent, View view, int
@@ -220,81 +176,71 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		// public void onNothingSelected( AdapterView<?> parent ) {
 		// }
 		// });
-		alertDeleteAll = new AlertDialog.Builder(this).setTitle(R.string.warn)
-				.setMessage(R.string.charlist_deleteAll).setPositiveButton(
-						R.string.yes, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-								Uri allFavourites = Uri
-										.parse(CONTENT_NAME_CHARACTERS);
-								int i = getContentResolver().delete(
-										allFavourites, null, null);
-								goToSearch();
-							}
-						}).setNegativeButton(R.string.no,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-							}
-						});
-		sortAndFill("NAME", SortDirection.ASCEND);
+		alertDeleteAll = new AlertDialog.Builder( this ).setTitle( R.string.warn ).setMessage(
+				R.string.charlist_deleteAll ).setPositiveButton( R.string.yes,
+				new DialogInterface.OnClickListener() {
+					public void onClick( DialogInterface dialog, int whichButton ) {
+						Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
+						int i = getContentResolver().delete( allFavourites, null, null );
+						goToSearch();
+					}
+				} ).setNegativeButton( R.string.no, new DialogInterface.OnClickListener() {
+			public void onClick( DialogInterface dialog, int whichButton ) {
+			}
+		} );
+		sortAndFill( "NAME", SortDirection.ASCEND );
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	public boolean onKeyDown( int keyCode, KeyEvent event ) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			android.os.Process.killProcess(android.os.Process.myPid());
+			android.os.Process.killProcess( android.os.Process.myPid() );
 		}
-		return super.onKeyDown(keyCode, event);
+		return super.onKeyDown( keyCode, event );
 	}
 
 	private void initSplash() {
-		((RelativeLayout) findViewById(R.id.splash))
-				.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
-						goToCharacterList();
-					}
-				});
-		TextView mTextView = (TextView) findViewById(R.id.splash_label_ver);
+		((RelativeLayout)findViewById( R.id.splash )).setOnClickListener( new OnClickListener() {
+			public void onClick( View v ) {
+				goToCharacterList();
+			}
+		} );
+		TextView mTextView = (TextView)findViewById( R.id.splash_label_ver );
 		try {
-			PackageInfo pi = getPackageManager().getPackageInfo(
-					getPackageName(), 0);
-			mTextView.setText("Version: " + pi.versionName);
+			PackageInfo pi = getPackageManager().getPackageInfo( getPackageName(), 0 );
+			mTextView.setText( "Version: " + pi.versionName );
 		} catch (NameNotFoundException e) {
 			// should never happen
 		}
 	}
 
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Cursor c = (Cursor) getListAdapter().getItem(position);
+	protected void onListItemClick( ListView l, View v, int position, long id ) {
+		Cursor c = (Cursor)getListAdapter().getItem( position );
 		// v.startAnimation( anim );
-		goToDetails(c);
+		goToDetails( c );
 	}
 
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
+	public boolean onContextItemSelected( MenuItem item ) {
 		switch (item.getItemId()) {
 		case CONTEXTMENU_REMOVE_FAVORITE:
-			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo) item
+			AdapterView.AdapterContextMenuInfo cmi = (AdapterView.AdapterContextMenuInfo)item
 					.getMenuInfo();
-			Cursor c = (Cursor) getListAdapter().getItem(cmi.position);
-
-			String sRegion = c
-					.getString(c.getColumnIndex(Column.REGION.name()));
-			String sRealm = c.getString(c.getColumnIndex(Column.REALM.name()));
-			String sName = c.getString(c.getColumnIndex(Column.NAME.name()));
-			Uri allFavourites = Uri.parse(CONTENT_NAME_CHARACTERS);
+			Cursor c = (Cursor)getListAdapter().getItem( cmi.position );
+			String sRegion = c.getString( c.getColumnIndex( Column.REGION.name() ) );
+			String sRealm = c.getString( c.getColumnIndex( Column.REALM.name() ) );
+			String sName = c.getString( c.getColumnIndex( Column.NAME.name() ) );
+			Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 			String where = Column.REGION.name() + " = \"" + sRegion + "\" AND "
-					+ Column.REALM.name() + " = \"" + sRealm + "\" AND "
-					+ Column.NAME.name() + " = \"" + sName
-					+ "\" AND IS_FAVOURITE =" + TRUE;
-			int i = getContentResolver().delete(allFavourites, where, null);
+					+ Column.REALM.name() + " = \"" + sRealm + "\" AND " + Column.NAME.name()
+					+ " = \"" + sName + "\" AND IS_FAVOURITE =" + TRUE;
+			int i = getContentResolver().delete( allFavourites, where, null );
 			if (i > 0) {
-				String s = getString(R.string.charlist_favorite_deleted_toast);
-				s = s.replace("%1", sRealm + " @ " + sName);
-				Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-				sortAndFill("NAME", SortDirection.ASCEND);
+				String s = getString( R.string.charlist_favorite_deleted_toast );
+				s = s.replace( "%1", sRealm + " @ " + sName );
+				Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
+				sortAndFill( "NAME", SortDirection.ASCEND );
 				if (getListAdapter().getCount() == 0) {
 					goToSearch();
 				}
@@ -308,8 +254,8 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	/**
 	 * @param menu
 	 */
-	private void populateMenu(Menu menu) {
-		new MenuInflater(getApplication()).inflate(R.menu.characterlist, menu);
+	private void populateMenu( Menu menu ) {
+		new MenuInflater( getApplication() ).inflate( R.menu.characterlist, menu );
 	}
 
 	/**
@@ -318,7 +264,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	 * @param item
 	 * @return
 	 */
-	private boolean applyMenuChoice(MenuItem item) {
+	private boolean applyMenuChoice( MenuItem item ) {
 		switch (item.getItemId()) {
 		case R.id.refresh:
 			refresh();
@@ -327,16 +273,16 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 			goToSearch();
 			return (true);
 		case R.id.sort_level_asc:
-			sortAndFill(Column.LEVEL.name(), SortDirection.ASCEND);
+			sortAndFill( Column.LEVEL.name(), SortDirection.ASCEND );
 			return (true);
 		case R.id.sort_level_desc:
-			sortAndFill(Column.LEVEL.name(), SortDirection.DESCEND);
+			sortAndFill( Column.LEVEL.name(), SortDirection.DESCEND );
 			return (true);
 		case R.id.sort_name_asc:
-			sortAndFill(Column.NAME.name(), SortDirection.ASCEND);
+			sortAndFill( Column.NAME.name(), SortDirection.ASCEND );
 			return (true);
 		case R.id.sort_name_desc:
-			sortAndFill(Column.NAME.name(), SortDirection.DESCEND);
+			sortAndFill( Column.NAME.name(), SortDirection.DESCEND );
 			return (true);
 		case R.id.clear_list:
 			alertDeleteAll.show();
@@ -351,27 +297,29 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	 * @param attribute
 	 *            Attribut nach dem sortiert werden soll
 	 */
-	private void sortAndFill(final Object attribute,
-			final SortDirection direction) {
+	private void sortAndFill( final Object attribute, final SortDirection direction ) {
 		try {
-			Uri CONTENT_URI = Uri.parse(CONTENT_NAME_CHARACTERS);
-			String[] projection = new String[] { Column.BITMAP.name(),
-					Column.REALM.name(), Column.NAME.name() };
+			Uri CONTENT_URI = Uri.parse( CONTENT_NAME_CHARACTERS );
+			String[] projection = new String[] {
+					Column.BITMAP.name(), Column.REALM.name(), Column.NAME.name()
+			};
 			String where = "IS_FAVOURITE = " + TRUE;
-			Cursor c = managedQuery(CONTENT_URI, null, where, null, attribute
-					+ ((direction == SortDirection.ASCEND) ? " asc" : " desc"));
-			startManagingCursor(c);
+			Cursor c = managedQuery( CONTENT_URI, null, where, null, attribute
+					+ ((direction == SortDirection.ASCEND) ? " asc" : " desc") );
+			startManagingCursor( c );
 			// __listCharacters();
 			c.moveToFirst();
 			if (c != null) {
-				int[] to = new int[] { R.id.CharLevelRaceClass, R.id.CharImage,
-						R.id.CharNameRealm, R.id.CharNameRealm };
-				ListAdapter mAdapter = new FavoriteListAdapter(this,
-						R.layout.characterlistitem, c, projection, to);
-				this.setListAdapter(mAdapter);
+				int[] to = new int[] {
+						R.id.CharLevelRaceClass, R.id.CharImage, R.id.CharNameRealm,
+						R.id.CharNameRealm
+				};
+				ListAdapter mAdapter = new FavoriteListAdapter( this, R.layout.characterlistitem,
+						c, projection, to );
+				this.setListAdapter( mAdapter );
 			}
 		} catch (Exception e) {
-			Log.e("[ERR]", e.getMessage());
+			Log.e( "[ERR]", e.getMessage() );
 		}
 	}
 
@@ -382,35 +330,29 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 		// Uri allTitles = Uri.parse(
 		// "content://net.wowcharacter.provider.characters/characters" );
 		// Cursor c = managedQuery( allTitles, null, null, null, "name desc" );
-		Uri allTitles = Uri.parse(CONTENT_NAME_CHARACTERS);
-		Cursor c = managedQuery(allTitles, null, null, null, "name desc");
+		Uri allTitles = Uri.parse( CONTENT_NAME_CHARACTERS );
+		Cursor c = managedQuery( allTitles, null, null, null, "name desc" );
 		if (c.moveToFirst()) {
 			do {
-				byte[] blob = c.getBlob(c.getColumnIndex(Column.BITMAP.name()));
-				Bitmap bmp = BitmapFactory
-						.decodeByteArray(blob, 0, blob.length);
-				Log.i(getClass().getName(), c.getString(c
-						.getColumnIndex(Column.NAME.name()))
-						+ ", "
-						+ c.getString(c.getColumnIndex(Column.REALM.name()))
-						+ ", bitmap: " + bmp);
+				byte[] blob = c.getBlob( c.getColumnIndex( Column.BITMAP.name() ) );
+				Bitmap bmp = BitmapFactory.decodeByteArray( blob, 0, blob.length );
+				Log.i( getClass().getName(), c.getString( c.getColumnIndex( Column.NAME.name() ) )
+						+ ", " + c.getString( c.getColumnIndex( Column.REALM.name() ) )
+						+ ", bitmap: " + bmp );
 			} while (c.moveToNext());
 		}
 	}
 
 	private void goToCharacterList() {
-		handler.removeMessages(STOP_SPLASH);
+		handler.removeMessages( STOP_SPLASH );
 		// TODO fullscreen aufheben
-		
-		flipper = (ViewFlipper) findViewById(R.id.flipperView);
-		flipper.setInAnimation(AnimationUtils.loadAnimation(this,
-				R.anim.fade_in));
-		flipper.setOutAnimation(AnimationUtils.loadAnimation(this,
-				R.anim.fade_out));
+		flipper = (ViewFlipper)findViewById( R.id.flipperView );
+		flipper.setInAnimation( AnimationUtils.loadAnimation( this, R.anim.fade_in ) );
+		flipper.setOutAnimation( AnimationUtils.loadAnimation( this, R.anim.fade_out ) );
 		flipper.showNext();
-		String sAppName = getString(R.string.app_name);
-		String sTitle = getString(R.string.charlist_title);
-		setTitle(sAppName + " (" + sTitle + ")");
+		String sAppName = getString( R.string.app_name );
+		String sTitle = getString( R.string.charlist_title );
+		setTitle( sAppName + " (" + sTitle + ")" );
 		Cursor cursor = getAllFavourites();
 		if (cursor == null || cursor.getCount() == 0) {
 			// keine Favouriten vorhanden, dann zur Suche gehen
@@ -424,24 +366,25 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 			refreshThread.interrupt();
 			while (refreshThread.isAlive()) {
 			}
-			Message msg = new Message();
-			msg.what = STOP_REFRESH;
-			handler.sendMessage(msg);
+			runOnUiThread( new Runnable() {
+				public void run() {
+					setProgressBarIndeterminateVisibility( false );
+				};
+			});
 		}
 		super.onPause();
 	}
 
 	/**
-	 * 
 	 * @return
 	 */
 	private Cursor getAllFavourites() {
-		Uri allFavourites = Uri.parse(CONTENT_NAME_CHARACTERS);
+		Uri allFavourites = Uri.parse( CONTENT_NAME_CHARACTERS );
 		Cursor cursor = null;
 		try {
 			String where = "IS_FAVOURITE = " + TRUE;
-			cursor = managedQuery(allFavourites, null, where, null, null);
-			startManagingCursor(cursor);
+			cursor = managedQuery( allFavourites, null, where, null, null );
+			startManagingCursor( cursor );
 		} catch (Exception e) {
 		}
 		return cursor;
@@ -451,46 +394,49 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	 * Favoriten-Details erneuern
 	 */
 	private void refresh() {
-		refreshThread = new Thread(new Runnable() {
+		refreshThread = new Thread( new Runnable() {
 			public void run() {
 				try {
-					Cursor cursor = getAllFavourites();
+					final Cursor cursor = getAllFavourites();
 					int count;
 					if (cursor != null && (count = cursor.getCount()) > 0) {
 						for (int i = 0; i < count; i++) {
 							if (Thread.interrupted()) {
 								break;
 							}
-							cursor.moveToPosition(i);
-							Bundle bundle = new Bundle();
-							StringBuilder sb = getXML(cursor);
-							bundle.putString(Column.XML.name(), sb.toString());
-							String name = cursor.getString(cursor
-									.getColumnIndex(Column.REALM.name()));
-							bundle.putString(Column.REALM.name(), name);
-							String realm = cursor.getString(cursor
-									.getColumnIndex(Column.NAME.name()));
-							bundle.putString(Column.NAME.name(), realm);
-							bundle.putString("CURSOR_id", cursor
-									.getString(cursor.getColumnIndex("_id")));
-							Message msg = new Message();
-							msg.what = UPDATE;
-							msg.setData(bundle);
-							// Ergebnis fuer das Update senden
-							handler.sendMessage(msg);
+							cursor.moveToPosition( i );
+							final ContentValues cv = new ContentValues();
+							StringBuilder sb = getXML( cursor );
+							cv.put( Column.XML.name(), sb.toString() );
+							final String id = cursor.getString( cursor.getColumnIndex( "_id" ) );
+							runOnUiThread( new Runnable() {
+								public void run() {
+									boolean success = update( id, cv );
+									if (success) {
+										String name = cursor.getString( cursor
+												.getColumnIndex( Column.REALM.name() ) );
+										String realm = cursor.getString( cursor
+												.getColumnIndex( Column.NAME.name() ) );
+										String s = getString( R.string.charlist_favorite_updated_toast );
+										s = s.replace( "%1", realm + " @ " + name );
+										Toast.makeText( getListView().getContext(), s,
+												Toast.LENGTH_SHORT ).show();
+									}
+								}
+							} );
 						}
 					}
-
-					Message msg = new Message();
-					msg.what = STOP_REFRESH;
-					// Alle Ergebnisse geschickt
-					handler.sendMessage(msg);
+					runOnUiThread( new Runnable() {
+						public void run() {
+							setProgressBarIndeterminateVisibility( false );
+						};
+					});
 				} catch (Throwable t) {
 					// just end the background thread
 				}
 			}
-		}, "WOW-Refresh");
-		setProgressBarIndeterminateVisibility(true);
+		}, "WOW-Refresh" );
+		setProgressBarIndeterminateVisibility( true );
 		refreshThread.start();
 	}
 
@@ -498,31 +444,27 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	 * 
 	 */
 	private void goToSearch() {
-		Intent intent = new Intent(this,
-				de.stm.android.wowcharacter.activitiy.Searchlist.class);
-		startActivity(intent);
+		Intent intent = new Intent( this, de.stm.android.wowcharacter.activitiy.Searchlist.class );
+		startActivity( intent );
 	}
 
 	/**
-	 * 
 	 * @param url
 	 * @param region
 	 * @return
 	 */
-	private StringBuilder getXML(String url, String region) {
-		return Armory.charactersheet(url, Armory.R.Region.valueOf(region));
+	private StringBuilder getXML( String url, String region ) {
+		return Armory.charactersheet( url, Armory.R.Region.valueOf( region ) );
 	}
 
 	/**
-	 * 
 	 * @param cursor
 	 * @return
 	 */
-	private StringBuilder getXML(Cursor cursor) {
-		String url = cursor.getString(cursor.getColumnIndex(Column.URL.name()));
-		String region = cursor.getString(cursor.getColumnIndex(Column.REGION
-				.name()));
-		return getXML(url, region);
+	private StringBuilder getXML( Cursor cursor ) {
+		String url = cursor.getString( cursor.getColumnIndex( Column.URL.name() ) );
+		String region = cursor.getString( cursor.getColumnIndex( Column.REGION.name() ) );
+		return getXML( url, region );
 	}
 
 	/**
@@ -531,83 +473,38 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	 * @param character
 	 * @return
 	 */
-	private boolean setXMLtoCharacter(Cursor cursor) {
-		StringBuilder sb = getXML(cursor);
+	private boolean setXMLtoCharacter( Cursor cursor ) {
+		StringBuilder sb = getXML( cursor );
 		if (sb != null) {
 			String xml = sb.toString();
 			try {
 				ContentValues cv = new ContentValues();
-				cv.put(Column.XML.name(), xml);
-				update(cursor, cv);
+				cv.put( Column.XML.name(), xml );
+				update( cursor, cv );
 				return true;
 			} catch (Exception e) {
 				// wenn Persistieren nicht erfolgeich, zur Laufzeit XML auch
 				// nicht behalten
 				ContentValues cv = new ContentValues();
-				cv.put(Column.XML.name(), "");
-				update(cursor, cv);
+				cv.put( Column.XML.name(), "" );
+				update( cursor, cv );
 				e.printStackTrace();
 			}
 		}
 		return false;
 	}
 
-	private boolean update(String id, ContentValues cv) {
-		Uri uri = Uri.parse(CONTENT_NAME_CHARACTERS + "/" + id);
-		int count = getContentResolver().update(uri, cv, null, null);
+	private boolean update( String id, ContentValues cv ) {
+		Uri uri = Uri.parse( CONTENT_NAME_CHARACTERS + "/" + id );
+		int count = getContentResolver().update( uri, cv, null, null );
 		return count > 0;
 	}
 
-	private boolean update(Cursor cursor, ContentValues cv) {
-		Uri uri = Uri.parse(CONTENT_NAME_CHARACTERS + "/"
-				+ cursor.getString(cursor.getColumnIndex("_id")));
-		int count = getContentResolver().update(uri, cv, null, null);
+	private boolean update( Cursor cursor, ContentValues cv ) {
+		Uri uri = Uri.parse( CONTENT_NAME_CHARACTERS + "/"
+				+ cursor.getString( cursor.getColumnIndex( "_id" ) ) );
+		int count = getContentResolver().update( uri, cv, null, null );
 		return count > 0;
-	}
-
-	private void __characterChanged(ContentValues values, Data[] datas) {
-		try {
-			// ContentValues values = new ContentValues();
-			// values.put( Column.CLASS.name(), character.get(
-			// Character.Data.CLASS ).toString() );
-			// values.put( Column.CLASSID.name(), character.get(
-			// Character.Data.CLASSID ).toString()
-			// );
-			// values.put( Column.FACTIONID.name(), character.get(
-			// Character.Data.FACTIONID )
-			// .toString() );
-			// values
-			// .put( Column.GENDERID.name(), character.get(
-			// Character.Data.GENDERID )
-			// .toString() );
-			// values.put( Column.GUILD.name(), character.get(
-			// Character.Data.GUILD ).toString() );
-			// values.put( Column.LEVEL.name(), character.get(
-			// Character.Data.LEVEL ).toString() );
-			// values.put( Column.NAME.name(), character.get(
-			// Character.Data.NAME ).toString() );
-			// values.put( Column.RACE.name(), character.get(
-			// Character.Data.RACE ).toString() );
-			// values.put( Column.RACEID.name(), character.get(
-			// Character.Data.RACEID ).toString()
-			// );
-			// values.put( Column.REALM.name(), character.get(
-			// Character.Data.REALM ).toString() );
-			// values.put( Column.REGION.name(), character.get(
-			// Character.Data.REGION ).toString()
-			// );
-			// values.put( Column.URL.name(), character.get( Character.Data.URL
-			// ).toString() );
-			// values.put( Column.BITMAP.name(), Model.getInstance().getImage(
-			// character ) );
-			// values.put( Column.XML.name(), character.get( Character.Data.XML
-			// ).toString() );
-			Uri contentUri = Uri.parse(CONTENT_NAME_CHARACTERS);
-			int r = getContentResolver().update(contentUri, values, null, null);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -615,37 +512,31 @@ public class Favoritelist extends ListActivity implements ICharactersProvider,
 	 * 
 	 * @param character
 	 */
-	private void goToDetails(Cursor cursor) {
-		boolean bOnline = setXMLtoCharacter(cursor);
+	private void goToDetails( Cursor cursor ) {
+		boolean bOnline = setXMLtoCharacter( cursor );
 		if (!bOnline) {
 			// Online XML nicht verfuegbar
-			String xml = cursor.getString(cursor.getColumnIndex(Column.XML
-					.name()));
-			if (xml == null || "".equals(xml)) {
+			String xml = cursor.getString( cursor.getColumnIndex( Column.XML.name() ) );
+			if (xml == null || "".equals( xml )) {
 				// Persitiertes Ergebnis auch nicht verfuegbar, dann keine
 				// Anzeige der Details
-				Toast.makeText(this, "Keine Details verfuegbar!",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText( this, "Keine Details verfuegbar!", Toast.LENGTH_SHORT ).show();
 				return;
 			}
 		}
-		Intent intent = new Intent(this,
-				de.stm.android.wowcharacter.activitiy.Characterview.class);
+		Intent intent = new Intent( this, de.stm.android.wowcharacter.activitiy.Characterview.class );
 		// Cursor kann leider nicht uebergeben werden, deshalb Schluessel an
 		// dieser Stelle
-		String region = cursor.getString(cursor.getColumnIndex(Column.REGION
-				.name()));
-		String realm = cursor.getString(cursor.getColumnIndex(Column.REALM
-				.name()));
-		String name = cursor.getString(cursor
-				.getColumnIndex(Column.NAME.name()));
-		intent.putExtra(Character.Data.REGION.name(), region);
-		intent.putExtra(Character.Data.REALM.name(), realm);
-		intent.putExtra(Character.Data.NAME.name(), name);
-		intent.putExtra("IS_TEMPORARY", false);
-		intent.putExtra("ONLINE", bOnline);// gibt an, ob das Ergebnis online
+		String region = cursor.getString( cursor.getColumnIndex( Column.REGION.name() ) );
+		String realm = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
+		String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
+		intent.putExtra( Character.Data.REGION.name(), region );
+		intent.putExtra( Character.Data.REALM.name(), realm );
+		intent.putExtra( Character.Data.NAME.name(), name );
+		intent.putExtra( "IS_TEMPORARY", false );
+		intent.putExtra( "ONLINE", bOnline );// gibt an, ob das Ergebnis online
 		// ermittelt wurde
 		// (somit aktuell ist)
-		startActivity(intent);
+		startActivity( intent );
 	}
 }

@@ -1,6 +1,8 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-05-07)
+	* Changed:	einige Handler durch runOnUiThread ersetzt
 	* Changed:	Layout fuer TabWidgets geaendert (CharacterView)
 
 (2010-04-11)
