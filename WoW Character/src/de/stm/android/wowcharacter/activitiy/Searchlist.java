@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.*;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
@@ -62,43 +63,6 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage( Message msg ) {
-			listModel.clear();
-			if (sbXMLPage != null && sbXMLPage.length() > 0) {
-				Region region = Region.EU;
-				if (tb_US.isChecked()) {
-					region = Region.US;
-				}
-				is.readXML( sbXMLPage.toString(), region, listModel );
-				// SearchListAdapter sla = new SearchListAdapter( Searchlist.this, listModel );
-				// Collections.sort( listModel );
-				// setListAdapter( sla );
-				// sortAndFill(sortBy);
-				String s;
-				int listsize = listModel.size();
-				if (listsize == 0) {
-					s = getString( R.string.search_char_found_none_toast );
-				} else if (listsize == 1) {
-					s = getString( R.string.search_char_found_one_toast );
-				} else {
-					s = getString( R.string.search_char_found_more_toast );
-					s = s.replace( "%1", Integer.toString( listsize ) );
-				}
-				Toast.makeText( Searchlist.this, s, Toast.LENGTH_SHORT ).show();
-				ready = true;
-				// new Handler().postDelayed(new Runnable() {
-				// public void run() {
-				// getListView().setSelection( selectedItemPosition );
-				// }
-				// }, 6000);
-			} else {
-				String s = getString( R.string.search_char_found_none_toast );
-				Toast.makeText( Searchlist.this, s, Toast.LENGTH_SHORT ).show();				
-			}
-			
-			sortAndFill( sortBy );
-			setProgressBarIndeterminateVisibility( false );
-			TextView tf = (TextView)findViewById( R.id.valuesChanged );
-			tf.setText( "" );
 		}
 	};
 
@@ -180,9 +144,11 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		et.setOnKeyListener( new EditText.OnKeyListener() {
 			public boolean onKey( View v, int keyCode, KeyEvent event ) {
 				checkEmpty();
-				if (keyCode == KeyEvent.KEYCODE_ENTER) {
-					search();
-					return true;
+				if( event.getAction() == KeyEvent.ACTION_DOWN ) {
+					if (keyCode == KeyEvent.KEYCODE_ENTER) {
+						search();
+						return true;
+					}
 				}
 				return false;
 			}
@@ -239,7 +205,7 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 			public void onScroll( AbsListView view, int firstVisibleItem, int visibleItemCount,
 					int totalItemCount ) {
 				if (ready) {// TODO Abfrage, ob Scroll-Marker eingeblendet ist, oder gleich an
-							// diesen einen Listener registrieren...
+					// diesen einen Listener registrieren...
 					int indexOfMiddleItem = firstVisibleItem + visibleItemCount / 2;
 					if (indexOfMiddleItem < listModel.size()) {
 						Character character = listModel.get( firstVisibleItem + visibleItemCount
@@ -256,10 +222,11 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 						}
 						sectionTooltip.setText( text );
 						sectionTooltip.setVisibility( View.VISIBLE );
+						
 						handler.removeCallbacks( mRemoveWindow );
 						handler.postDelayed( mRemoveWindow, 1500 );// 1.5s ist die Zeit, die auch
-																	// der Scroll-Marker zum
-																	// Ausblenden benoetigt
+						// der Scroll-Marker zum
+						// Ausblenden benoetigt
 					}
 				}
 			}
@@ -285,12 +252,59 @@ public class Searchlist extends ListActivity implements ICharactersProvider, ISe
 		while (searchThread != null && searchThread.isAlive()) {
 			// solange warten, bis ein laufender Suchthread beendet wird
 		}
-		setProgressBarIndeterminateVisibility( false );
 		searchThread = new Thread( new Runnable() {
 			public void run() {
 				try {
 					sbXMLPage = Armory.search( et.getText().toString(), region );
-					handler.sendMessage( handler.obtainMessage() );
+					runOnUiThread( new Runnable() {
+						public void run() {
+							listModel.clear();
+						}
+					});
+					if (sbXMLPage != null && sbXMLPage.length() > 0) {
+						Region region = Region.EU;
+						if (tb_US.isChecked()) {
+							region = Region.US;
+						}
+						is.readXML( sbXMLPage.toString(), region, listModel );
+
+						runOnUiThread( new Runnable() {
+							public void run() {
+								String s;
+								int listsize = listModel.size();
+								if (listsize == 0) {
+									s = getString( R.string.search_char_found_none_toast );
+								} else if (listsize == 1) {
+									s = getString( R.string.search_char_found_one_toast );
+								} else {
+									s = getString( R.string.search_char_found_more_toast );
+									s = s.replace( "%1", Integer.toString( listsize ) );
+								}
+								Toast.makeText( Searchlist.this, s, Toast.LENGTH_SHORT ).show();
+							}
+						});
+						ready = true;
+						// new Handler().postDelayed(new Runnable() {
+						// public void run() {
+						// getListView().setSelection( selectedItemPosition );
+						// }
+						// }, 6000);
+					} else {
+						runOnUiThread( new Runnable() {
+							public void run() {
+								String s = getString( R.string.search_char_found_none_toast );
+								Toast.makeText( Searchlist.this, s, Toast.LENGTH_SHORT ).show();
+							}
+						});
+					}
+					runOnUiThread( new Runnable() {
+						public void run() {
+							sortAndFill( sortBy );
+							setProgressBarIndeterminateVisibility( false );
+							TextView tf = (TextView)findViewById( R.id.valuesChanged );
+							tf.setText( "" );
+						}
+					} );
 				} catch (Throwable t) {
 					// just end the background thread
 				}

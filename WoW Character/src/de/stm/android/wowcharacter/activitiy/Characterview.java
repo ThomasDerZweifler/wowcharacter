@@ -23,7 +23,6 @@ import android.os.*;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import de.stm.android.wowcharacter.R;
 import de.stm.android.wowcharacter.data.Character;
@@ -58,61 +57,8 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private RSSListAdapter rssListAdapter;
 	/** Thread fuer das Laden der Items */
 	private Thread threadItems;
-	/** Thread fuer das Laden der Aktivitaeten */
-	private Thread threadRSS;
 	private Button setAsFavourite;
 	private TextView charNameRealm;
-	private enum MSG_TYPES {
-		PROGRESS_ON, PROGRESS_OFF, RSS_LOADED, ITEM_LOADED
-	}
-	/**
-	 * Nachrichten-Handler dient dem Akoppeln des Threads vom Erneuern der Oberflaeche
-	 */
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage( Message msg ) {
-			if (msg.what == MSG_TYPES.PROGRESS_ON.ordinal()) {
-				setProgressBarIndeterminateVisibility( true );
-			} else if (msg.what == MSG_TYPES.PROGRESS_OFF.ordinal()) {
-				progressOff();
-			} else if (msg.what == MSG_TYPES.ITEM_LOADED.ordinal()) {
-				Bundle bundle = msg.getData();
-				boolean error = bundle.getBoolean( "ERROR" );
-				int itemNumber = bundle.getInt( "ITEM_NUMBER" );
-				int itemCount = bundle.getInt( "ITEM_COUNT" );
-				if (!error) {
-					Bitmap bitmap = bundle.getParcelable( "BITMAP" );
-					String name = bundle.getString( "NAME" );
-					String level = bundle.getString( "LEVEL" );
-					Integer rarity = bundle.getInt( "RARITY" );
-					Object[] o = new Object[] {
-							bitmap, name, level, rarity
-					};
-					itemListAdapter.add( o );
-					TextView tv = (TextView)tabHost.getTabWidget().getChildAt( 1 ).findViewById(
-							android.R.id.title );
-					tv.setText( getResources().getString( R.string.charview_tab_items ) + " ("
-							+ (itemNumber + 1) + "/" + itemCount + ")" );
-				}
-				if (error || (itemNumber == itemCount - 1)) {
-					setProgressBarIndeterminateVisibility( false );
-					TextView tv = (TextView)tabHost.getTabWidget().getChildAt( 1 ).findViewById(
-							android.R.id.title );
-					tv.setText( getResources().getString( R.string.charview_tab_items ) + " ("
-							+ itemCount + ")" );
-				}
-			} else if (msg.what == MSG_TYPES.RSS_LOADED.ordinal()) {
-				Bundle bundle = msg.getData();
-				String title = bundle.getString( "TITLE" );
-				String datetimestamp = bundle.getString( "DATETIMESTAMP" );
-				CharSequence content = bundle.getCharSequence( "CONTENT" );
-				Object[] o = new Object[] {
-						title, datetimestamp, content
-				};
-				rssListAdapter.add( o );
-			}
-		}
-	};
 
 	/**
 	 * Items laden und jedes einzelne dem Handler zum Anzeigen uebergeben <br>
@@ -128,15 +74,18 @@ public class Characterview extends Activity implements ICharactersProvider {
 			threadItems = null;
 			return;
 		}
+		shutdownThread( threadItems );
 		/** Thread der nebenlaeufig die Items laedt */
 		threadItems = new Thread( new Runnable() {
 			public void run() {
 				NodeList nl = doc.getElementsByTagName( "item" );
 				int length = nl.getLength();
 				if (length > 0) {
-					Message msg = new Message();
-					msg.what = MSG_TYPES.PROGRESS_ON.ordinal();
-					handler.sendMessage( msg );
+					runOnUiThread( new Runnable() {
+						public void run() {
+							setProgressBarIndeterminateVisibility( true );
+						}
+					});
 				}
 				// jedes Item betrachten
 				for (int i = 0; i < length; i++) {
@@ -156,27 +105,58 @@ public class Characterview extends Activity implements ICharactersProvider {
 							.getString( cursor.getColumnIndex( Column.REGION.name() ) );
 					// Icon fuer das Item
 					Bitmap bitmap = Armory.getItemIcon( iconName, region );
+					
+					final int f_i = i;
+					final int f_length = length;
+					if (!error) {
+						final Object[] o = new Object[] {
+								bitmap, name, level, rarity
+						};
+						runOnUiThread( new Runnable() {
+							public void run() {
+								itemListAdapter.add( o );
+								TextView tv = (TextView)tabHost.getTabWidget().getChildAt( 1 ).findViewById(
+										android.R.id.title );
+								tv.setText( getResources().getString( R.string.charview_tab_items ) + " ("
+										+ (f_i + 1) + "/" + f_length + ")" );
+								}
+						});
+					}
+					if (error || (i == length - 1)) {
+						runOnUiThread( new Runnable() {
+							public void run() {
+								setProgressBarIndeterminateVisibility( false );
+								TextView tv = (TextView)tabHost.getTabWidget().getChildAt( 1 ).findViewById(
+										android.R.id.title );
+								tv.setText( getResources().getString( R.string.charview_tab_items ) + " ("
+										+ f_length + ")" );
+								}
+						});
+					}
+
 					// Item kann hier nicht direkt zum Adapter hinzugefuegt
 					// werden (wegen Oberflaechen-Erneuerung),
 					// deshalb Abkopplung dieses Thread mittels Nachricht
-					Message msg = new Message();
-					msg.what = MSG_TYPES.ITEM_LOADED.ordinal();
-					Bundle bundle = new Bundle();
-					bundle.putBoolean( "ERROR", error );
-					if (!error) {
-						bundle.putString( "NAME", name );
-						bundle.putString( "LEVEL", level );
-						bundle.putInt( "RARITY", rarity );
-						if (bitmap == null) {
-							bitmap = BitmapFactory.decodeResource( getResources(),
-									R.drawable.question_mark );
-						}
-						bundle.putParcelable( "BITMAP", bitmap );
-						bundle.putInt( "ITEM_COUNT", length );
-						bundle.putInt( "ITEM_NUMBER", i );
-					}
-					msg.setData( bundle );
-					handler.sendMessage( msg );
+//					Message msg = new Message();
+//					msg.what = MSG_TYPES.ITEM_LOADED.ordinal();
+//					Bundle bundle = new Bundle();
+//					bundle.putBoolean( "ERROR", error );
+//					if (!error) {
+//						bundle.putString( "NAME", name );
+//						bundle.putString( "LEVEL", level );
+//						bundle.putInt( "RARITY", rarity );
+//						if (bitmap == null) {
+//							bitmap = BitmapFactory.decodeResource( getResources(),
+//									R.drawable.question_mark );
+//						}
+//						bundle.putParcelable( "BITMAP", bitmap );
+//						bundle.putInt( "ITEM_COUNT", length );
+//						bundle.putInt( "ITEM_NUMBER", i );
+//					}
+//					
+//					msg.setData( bundle );
+//					handler.sendMessage( msg );
+
 					if (error) {
 						// konnte ein Item nicht geladen werden
 						// (Netzwerkverbindung unterbrochen?), dann ist die
@@ -185,42 +165,35 @@ public class Characterview extends Activity implements ICharactersProvider {
 						// deshalb hier abbrechen
 						break;
 					}
-				}//for
-				Message msg = new Message();
-				msg.what = MSG_TYPES.PROGRESS_OFF.ordinal();
-				handler.sendMessage( msg );
-			}//run
+				}// for
+				runOnUiThread( new Runnable() {
+					public void run() {
+						setProgressBarIndeterminateVisibility( false );
+					}
+				});
+			}// run
 		} );
 		threadItems.start();
-	}
-
-	protected void progressOff() {
-		if( ( threadItems == null || ( threadItems!=null && !threadItems.isAlive() ) ) 
-				&& 
-				( threadRSS == null || ( threadRSS!=null && !threadRSS.isAlive() ) ) ) {
-			setProgressBarIndeterminateVisibility( false );			
-		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		shutdownThread( threadItems );
-		shutdownThread( threadRSS );
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
 		shutdownThread( threadItems );
-		shutdownThread( threadRSS );
 		super.onPause();
 	}
 
 	/**
 	 * Thread stoppen
+	 * 
 	 * @param thread
 	 */
-	private void shutdownThread(Thread thread) {
+	private void shutdownThread( Thread thread ) {
 		if (thread != null) {
 			thread.interrupt();
 			// TODO noch zu ueberlegen, wenn Thread nicht beendet wird (dann nur
@@ -229,9 +202,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 			// zulassen
 			while (thread.isAlive()) {
 			}
-		}		
+		}
 	}
-	
+
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
@@ -354,20 +327,22 @@ public class Characterview extends Activity implements ICharactersProvider {
 		specRSS.setContent( new TabHost.TabContentFactory() {
 			public View createTabContent( String tag ) {
 				ListView listViewRSS = new ListView( Characterview.this );
-//				listViewRSS.setOnItemClickListener(new OnItemClickListener() {
-//					public void onItemClick( AdapterView<?> arg0, View view, int position, long id ) {
-//						rssListAdapter.setSelectedPosition(position);
-//					}
-//				});
-				listViewRSS.setOnItemSelectedListener(new OnItemSelectedListener() {
-					public void onItemSelected( AdapterView<?> arg0, View view, int position, long id ) {
-						rssListAdapter.setSelectedPosition(position);						
+				// listViewRSS.setOnItemClickListener(new OnItemClickListener() {
+				// public void onItemClick( AdapterView<?> arg0, View view, int position, long id )
+				// {
+				// rssListAdapter.setSelectedPosition(position);
+				// }
+				// });
+				listViewRSS.setOnItemSelectedListener( new OnItemSelectedListener() {
+					public void onItemSelected( AdapterView<?> arg0, View view, int position,
+							long id ) {
+						rssListAdapter.setSelectedPosition( position );
 					}
+
 					public void onNothingSelected( AdapterView<?> arg0 ) {
-						rssListAdapter.setSelectedPosition(-1);
+						rssListAdapter.setSelectedPosition( -1 );
 					}
-				});
-				
+				} );
 				listViewRSS.setFastScrollEnabled( true );
 				listViewRSS.setAdapter( rssListAdapter );// Model an View
 				return listViewRSS;
@@ -379,7 +354,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 		tabHost.addTab( specRSS );
 		tabHost.setCurrentTab( 0 );
 	}
-	
+
 	/**
 	 * Kopf fuellen
 	 */
@@ -625,8 +600,9 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private void readRSS() {
 		rssListAdapter.clear();
 		rssListAdapter.notifyDataSetChanged();
+		shutdownThread( threadItems );
 		/** Thread der nebenlaeufig die Items laedt */
-		threadRSS = new Thread( new Runnable() {
+		threadItems = new Thread( new Runnable() {
 			public void run() {
 				String name = cursor.getString( cursor.getColumnIndex( Column.NAME.name() ) );
 				String region = cursor.getString( cursor.getColumnIndex( Column.REGION.name() ) );
@@ -637,11 +613,12 @@ public class Characterview extends Activity implements ICharactersProvider {
 					if (doc1 != null) {
 						NodeList nl = doc1.getElementsByTagName( "entry" );
 						if (nl != null) {
-								Message msg = new Message();
-								msg.what = MSG_TYPES.PROGRESS_ON.ordinal();
-								handler.sendMessage( msg );
-
-								for (int k = 0; k < nl.getLength(); k++) {
+							runOnUiThread( new Runnable() {
+								public void run() {
+									setProgressBarIndeterminateVisibility( true );
+								}
+							});
+							for (int k = 0; k < nl.getLength(); k++) {
 								if (Thread.interrupted()) {
 									break;
 								}
@@ -649,7 +626,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 								NodeList nl1 = nEntry.getChildNodes();
 								String title = "";
 								String datetimestamp = "";
-								CharSequence content = "";								
+								CharSequence content = "";
 								for (int i = 0; i < nl1.getLength(); i++) {
 									if (Thread.interrupted()) {
 										break;
@@ -678,30 +655,29 @@ public class Characterview extends Activity implements ICharactersProvider {
 											} else if (name1.equals( "content" )) {
 												content = value1.toString();
 											}
-										}//if
-									}//if
-								}//if
-								// Item kann hier nicht direkt zum Adapter hinzugefuegt
-								// werden (wegen Oberflaechen-Erneuerung),
-								// deshalb Abkopplung dieses Thread mittels Nachricht
-								msg = new Message();
-								msg.what = MSG_TYPES.RSS_LOADED.ordinal();
-								Bundle bundle = new Bundle();
-								bundle.putString( "TITLE", title );
-								bundle.putString( "DATETIMESTAMP", datetimestamp );
-								bundle.putCharSequence( "CONTENT", content );
-								msg.setData( bundle );
-								handler.sendMessage( msg );
-							}//for
-							msg = new Message();
-							msg.what = MSG_TYPES.PROGRESS_OFF.ordinal();
-							handler.sendMessage( msg );
+										}// if
+									}// if
+								}// for
+								final Object[] o = new Object[] {
+										title, datetimestamp, content
+								};
+								runOnUiThread( new Runnable() {
+									public void run() {
+										rssListAdapter.add( o );
+									}
+								});
+							}// for
+							runOnUiThread( new Runnable() {
+								public void run() {
+									setProgressBarIndeterminateVisibility( false );
+								}
+							});
 						}
 					}
 				}
 			}
 		} );
-		threadRSS.start();
+		threadItems.start();
 	}
 
 	/**
