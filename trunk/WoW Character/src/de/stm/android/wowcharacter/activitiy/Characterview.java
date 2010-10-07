@@ -19,7 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -51,6 +51,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 	private TabHost.TabSpec specValues;
 	private ListView listViewItems;
 	private ItemListAdapter itemListAdapter;
+	private ExpandableListView listViewValues;
 	private ValuesListAdapter valuesListAdapter;
 	/** Karteikarte RSS */
 	private TabHost.TabSpec specRSS;
@@ -312,7 +313,7 @@ public class Characterview extends Activity implements ICharactersProvider {
 		valuesListAdapter = new ValuesListAdapter( Characterview.this );
 		specValues.setContent( new TabHost.TabContentFactory() {
 			public View createTabContent( String tag ) {
-				ExpandableListView listViewValues = new ExpandableListView( Characterview.this );
+				listViewValues = new ExpandableListView( Characterview.this );
 				listViewValues.setAdapter( valuesListAdapter );// Model an View
 				return listViewValues;
 			}
@@ -588,6 +589,13 @@ public class Characterview extends Activity implements ICharactersProvider {
 		map.put( 2, getChilds( "melee" ) );
 		map.put( 3, getChilds( "defenses" ) );
 		valuesListAdapter.setValues( groups, map );
+		runOnUiThread( new Runnable() {
+			public void run() {
+				if (!listViewValues.isGroupExpanded( 0 )) {
+					listViewValues.expandGroup( 0 );
+				}
+			}
+		} );
 	}
 
 	/**

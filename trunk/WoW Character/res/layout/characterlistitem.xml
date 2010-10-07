@@ -17,26 +17,26 @@
         	android:layout_weight="1"
 		>
 			<TextView android:id="@+id/CharNameRealm"
-				android:layout_marginLeft="5dip"
+				android:layout_marginLeft="5dp"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:scrollHorizontally="true"
 				android:maxLines="1"
 				android:ellipsize="marquee"
-				android:textSize="22px" />
+				android:textSize="20dp" />
 			<TextView android:id="@+id/CharLevelRaceClass"
-				android:layout_marginLeft="6dip"
+				android:layout_marginLeft="6dp"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:textSize="12px" />
+				android:textSize="12dp" />
 			<TextView android:id="@+id/CharGuild"
-				android:layout_marginLeft="6dip"
+				android:layout_marginLeft="6dp"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:textSize="12px" />
+				android:textSize="12dp" />
 		</LinearLayout>
 	</TableRow>
 </TableLayout>

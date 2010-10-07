@@ -16,6 +16,9 @@ public class CustomProgressBar extends ProgressBar {
 	public final static int HORIZONTAL = 0;
 	public final static int VERTICAL = 0;
 
+	private int m_width;
+	private int m_height;
+	
 	private Paint paint;
 	private String processingText = "";
 	private int textColor = 0xFFFFFFFF;
@@ -23,8 +26,8 @@ public class CustomProgressBar extends ProgressBar {
 	private int position = 0;
 	private int min = 0;
 	private int max = 100;
-	private int xText;
-	private int yText;
+	private int xText = 0;
+	private int yText = 0;
 
 	/**
 	 * 
@@ -61,15 +64,23 @@ public class CustomProgressBar extends ProgressBar {
 	 */
 	private void init() {
 		paint = new Paint();
-		paint.setTextSize(12);
+//		paint.setTextSize(12);
+//		paint.setTextSize(18);
 		paint.setStyle(Paint.Style.FILL);
 	}
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		this.setMeasuredDimension(MeasureWidth(widthMeasureSpec),
-				MeasureHeight(heightMeasureSpec));
+//		this.setMeasuredDimension(MeasureWidth(widthMeasureSpec),
+//				MeasureHeight(heightMeasureSpec));
 
+		m_width = widthMeasureSpec;
+		m_height = heightMeasureSpec;
+		
+		
+//		MeasureWidth(widthMeasureSpec);
+//		MeasureHeight(heightMeasureSpec);
+		super.onMeasure( widthMeasureSpec, heightMeasureSpec );
 	}
 
 	/**
@@ -87,8 +98,7 @@ public class CustomProgressBar extends ProgressBar {
 		} else {
 			yText = 0;
 			result = Math.min(specSize, max - min);
-		}
-
+		}		
 		return result;
 	}
 
@@ -124,6 +134,11 @@ public class CustomProgressBar extends ProgressBar {
 			if (this.orientation == HORIZONTAL) {
 				paint.setColor(this.textColor);
 				paint.setAntiAlias(true);
+				paint.setTextSize( getHeight()-10 );
+				
+				MeasureWidth(m_width);
+				MeasureHeight(m_height);
+
 				canvas.drawText(processingText, xText, yText, paint);
 			}
 		}
