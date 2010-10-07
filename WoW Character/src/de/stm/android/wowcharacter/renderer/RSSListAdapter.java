@@ -1,13 +1,12 @@
 package de.stm.android.wowcharacter.renderer;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.style.URLSpan;
-import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import de.stm.android.wowcharacter.R;

@@ -3,7 +3,7 @@
 	android:layout_height="40sp" android:background="#aaaa90">
 
 	<TextView android:id="@+id/rowChild" android:layout_width="fill_parent"
-		android:layout_height="32px" android:paddingLeft="10sp"
+		android:layout_height="32dp" android:paddingLeft="10sp"
 		android:textColor="#000000" android:textColorHighlight="#ffffff"
 		android:gravity="center_vertical" />
 

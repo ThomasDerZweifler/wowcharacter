@@ -29,7 +29,7 @@
 				android:layout_centerHorizontal="true"
 				android:layout_below="@+id/splash_label_app" />		
 			<TextView android:id="@+id/splash_label_author1"
-				android:paddingTop="10px"
+				android:paddingTop="10dp"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_centerHorizontal="true"

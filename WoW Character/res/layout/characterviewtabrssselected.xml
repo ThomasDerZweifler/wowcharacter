@@ -17,12 +17,12 @@
 	   	    	android:maxLines="1"
 				android:ellipsize="marquee"
 				android:layout_weight="1"
-	    		android:textSize="16px" />
+	    		android:textSize="16dp" />
 			<TextView android:id="@+id/rssDatetimestamp"
 				android:layout_width="wrap_content" 
 	    		android:layout_height="wrap_content"
 	    		android:textColor="#000000"
-				android:textSize="14px" />
+				android:textSize="14dp" />
 			<TextView android:id="@+id/rssContent"
 				android:layout_width="fill_parent" 
 	    		android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
 	   	    	android:maxLines="1"
 				android:ellipsize="marquee"
 				android:layout_weight="1"
-	    		android:textSize="14px" />
+	    		android:textSize="14dp" />
 		</LinearLayout>
 	</TableRow>
 </TableLayout>

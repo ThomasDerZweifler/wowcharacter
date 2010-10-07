@@ -7,8 +7,8 @@
 	<TableRow>
 		<LinearLayout android:id="@+id/name"
 			android:layout_span="3"
-			android:layout_marginLeft="5px"
-			android:layout_marginTop="5px"
+			android:layout_marginLeft="5dp"
+			android:layout_marginTop="5dp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal" >
@@ -26,7 +26,7 @@
 	<TableRow>
 		<TextView android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="5px"
+			android:layout_margin="5dp"
 			android:textColor="#ffffff"
 			android:text="@string/search_region"
 			android:layout_gravity="center"/>
@@ -48,7 +48,7 @@
 			<TextView android:id="@+id/valuesChanged"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_margin="5px"
+				android:layout_margin="5dp"
 				android:textColor="#ffffff"/>
 		</LinearLayout>
 	</TableRow>

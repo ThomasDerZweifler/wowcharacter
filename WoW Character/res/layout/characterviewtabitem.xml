@@ -19,11 +19,11 @@
 	   	    	android:maxLines="1"
 				android:ellipsize="marquee"
 				android:layout_weight="1"
-	    		android:textSize="20px" />
+	    		android:textSize="20dp" />
 			<TextView android:id="@+id/ItemLevel"
 				android:layout_width="wrap_content" 
 	    		android:layout_height="wrap_content" 
-				android:textSize="12px" />
+				android:textSize="12dp" />
 		</LinearLayout>
 	</TableRow>
 </TableLayout>
