@@ -2,10 +2,12 @@
   -----------------------------
 
 (2010-10-09)
+	+ New:		Veroeffentlichung (1.0.1)
 	* Fixed:	Auslesen der Hauptberufe
+	+ New:		Favourites Label
 
 (2010-10-08)
-	+ New:		Veroeffentlichung in http://slideme.org/application/wow-character und http://andappstore.com/AndroidApplications/apps/WOWCharacter
+	+ New:		Veroeffentlichung (1.0.0) in http://slideme.org/application/wow-character und http://andappstore.com/AndroidApplications/apps/WOWCharacter
 	* Changed:	layout fuer hoehere Aufloesungen kompatibel gestaltet
 
 (2010-05-07)
