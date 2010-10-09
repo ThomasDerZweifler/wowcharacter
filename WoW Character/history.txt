@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-10-09)
+	* Fixed:	Auslesen der Hauptberufe
+
 (2010-10-08)
 	+ New:		Veroeffentlichung in http://slideme.org/application/wow-character und http://andappstore.com/AndroidApplications/apps/WOWCharacter
 	* Changed:	layout fuer hoehere Aufloesungen kompatibel gestaltet
