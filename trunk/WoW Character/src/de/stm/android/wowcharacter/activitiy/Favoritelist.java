@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.*;
+import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -25,7 +26,7 @@ import de.stm.android.wowcharacter.renderer.FavoriteListAdapter;
 import de.stm.android.wowcharacter.util.Armory;
 
 /**
- * Einstiegspunkt für Splash gefolgt von der Favoritenliste. Wenn Favoritenliste leer, dann wird in
+ * Einstiegspunkt fuer Splash gefolgt von der Favoritenliste. Wenn Favoritenliste leer, dann wird in
  * die Suche verzweigt
  * 
  * @author <a href="mailto:thomasfunke71@googlemail.com">Thomas Funke</a>, <a
@@ -408,7 +409,7 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 							final ContentValues cv = new ContentValues();
 							StringBuilder sb = getXML( cursor );
 							cv.put( Column.XML.name(), sb.toString() );
-							final String id = cursor.getString( cursor.getColumnIndex( "_id" ) );
+							final String id = cursor.getString( cursor.getColumnIndex( BaseColumns._ID ) );
 							runOnUiThread( new Runnable() {
 								public void run() {
 									boolean success = update( id, cv );
