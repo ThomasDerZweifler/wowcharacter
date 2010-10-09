@@ -520,18 +520,26 @@ public class Characterview extends Activity implements ICharactersProvider {
 		barname = getResources().getString( secondText );
 		progbar.setProcessingText( barname + ": " + value_progress );
 		/* dritter und vierter Balken */
-		nl = doc.getElementsByTagName( "skill" );
-		for (int i = 0; i < nl.getLength(); i++) {
-			int bar = (i == 0) ? R.id.progress_prof_one : R.id.progress_prof_two;
-			value_progress = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "value" )
-					.getNodeValue() );
-			value_max = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "max" )
-					.getNodeValue() );
-			barname = nl.item( i ).getAttributes().getNamedItem( "name" ).getNodeValue();
-			progbar = (CustomProgressBar)findViewById( bar );
-			progbar.setMax( value_max );
-			progbar.setProgress( value_progress );
-			progbar.setProcessingText( barname + ": " + value_progress + "/" + value_max );
+		nl = doc.getElementsByTagName( "professions" );
+		if (nl.getLength() > 0) {
+			nl = nl.item( 0 ).getChildNodes();
+			int bar = R.id.progress_prof_one ;
+			for (int i = 0; i < nl.getLength(); i++) {
+				if (nl.item( i ).getNodeType() == Node.ELEMENT_NODE ) {
+					value_progress = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "value" )
+							.getNodeValue() );
+					value_max = Integer.parseInt( nl.item( i ).getAttributes().getNamedItem( "max" )
+							.getNodeValue() );
+					barname = nl.item( i ).getAttributes().getNamedItem( "name" ).getNodeValue();
+
+					progbar = (CustomProgressBar)findViewById( bar );
+					progbar.setMax( value_max );
+					progbar.setProgress( value_progress );
+					progbar.setProcessingText( barname + ": " + value_progress + "/" + value_max );					
+
+					bar = R.id.progress_prof_two;
+				} 
+			}
 		}
 		/* Talente */
 		int[] idsImage = new int[] {
