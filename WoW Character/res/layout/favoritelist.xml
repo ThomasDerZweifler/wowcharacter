@@ -48,6 +48,13 @@
 			android:baselineAligned="true"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent">
+			<TextView android:id="@+id/favorites_title" 
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:textColor="#ffffff"
+				android:textSize="20dp"
+				android:text="@string/favourites_title"/>		
 			<ListView android:id="@android:id/list"
 				android:layout_width="fill_parent"
 				android:layout_height="fill_parent"
