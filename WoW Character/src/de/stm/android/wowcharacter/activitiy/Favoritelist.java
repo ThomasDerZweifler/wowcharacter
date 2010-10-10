@@ -288,10 +288,26 @@ public class Favoritelist extends ListActivity implements ICharactersProvider, I
 		case R.id.clear_list:
 			alertDeleteAll.show();
 			return (true);
+		case R.id.feedback:
+			sendEmail();
+			return (true);
 		}
 		return false;
 	}
 
+	private void sendEmail() {
+		String sEmail = "thomasfunke71@googlemail.com";
+		Intent intent = new Intent( Intent.ACTION_SENDTO, Uri.fromParts( "mailto", sEmail, null ) );
+		String version = "";
+		try {
+			PackageInfo pi = getPackageManager().getPackageInfo( getPackageName(), 0 );
+			version = pi.versionName;
+		} catch (NameNotFoundException e) {
+		}
+		intent.putExtra( Intent.EXTRA_SUBJECT, "WOWCharacter (ver. " + version + ")" );
+		startActivity( Intent.createChooser( intent, "Send email..." ) );
+	}
+	
 	/**
 	 * Nach Attribut sortierte Charaktere (Favoriten) in Liste fuellen
 	 * 

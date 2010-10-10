@@ -55,6 +55,8 @@
 	<string name="tooltipSearchlist_Relevance">Relevance: %1</string>
 	<string name="na">n.a.</string>
 	
+	<string name="menu_feedback">Your Feedback</string>
+	
 	<string name="author1">Thomas Funke</string>
 	<string name="author2">Stefan Moldenhauer</string>
 </resources>
