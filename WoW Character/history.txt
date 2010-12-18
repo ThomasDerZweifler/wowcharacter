@@ -1,6 +1,9 @@
   Wowcharacter Release History:
   -----------------------------
 
+(2010-12-17)
+	+ Fixed:	Favoriten-Button unsichtbar schalten (fuer GT1000)
+
 (2010-10-10)
 	+ New:		Veroeffentlichung (1.0.2)
 	+ New:		Feedback (email senden)
