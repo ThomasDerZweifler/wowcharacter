@@ -397,13 +397,10 @@ public class Characterview extends Activity implements ICharactersProvider {
 			String realm = cursor.getString( cursor.getColumnIndex( Column.REALM.name() ) );
 			charNameRealm.setText( name + " @ " + realm );
 			if (favouriteExists()) {
-				// Favoriten-Button aus dem Layout entfernen
-				// (setAsFavoutite.setVisible(View.INVISIBLE) laesst nur freien
-				// Platz zurueck)
-				// addView(tr,index) fuer das dynamische Anzeigen verwenden
-				TableLayout tl = (TableLayout)findViewById( R.id.tableCharacter );
-				TableRow tr = (TableRow)findViewById( R.id.rowSetAsFavourite );
-				tl.removeView( tr );
+				setAsFavourite = (Button)findViewById( R.id.setAsFavourite );
+				ViewGroup.LayoutParams params = setAsFavourite.getLayoutParams();
+				params.height = 0;
+				setAsFavourite.requestLayout();					
 			} else {
 				setAsFavourite = (Button)findViewById( R.id.setAsFavourite );
 				setAsFavourite.setOnClickListener( new OnClickListener() {
@@ -450,9 +447,10 @@ public class Characterview extends Activity implements ICharactersProvider {
 			String s = getString( R.string.search_addToFavorites_ok_toast );
 			s = s.replace( "%1", charNameRealm.getText() );
 			Toast.makeText( this, s, Toast.LENGTH_SHORT ).show();
-			TableLayout tl = (TableLayout)findViewById( R.id.tableCharacter );
-			TableRow tr = (TableRow)findViewById( R.id.rowSetAsFavourite );
-			tl.removeView( tr );
+			setAsFavourite = (Button)findViewById( R.id.setAsFavourite );
+			ViewGroup.LayoutParams params = setAsFavourite.getLayoutParams();
+			params.height = 0;
+			setAsFavourite.requestLayout();					
 		}
 	}
 

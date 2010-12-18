@@ -1,3 +1,7 @@
+
+* refresh der favoriten (server werden nicht korrekt im tooltip dargestellt)
+* offline betrieb
+
 * RSS Feed evtl. nebenlaeufig laden (wie die Items)
 * im RSS Tab die Items noch etwas aufhuebschen und Selektion trotz grauem Hintergrund anzeigen
 * Basic und andre Specs in expandable List (noch Zauber und Nahkampf.Schaden), evtl. fuer Character relvanten Knoten schon aufklappen
